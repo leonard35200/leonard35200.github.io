@@ -31,7 +31,7 @@
             margin-bottom: 0.5rem;
             color: #495057;
         }
-        input[type="text"], input[type="number"], select, textarea {
+        input[type="text"], input[type="number"], textarea {
             width: calc(100% - 70px);
             padding: 0.5rem;
             margin-bottom: 1rem;
@@ -75,12 +75,6 @@
             border-radius: 4px;
             background-color: #f8f9fa;
         }
-        select {
-            padding: 0.5rem;
-            border-radius: 4px;
-            background-color: #f8f9fa;
-            border: 1px solid #ced4da;
-        }
         .save-button {
             display: block;
             width: 100%;
@@ -117,21 +111,20 @@
             margin-top: 1rem;
             color: #007bff;
         }
-         .dice-animation {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 150px; /* Augmenter la hauteur */
-    width: 150px;  /* Augmenter la largeur */
-    margin: 20px auto;
-    font-size: 72px;
-}
-
-.dice-face {
-    width: 150px;  /* Augmenter la largeur */
-    height: 150px; /* Augmenter la hauteur */
-    font-size: 72px; /* Augmenter la taille de la police */
-}
+        .dice-animation {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 150px; /* Augmenter la hauteur */
+            width: 150px;  /* Augmenter la largeur */
+            margin: 20px auto;
+            font-size: 72px;
+        }
+        .dice-face {
+            width: 150px;  /* Augmenter la largeur */
+            height: 150px; /* Augmenter la hauteur */
+            font-size: 72px; /* Augmenter la taille de la police */
+        }
     </style>
 </head>
 <body>
@@ -159,31 +152,30 @@
                 </div>
             </div>
             <div class="form-group">
-    <label for="disciplines">Disciplines Kaï</label>
-    <div id="disciplines-container">
-        <label><input type="checkbox" value="Maîtrise des Armes"> Maîtrise des Armes</label><br>
-        <label><input type="checkbox" value="Bouclier Psychique"> Bouclier Psychique</label><br>
-        <label><input type="checkbox" value="Guérison"> Guérison</label><br>
-        <label><input type="checkbox" value="Camouflage"> Camouflage</label><br>
-        <label><input type="checkbox" value="Sixième Sens"> Sixième Sens</label><br>
-        <label><input type="checkbox" value="Chasse"> Chasse</label><br>
-        <label><input type="checkbox" value="Communication Animale"> Communication Animale</label><br>
-        <label><input type="checkbox" value="Puissance Psychique"> Puissance Psychique</label><br>
-        <label><input type="checkbox" value="Sens Magnétique"> Sens Magnétique</label><br>
-        <label><input type="checkbox" value="Maîtrise de l'Esprit"> Maîtrise de l'Esprit</label><br>
-    </div>
-    <div id="selected-disciplines" class="selected-list"></div>
-</div>
-
+                <label>Disciplines Kaï</label>
+                <div id="disciplines">
+                    <label><input type="checkbox" name="disciplines" value="Maîtrise des Armes"> Maîtrise des Armes</label>
+                    <label><input type="checkbox" name="disciplines" value="Bouclier Psychique"> Bouclier Psychique</label>
+                    <label><input type="checkbox" name="disciplines" value="Guérison"> Guérison</label>
+                    <label><input type="checkbox" name="disciplines" value="Camouflage"> Camouflage</label>
+                    <label><input type="checkbox" name="disciplines" value="Sixième Sens"> Sixième Sens</label>
+                    <label><input type="checkbox" name="disciplines" value="Chasse"> Chasse</label>
+                    <label><input type="checkbox" name="disciplines" value="Communication Animale"> Communication Animale</label>
+                    <label><input type="checkbox" name="disciplines" value="Puissance Psychique"> Puissance Psychique</label>
+                    <label><input type="checkbox" name="disciplines" value="Sens Magnétique"> Sens Magnétique</label>
+                    <label><input type="checkbox" name="disciplines" value="Maîtrise de l'Esprit"> Maîtrise de l'Esprit</label>
+                </div>
+                <div id="selected-disciplines" class="selected-list"></div>
+            </div>
             <div class="form-group">
-                <label for="armes">Armes (max 2)</label>
-                <select id="armes" name="armes" multiple onchange="updateSelectedList('armes', 'selected-armes'); checkArmesLimit();">
-                    <option value="Épée">Épée</option>
-                    <option value="Hache">Hache</option>
-                    <option value="Lance">Lance</option>
-                    <option value="Dague">Dague</option>
-                    <option value="Arc">Arc</option>
-                </select>
+                <label>Armes (max 2)</label>
+                <div id="armes">
+                    <label><input type="checkbox" name="armes" value="Épée"> Épée</label>
+                    <label><input type="checkbox" name="armes" value="Hache"> Hache</label>
+                    <label><input type="checkbox" name="armes" value="Lance"> Lance</label>
+                    <label><input type="checkbox" name="armes" value="Dague"> Dague</label>
+                    <label><input type="checkbox" name="armes" value="Arc"> Arc</label>
+                </div>
                 <div id="selected-armes" class="selected-list"></div>
             </div>
             <div class="form-group">
@@ -212,142 +204,66 @@
             </div>
             <button type="button" class="save-button" onclick="saveData()">Enregistrer</button>
             <button type="button" class="dice-button" onclick="rollDice()">Lancer le Dé</button>
+            <div class="dice-animation">
+                <div id="dice-face" class="dice-face"></div>
+            </div>
             <div id="dice-result" class="dice-result"></div>
-            <div id="dice-animation" class="dice-animation"></div></form>
+        </form>
     </div>
-
     <script>
-    
-document.getElementById('disciplines').addEventListener('mousedown', function(event) {
-    event.preventDefault(); // Empêche le comportement de sélection multiple par défaut
-    const option = event.target;
-    if (option.tagName === 'OPTION') {  // Vérifie si c'est bien une option
-        option.selected = !option.selected; // Inverse la sélection de l'option
-    }
-    updateSelectedList('disciplines', 'selected-disciplines'); // Met à jour la liste des disciplines sélectionnées
-});
+        document.addEventListener('DOMContentLoaded', () => {
+            updateSelectedList('disciplines', 'selected-disciplines');
+            updateSelectedList('armes', 'selected-armes');
 
-function updateSelectedList(selectId, listId) {
-    const select = document.getElementById(selectId);
-    const list = document.getElementById(listId);
-    list.innerHTML = ''; // Vider la liste pour éviter les doublons
+            document.getElementById('disciplines').addEventListener('change', () => {
+                updateSelectedList('disciplines', 'selected-disciplines');
+            });
 
-    // Récupère toutes les options sélectionnées
-    const selectedOptions = Array.from(select.selectedOptions);
+            document.getElementById('armes').addEventListener('change', () => {
+                updateSelectedList('armes', 'selected-armes');
+                checkArmesLimit();
+            });
+        });
 
-    // Pour chaque option sélectionnée, l'ajouter à la liste
-    selectedOptions.forEach(option => {
-        const item = document.createElement('div');
-        item.textContent = option.text;
-        list.appendChild(item); // Ajoute chaque option sélectionnée à la liste
-    });
-}
-
-// Attache un événement change pour la sélection multiple
-document.getElementById('disciplines').addEventListener('change', function() {
-    updateSelectedList('disciplines', 'selected-disciplines');
-});
-
-
-        function saveData() {
-            const form = document.getElementById('feuille-de-route');
-            const data = new FormData(form);
-            for (let [key, value] of data.entries()) {
-                if (form[key].tagName === 'SELECT' && form[key].multiple) {
-                    value = [...form[key].options].filter(option => option.selected).map(option => option.value).join(',');
-                }
-                localStorage.setItem(key, value);
-            }
-            alert('Données enregistrées');
+        function updateSelectedList(containerId, listId) {
+            const container = document.getElementById(containerId);
+            const list = document.getElementById(listId);
+            list.innerHTML = '';
+            const checkedBoxes = [...container.querySelectorAll('input[type="checkbox"]:checked')];
+            checkedBoxes.forEach(box => {
+                const item = document.createElement('div');
+                item.textContent = box.nextSibling.textContent.trim(); // Texte de l'option
+                list.appendChild(item);
+            });
         }
-
-        function loadData() {
-            const form = document.getElementById('feuille-de-route');
-            for (let element of form.elements) {
-                const value = localStorage.getItem(element.name);
-                if (value) {
-                    if (element.tagName === 'SELECT' && element.multiple) {
-                        const selectedValues = value.split(',');
-                        for (let option of element.options) {
-                            option.selected = selectedValues.includes(option.value);
-                        }
-                    } else {
-                        element.value = value;
-                    }
-                }
-            }
-        }
-
-// Fonction pour mettre à jour la liste des disciplines sélectionnées
-function updateSelectedDisciplines() {
-    const checkboxes = document.querySelectorAll('#disciplines-container input[type="checkbox"]');
-    const selectedDisciplines = document.getElementById('selected-disciplines');
-    selectedDisciplines.innerHTML = ''; // Vide la liste actuelle
-
-    // Parcourt toutes les cases à cocher et récupère celles qui sont cochées
-    checkboxes.forEach(checkbox => {
-        if (checkbox.checked) {
-            const item = document.createElement('div');
-            item.textContent = checkbox.value;
-            selectedDisciplines.appendChild(item); // Ajoute la discipline sélectionnée
-        }
-    });
-}
-
-// Attache l'événement "change" à chaque case à cocher
-const checkboxes = document.querySelectorAll('#disciplines-container input[type="checkbox"]');
-checkboxes.forEach(checkbox => {
-    checkbox.addEventListener('change', updateSelectedDisciplines);
-});
-
-        
-        function adjustValue(id, change) {
-            const input = document.getElementById(id);
-            let currentValue = parseInt(input.value, 10) || 0;
-            const amount = parseInt(prompt("Combien voulez-vous ajouter/enlever ?", "1"), 10) || 0;
-            input.value = currentValue + (change * amount);
-        }
-
-   document.getElementById('disciplines').addEventListener('mousedown', function(event) {
-    event.preventDefault(); // Empêche le comportement de sélection multiple par défaut
-    const option = event.target;
-    option.selected = !option.selected; // Inverse la sélection de l'option
-    updateSelectedList('disciplines', 'selected-disciplines'); // Met à jour la liste des disciplines sélectionnées
-});
-
 
         function checkArmesLimit() {
-            const select = document.getElementById('armes');
-            const selectedOptions = [...select.options].filter(option => option.selected);
-            if (selectedOptions.length > 2) {
+            const checkboxes = document.querySelectorAll('#armes input[type="checkbox"]');
+            const selectedCheckboxes = [...checkboxes].filter(box => box.checked);
+            if (selectedCheckboxes.length > 2) {
                 alert('Vous ne pouvez sélectionner que 2 armes.');
-                selectedOptions.forEach(option => option.selected = false);
+                selectedCheckboxes.slice(2).forEach(box => box.checked = false);
             }
+        }
+
+        function adjustValue(id, adjustment) {
+            const input = document.getElementById(id);
+            const newValue = Math.max(0, parseInt(input.value) + adjustment);
+            input.value = newValue;
+        }
+
+        function saveData() {
+            alert('Données enregistrées !');
         }
 
         function rollDice() {
-            const diceAnimation = document.getElementById('dice-animation');
+            const diceFace = document.getElementById('dice-face');
             const diceResult = document.getElementById('dice-result');
-
-            diceAnimation.innerHTML = '';
-            diceResult.textContent = '';
-
-            const diceFaces = [
-                '⚀', '⚁', '⚂', '⚃', '⚄', '⚅'
-            ];
-
-            let animationInterval = setInterval(() => {
-                const randomFace = diceFaces[Math.floor(Math.random() * diceFaces.length)];
-                diceAnimation.textContent = randomFace;
-            }, 100);
-
-            setTimeout(() => {
-                clearInterval(animationInterval);
-                const result = Math.floor(Math.random() * 6) + 1;
-                diceResult.textContent = ''; // Texte supprimé
-                diceAnimation.textContent = diceFaces[result - 1];
-            }, 2000);
+            const result = Math.floor(Math.random() * 6) + 1;
+            diceFace.textContent = result;
+            diceResult.textContent = `Vous avez lancé un ${result}`;
         }
     </script>
 </body>
 </html>
+
