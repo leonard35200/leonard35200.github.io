@@ -216,12 +216,24 @@
     </div>
 
     <script>
-       document.getElementById('disciplines').addEventListener('click', function(event) {
+     document.getElementById('disciplines').addEventListener('mousedown', function(event) {
+    event.preventDefault(); // Empêche le comportement par défaut
     const option = event.target;
-    option.selected = !option.selected; // Inverse la sélection
-    updateSelectedList('disciplines', 'selected-disciplines');
-    event.preventDefault(); // Empêche la liste d'agir comme une sélection classique
+    option.selected = !option.selected; // Inverse la sélection de l'option
+    updateSelectedList('disciplines', 'selected-disciplines'); // Met à jour la liste des disciplines sélectionnées
 });
+
+function updateSelectedList(selectId, listId) {
+    const select = document.getElementById(selectId);
+    const list = document.getElementById(listId);
+    list.innerHTML = ''; // Vide la liste pour éviter les doublons
+    const selectedOptions = [...select.options].filter(option => option.selected);
+    selectedOptions.forEach(option => {
+        const item = document.createElement('div');
+        item.textContent = option.text;
+        list.appendChild(item); // Ajoute chaque option sélectionnée à la liste
+    });
+}
 
         function saveData() {
             const form = document.getElementById('feuille-de-route');
