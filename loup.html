@@ -216,10 +216,13 @@
     </div>
 
     <script>
-     document.getElementById('disciplines').addEventListener('mousedown', function(event) {
-    event.preventDefault(); // Empêche le comportement par défaut
+    
+document.getElementById('disciplines').addEventListener('mousedown', function(event) {
+    event.preventDefault(); // Empêche le comportement de sélection multiple par défaut
     const option = event.target;
-    option.selected = !option.selected; // Inverse la sélection de l'option
+    if (option.tagName === 'OPTION') {  // Vérifie si c'est bien une option
+        option.selected = !option.selected; // Inverse la sélection de l'option
+    }
     updateSelectedList('disciplines', 'selected-disciplines'); // Met à jour la liste des disciplines sélectionnées
 });
 
