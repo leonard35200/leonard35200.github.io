@@ -229,14 +229,24 @@ document.getElementById('disciplines').addEventListener('mousedown', function(ev
 function updateSelectedList(selectId, listId) {
     const select = document.getElementById(selectId);
     const list = document.getElementById(listId);
-    list.innerHTML = ''; // Vide la liste pour éviter les doublons
-    const selectedOptions = [...select.options].filter(option => option.selected);
+    list.innerHTML = ''; // Vider la liste pour éviter les doublons
+
+    // Récupère toutes les options sélectionnées
+    const selectedOptions = Array.from(select.selectedOptions);
+
+    // Pour chaque option sélectionnée, l'ajouter à la liste
     selectedOptions.forEach(option => {
         const item = document.createElement('div');
         item.textContent = option.text;
         list.appendChild(item); // Ajoute chaque option sélectionnée à la liste
     });
 }
+
+// Attache un événement change pour la sélection multiple
+document.getElementById('disciplines').addEventListener('change', function() {
+    updateSelectedList('disciplines', 'selected-disciplines');
+});
+
 
         function saveData() {
             const form = document.getElementById('feuille-de-route');
