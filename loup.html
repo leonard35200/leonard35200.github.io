@@ -204,10 +204,8 @@
             </div>
             <button type="button" class="save-button" onclick="saveData()">Enregistrer</button>
             <button type="button" class="dice-button" onclick="rollDice()">Lancer le Dé</button>
-            <div class="dice-animation">
-                <div id="dice-face" class="dice-face"></div>
-            </div>
             <div id="dice-result" class="dice-result"></div>
+            <div id="dice-animation" class="dice-animation"></div>
         </form>
     </div>
     <script>
@@ -257,11 +255,27 @@
         }
 
         function rollDice() {
-            const diceFace = document.getElementById('dice-face');
+            const diceAnimation = document.getElementById('dice-animation');
             const diceResult = document.getElementById('dice-result');
-            const result = Math.floor(Math.random() * 6) + 1;
-            diceFace.textContent = result;
-            diceResult.textContent = `Vous avez lancé un ${result}`;
+
+            diceAnimation.innerHTML = '';
+            diceResult.textContent = '';
+
+            const diceFaces = [
+                '⚀', '⚁', '⚂', '⚃', '⚄', '⚅'
+            ];
+
+            let animationInterval = setInterval(() => {
+                const randomFace = diceFaces[Math.floor(Math.random() * diceFaces.length)];
+                diceAnimation.textContent = randomFace;
+            }, 100);
+
+            setTimeout(() => {
+                clearInterval(animationInterval);
+                const result = Math.floor(Math.random() * 6) + 1;
+                diceResult.textContent = ''; // Texte supprimé
+                diceAnimation.textContent = diceFaces[result - 1];
+            }, 2000);
         }
     </script>
 </body>
