@@ -216,11 +216,12 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', (event) => {
-            loadData();
-            updateSelectedList('disciplines', 'selected-disciplines');
-            updateSelectedList('armes', 'selected-armes');
-        });
+       document.getElementById('disciplines').addEventListener('click', function(event) {
+    const option = event.target;
+    option.selected = !option.selected; // Inverse la sélection
+    updateSelectedList('disciplines', 'selected-disciplines');
+    event.preventDefault(); // Empêche la liste d'agir comme une sélection classique
+});
 
         function saveData() {
             const form = document.getElementById('feuille-de-route');
