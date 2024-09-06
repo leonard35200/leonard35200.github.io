@@ -159,21 +159,22 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="disciplines">Disciplines Kaï</label>
-                <select id="disciplines" name="disciplines" multiple onchange="updateSelectedList('disciplines', 'selected-disciplines')">
-                    <option value="Maîtrise des Armes">Maîtrise des Armes</option>
-                    <option value="Bouclier Psychique">Bouclier Psychique</option>
-                    <option value="Guérison">Guérison</option>
-                    <option value="Camouflage">Camouflage</option>
-                    <option value="Sixième Sens">Sixième Sens</option>
-                    <option value="Chasse">Chasse</option>
-                    <option value="Communication Animale">Communication Animale</option>
-                    <option value="Puissance Psychique">Puissance Psychique</option>
-                    <option value="Sens Magnétique">Sens Magnétique</option>
-                    <option value="Maîtrise de l'Esprit">Maîtrise de l'Esprit</option>
-                </select>
-                <div id="selected-disciplines" class="selected-list"></div>
-            </div>
+    <label for="disciplines">Disciplines Kaï</label>
+    <div id="disciplines-container">
+        <label><input type="checkbox" value="Maîtrise des Armes"> Maîtrise des Armes</label><br>
+        <label><input type="checkbox" value="Bouclier Psychique"> Bouclier Psychique</label><br>
+        <label><input type="checkbox" value="Guérison"> Guérison</label><br>
+        <label><input type="checkbox" value="Camouflage"> Camouflage</label><br>
+        <label><input type="checkbox" value="Sixième Sens"> Sixième Sens</label><br>
+        <label><input type="checkbox" value="Chasse"> Chasse</label><br>
+        <label><input type="checkbox" value="Communication Animale"> Communication Animale</label><br>
+        <label><input type="checkbox" value="Puissance Psychique"> Puissance Psychique</label><br>
+        <label><input type="checkbox" value="Sens Magnétique"> Sens Magnétique</label><br>
+        <label><input type="checkbox" value="Maîtrise de l'Esprit"> Maîtrise de l'Esprit</label><br>
+    </div>
+    <div id="selected-disciplines" class="selected-list"></div>
+</div>
+
             <div class="form-group">
                 <label for="armes">Armes (max 2)</label>
                 <select id="armes" name="armes" multiple onchange="updateSelectedList('armes', 'selected-armes'); checkArmesLimit();">
@@ -277,6 +278,29 @@ document.getElementById('disciplines').addEventListener('change', function() {
             }
         }
 
+// Fonction pour mettre à jour la liste des disciplines sélectionnées
+function updateSelectedDisciplines() {
+    const checkboxes = document.querySelectorAll('#disciplines-container input[type="checkbox"]');
+    const selectedDisciplines = document.getElementById('selected-disciplines');
+    selectedDisciplines.innerHTML = ''; // Vide la liste actuelle
+
+    // Parcourt toutes les cases à cocher et récupère celles qui sont cochées
+    checkboxes.forEach(checkbox => {
+        if (checkbox.checked) {
+            const item = document.createElement('div');
+            item.textContent = checkbox.value;
+            selectedDisciplines.appendChild(item); // Ajoute la discipline sélectionnée
+        }
+    });
+}
+
+// Attache l'événement "change" à chaque case à cocher
+const checkboxes = document.querySelectorAll('#disciplines-container input[type="checkbox"]');
+checkboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', updateSelectedDisciplines);
+});
+
+        
         function adjustValue(id, change) {
             const input = document.getElementById(id);
             let currentValue = parseInt(input.value, 10) || 0;
