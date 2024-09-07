@@ -244,10 +244,11 @@
             }
         }
 
-        function adjustValue(id, adjustment) {
+        function adjustValue(id, change) {
             const input = document.getElementById(id);
-            const newValue = Math.max(0, parseInt(input.value) + adjustment);
-            input.value = newValue;
+            let currentValue = parseInt(input.value, 10) || 0;
+            const amount = parseInt(prompt("Combien voulez-vous ajouter/enlever ?", "1"), 10) || 0;
+            input.value = currentValue + (change * amount);
         }
 
         function saveData() {
