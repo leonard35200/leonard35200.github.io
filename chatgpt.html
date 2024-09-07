@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exploration Spatiale</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: radial-gradient(circle at center, #0d1b2a, #1b263b);
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    header {
+      text-align: center;
+      padding: 50px;
+      background: transparent;
+      position: relative;
+    }
+
+    header h1 {
+      font-size: 3em;
+      letter-spacing: 2px;
+      color: #fff;
+      text-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+    }
+
+    header p {
+      font-size: 1.2em;
+      margin-top: 15px;
+      color: #a8dadc;
+    }
+
+    .planets {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 100px 50px;
+      flex-wrap: wrap;
+    }
+
+    .planet {
+      text-align: center;
+      position: relative;
+      transition: transform 0.3s ease;
+    }
+
+    .planet:hover {
+      transform: scale(1.1);
+    }
+
+    .planet img {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      box-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
+    }
+
+    .planet h3 {
+      margin-top: 20px;
+      font-size: 1.5em;
+      color: #ffb703;
+    }
+
+    .planet p {
+      color: #a8dadc;
+      margin-top: 10px;
+    }
+
+    footer {
+      background: #0d1b2a;
+      padding: 30px;
+      text-align: center;
+      color: #a8dadc;
+      margin-top: 50px;
+    }
+
+    footer p {
+      font-size: 0.9em;
+    }
+
+    .stars {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: url('https://www.transparenttextures.com/patterns/stardust.png');
+      animation: twinkle 2s infinite ease-in-out alternate;
+    }
+
+    @keyframes twinkle {
+      from {
+        opacity: 0.5;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="stars"></div>
+
+  <header>
+    <h1>Exploration Spatiale</h1>
+    <p>Voyage à travers les merveilles du système solaire</p>
+  </header>
+
+  <section class="planets">
+    <div class="planet">
+      <img src="https://www.nasa.gov/sites/default/files/thumbnails/image/PIA24924-1280.jpg" alt="Mars">
+      <h3>Mars</h3>
+      <p>La planète rouge aux mystères infinis.</p>
+    </div>
+    <div class="planet">
+      <img src="https://www.nasa.gov/sites/default/files/thumbnails/image/pia23791-1041.jpg" alt="Jupiter">
+      <h3>Jupiter</h3>
+      <p>La géante gazeuse avec sa Grande Tache Rouge.</p>
+    </div>
+    <div class="planet">
+      <img src="https://www.nasa.gov/sites/default/files/thumbnails/image/planetsaturn1.jpg" alt="Saturne">
+      <h3>Saturne</h3>
+      <p>Ses anneaux fascinants ont toujours émerveillé.</p>
+    </div>
+    <div class="planet">
+      <img src="https://www.nasa.gov/sites/default/files/thumbnails/image/PIA24337-1280.jpg" alt="Neptune">
+      <h3>Neptune</h3>
+      <p>Le monde des vents les plus violents du système solaire.</p>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2024 Exploration Spatiale. Tous droits réservés.</p>
+  </footer>
+
+</body>
+</html>
