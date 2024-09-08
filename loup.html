@@ -269,10 +269,15 @@
         function checkArmesLimit() {
     const select = document.getElementById('armes');
     const selectedOptions = [...select.options].filter(option => option.selected);
+
     if (selectedOptions.length > 2) {
         alert('Vous ne pouvez sélectionner que 2 armes.');
-        select.selectedIndex = -1;
+
+        // Désélectionne la dernière arme ajoutée (celle qui dépasse la limite)
+        selectedOptions[selectedOptions.length - 1].selected = false;
     }
+
+    updateSelectedList('armes', 'selected-armes');
 }
 
         function rollDice() {
