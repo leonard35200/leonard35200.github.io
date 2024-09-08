@@ -139,43 +139,43 @@
                 <label for="habilite-base">Score de Base (Habilité)</label>
                 <div class="adjust-container">
                     <input type="number" id="habilite-base" name="habilite-base" min="0">
-                    <button type="button" class="minus" onclick="adjustValue('habilite-base', -1)">-</button>
-                    <button type="button" class="plus" onclick="adjustValue('habilite-base', 1)">+</button>
+                    <button type="button" class="minus" onclick="adjustValue('habilite-base', -1, 'enlever')">-</button>
+<button type="button" class="plus" onclick="adjustValue('habilite-base', 1, 'ajouter')">+</button>
                 </div>
             </div>
             <div class="form-group">
                 <label for="endurance-base">Score de Base (Endurance)</label>
                 <div class="adjust-container">
                     <input type="number" id="endurance-base" name="endurance-base" min="0">
-                    <button type="button" class="minus" onclick="adjustValue('endurance-base', -1)">-</button>
-                    <button type="button" class="plus" onclick="adjustValue('endurance-base', 1)">+</button>
+                    <button type="button" class="minus" onclick="adjustValue('endurance-base', -1,'enlever')">-</button>
+                    <button type="button" class="plus" onclick="adjustValue('endurance-base', 1,'ajouter')">+</button>
                 </div>
             </div>
             <div class="form-group">
-                <label>Disciplines Kaï</label>
-                <div id="disciplines">
-                    <label><input type="checkbox" name="disciplines" value="Maîtrise des Armes"> Maîtrise des Armes</label>
-                    <label><input type="checkbox" name="disciplines" value="Bouclier Psychique"> Bouclier Psychique</label>
-                    <label><input type="checkbox" name="disciplines" value="Guérison"> Guérison</label>
-                    <label><input type="checkbox" name="disciplines" value="Camouflage"> Camouflage</label>
-                    <label><input type="checkbox" name="disciplines" value="Sixième Sens"> Sixième Sens</label>
-                    <label><input type="checkbox" name="disciplines" value="Chasse"> Chasse</label>
-                    <label><input type="checkbox" name="disciplines" value="Communication Animale"> Communication Animale</label>
-                    <label><input type="checkbox" name="disciplines" value="Puissance Psychique"> Puissance Psychique</label>
-                    <label><input type="checkbox" name="disciplines" value="Sens Magnétique"> Sens Magnétique</label>
-                    <label><input type="checkbox" name="disciplines" value="Maîtrise de l'Esprit"> Maîtrise de l'Esprit</label>
-                </div>
+                <label for="disciplines">Disciplines Kaï</label>
+                <select id="disciplines" name="disciplines" multiple onchange="updateSelectedList('disciplines', 'selected-disciplines')">
+                    <option value="Maîtrise des Armes">Maîtrise des Armes</option>
+                    <option value="Bouclier Psychique">Bouclier Psychique</option>
+                    <option value="Guérison">Guérison</option>
+                    <option value="Camouflage">Camouflage</option>
+                    <option value="Sixième Sens">Sixième Sens</option>
+                    <option value="Chasse">Chasse</option>
+                    <option value="Communication Animale">Communication Animale</option>
+                    <option value="Puissance Psychique">Puissance Psychique</option>
+                    <option value="Sens Magnétique">Sens Magnétique</option>
+                    <option value="Maîtrise de l'Esprit">Maîtrise de l'Esprit</option>
+                </select>
                 <div id="selected-disciplines" class="selected-list"></div>
             </div>
             <div class="form-group">
-                <label>Armes (max 2)</label>
-                <div id="armes">
-                    <label><input type="checkbox" name="armes" value="Épée"> Épée</label>
-                    <label><input type="checkbox" name="armes" value="Hache"> Hache</label>
-                    <label><input type="checkbox" name="armes" value="Lance"> Lance</label>
-                    <label><input type="checkbox" name="armes" value="Dague"> Dague</label>
-                    <label><input type="checkbox" name="armes" value="Arc"> Arc</label>
-                </div>
+                <label for="armes">Armes (max 2)</label>
+                <select id="armes" name="armes" multiple onchange="updateSelectedList('armes', 'selected-armes'); checkArmesLimit();">
+                    <option value="Épée">Épée</option>
+                    <option value="Hache">Hache</option>
+                    <option value="Lance">Lance</option>
+                    <option value="Dague">Dague</option>
+                    <option value="Arc">Arc</option>
+                </select>
                 <div id="selected-armes" class="selected-list"></div>
             </div>
             <div class="form-group">
@@ -190,16 +190,16 @@
                 <label for="vivres">Vivres</label>
                 <div class="adjust-container">
                     <input type="number" id="vivres" name="vivres" min="0">
-                    <button type="button" class="minus" onclick="adjustValue('vivres', -1)">-</button>
-                    <button type="button" class="plus" onclick="adjustValue('vivres', 1)">+</button>
+                    <button type="button" class="minus" onclick="adjustValue('vivres', -1,'enlever')">-</button>
+                    <button type="button" class="plus" onclick="adjustValue('vivres', 1,'ajouter')">+</button>
                 </div>
             </div>
             <div class="form-group">
                 <label for="bourse">Bourse</label>
                 <div class="adjust-container">
                     <input type="number" id="bourse" name="bourse" min="0">
-                    <button type="button" class="minus" onclick="adjustValue('bourse', -1)">-</button>
-                    <button type="button" class="plus" onclick="adjustValue('bourse', 1)">+</button>
+                    <button type="button" class="minus" onclick="adjustValue('bourse', -1,'enlever')">-</button>
+                    <button type="button" class="plus" onclick="adjustValue('bourse', 1,'ajouter')">+</button>
                 </div>
             </div>
             <button type="button" class="save-button" onclick="saveData()">Enregistrer</button>
@@ -208,52 +208,72 @@
             <div id="dice-animation" class="dice-animation"></div>
         </form>
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
+       <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            loadData();
             updateSelectedList('disciplines', 'selected-disciplines');
             updateSelectedList('armes', 'selected-armes');
-
-            document.getElementById('disciplines').addEventListener('change', () => {
-                updateSelectedList('disciplines', 'selected-disciplines');
-            });
-
-            document.getElementById('armes').addEventListener('change', () => {
-                updateSelectedList('armes', 'selected-armes');
-                checkArmesLimit();
-            });
         });
 
-        function updateSelectedList(containerId, listId) {
-            const container = document.getElementById(containerId);
+        function saveData() {
+            const form = document.getElementById('feuille-de-route');
+            const data = new FormData(form);
+            for (let [key, value] of data.entries()) {
+                if (form[key].tagName === 'SELECT' && form[key].multiple) {
+                    value = [...form[key].options].filter(option => option.selected).map(option => option.value).join(',');
+                }
+                localStorage.setItem(key, value);
+            }
+            alert('Données enregistrées');
+        }
+
+        function loadData() {
+            const form = document.getElementById('feuille-de-route');
+            for (let element of form.elements) {
+                const value = localStorage.getItem(element.name);
+                if (value) {
+                    if (element.tagName === 'SELECT' && element.multiple) {
+                        const selectedValues = value.split(',');
+                        for (let option of element.options) {
+                            option.selected = selectedValues.includes(option.value);
+                        }
+                    } else {
+                        element.value = value;
+                    }
+                }
+            }
+        }
+
+        function adjustValue(id, change, nom) {
+    const input = document.getElementById(id);
+    let currentValue = parseInt(input.value, 10) || 0;
+    const amount = parseInt(prompt("Combien voulez-vous " + nom + " ?", "1"), 10) || 0;
+    let newValue = currentValue + (change * amount);
+    if (newValue < 0) {
+        newValue = 0;
+    }
+    input.value = newValue;
+}
+        function updateSelectedList(selectId, listId) {
+            const select = document.getElementById(selectId);
             const list = document.getElementById(listId);
             list.innerHTML = '';
-            const checkedBoxes = [...container.querySelectorAll('input[type="checkbox"]:checked')];
-            checkedBoxes.forEach(box => {
+            const selectedOptions = [...select.options].filter(option => option.selected);
+            selectedOptions.forEach(option => {
                 const item = document.createElement('div');
-                item.textContent = box.nextSibling.textContent.trim(); // Texte de l'option
+                item.textContent = option.text;
                 list.appendChild(item);
             });
         }
 
         function checkArmesLimit() {
-            const checkboxes = document.querySelectorAll('#armes input[type="checkbox"]');
-            const selectedCheckboxes = [...checkboxes].filter(box => box.checked);
-            if (selectedCheckboxes.length > 2) {
-                alert('Vous ne pouvez sélectionner que 2 armes.');
-                selectedCheckboxes.slice(2).forEach(box => box.checked = false);
-            }
-        }
-
-        function adjustValue(id, change) {
-            const input = document.getElementById(id);
-            let currentValue = parseInt(input.value, 10) || 0;
-            const amount = parseInt(prompt("Combien voulez-vous ajouter/enlever ?", "1"), 10) || 0;
-            input.value = currentValue + (change * amount);
-        }
-
-        function saveData() {
-            alert('Données enregistrées !');
-        }
+    const select = document.getElementById('armes');
+    const selectedOptions = [...select.options].filter(option => option.selected);
+    if (selectedOptions.length > 2) {
+        alert('Vous ne pouvez sélectionner que 2 armes.');
+        select.selectedIndex = -1;
+    }
+}
 
         function rollDice() {
             const diceAnimation = document.getElementById('dice-animation');
