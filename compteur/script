@@ -1,0 +1,173 @@
+let nombreJoueur = 1
+
+function changerNombreJoueur(value) {
+  nombreJoueur = value;
+sessionStorage.setItem('nombreJoueur', value);
+  
+}
+
+
+function unJoueur() {
+ changerNombreJoueur(1);
+
+}
+function deuxJoueurs() {
+  changerNombreJoueur(2);
+  
+}
+function troisJoueurs() {
+  changerNombreJoueur(3);
+  
+}
+function quatreJoueurs() {
+  changerNombreJoueur(4)
+  sessionStorage.setItem('nombreJoueur', nombreJoueur);
+
+}
+function cinqJoueurs() {
+  nombreJoueur = 5
+  
+}
+function sixJoueurs() {
+  nombreJoueur = 6
+  
+}
+function septJoueurs() {
+  nombreJoueur = 7
+}
+function test() {
+  console.log(nombreJoueur)
+  document.getElementById('nombreJoueur').innerHTML ="vous etes "+ nombreJoueur;
+   
+}
+
+function updateTableSeven() {
+    var table = document.getElementById('scoreTableSeven');
+    table.innerHTML = '';
+
+    var headerRowSeven = table.insertRow(0);
+    headerRowSeven.insertCell(0);
+
+    for (var i = 1; i <= nombreJoueur; i++) {
+        var cell = headerRowSeven.insertCell(i);
+        cell.innerHTML = 'Joueur ' + i;
+        cell.style.backgroundColor = "BlanchedAlmond";
+    }
+
+    var categoriesSeven = ['Pièce', 'Merveille', 'Armée', ' ', ' ', ' ', ' '];
+    var couleursSeven = ['grey', 'grey', 'red', 'blue', 'yellow', 'purple', 'green'];
+
+    for (var i = 0; i < categoriesSeven.length; i++) {
+        var row = table.insertRow(-1);
+        var cell = row.insertCell(0);
+        cell.innerHTML = categoriesSeven[i];
+        cell.style.backgroundColor = couleursSeven[i];
+
+        for (var j = 1; j <= nombreJoueur; j++) {
+            var cell = row.insertCell(j);
+            cell.contentEditable = true;
+
+            // Assuming storedValues is a 2D array
+            cell.innerText = storedValues[i][j - 1] || ''; // Default to empty string if value is undefined
+        }
+    }
+}
+
+
+/*function updateTableSeven() {
+    // Efface le contenu actuel du tableau
+    var table = document.getElementById('scoreTableSeven');
+    table.innerHTML = '';
+
+    // Génère les colonnes du tableau en fonction du nombre de joueurs
+    var headerRowSeven = table.insertRow(0);
+    headerRowSeven.insertCell(0);
+
+    for (var i = 1; i <= nombreJoueur; i++) {
+        var cell = headerRowSeven.insertCell(i);
+        cell.innerHTML = 'Joueur ' + i;
+        cell.style.backgroundColor = "BlanchedAlmond";
+    }
+
+    // Génère les lignes du tableau pour chaque catégorie
+    var categoriesSeven = ['Pièce', 'Merveille','Armée',' ',' ',' ',' ']; // Ajoutez d'autres catégories au besoin
+    var couleursSeven = ['grey','grey','red', 'blue', 'yellow', 'purple', 'green']; // Ajoutez d'autres couleurs au besoin
+    for (var i = 0; i < categoriesSeven.length; i++) {
+        var row = table.insertRow(-1);
+        var cell = row.insertCell(0);
+        cell.innerHTML = categoriesSeven[i];
+        cell.style.backgroundColor = couleursSeven[i];
+
+        for (var j = 1; j <= nombreJoueur; j++) {
+            var cell = row.insertCell(j);
+            // Retrieve stored values from elsewhere and populate the table with those values
+            // Assuming the stored values are in an array called 'storedValues'
+            cell.contentEditable = true;
+            cell.innerText = storedValues[i][j-1]; // Assuming the stored values are in a 2D array
+        }
+
+    }
+}
+
+
+*/
+
+
+/*
+
+ function updateTableSeven() {
+          
+
+            // Efface le contenu actuel du tableau
+            var table = document.getElementById('scoreTableSeven');
+            table.innerHTML = '';
+
+            // Génère les colonnes du tableau en fonction du nombre de joueurs
+            var headerRowSeven= table.insertRow(0);
+            headerRowSeven.insertCell(0);
+
+            for (var i = 1; i <= nombreJoueur; i++) {
+                var cell = headerRowSeven.insertCell(i);
+                cell.innerHTML = 'Joueur ' + i;
+           cell.style.backgroundColor ="BlanchedAlmond";
+            }
+
+            // Génère les lignes du tableau pour chaque catégorie
+            var categoriesSeven = [ 'Pièce', 'Merveille','Armée',' ',' ',' ',' ']; // Ajoutez d'autres catégories au besoin
+            var couleursSeven = [ 'grey','grey','red', 'blue', 'yellow', 'purple', 'green']; // Ajoutez d'autres couleurs au besoin
+            for (var i = 0; i < categoriesSeven.length; i++) {
+                var row = table.insertRow(-1);
+                var cell = row.insertCell(0);
+                cell.innerHTML = categoriesSeven[i];
+                cell.style.backgroundColor = couleursSeven[i];        
+                
+
+                for (var j = 1; j <= nombreJoueur; j++) {
+                    var cell = row.insertCell(j);
+                    cell.contentEditable = true;
+                }
+            }
+        }
+*/
+      function calculateScoresSeven() {
+            // Logique de calcul des: scores ici
+
+            // Exemple simple : addition des points par colonne
+            var totalPointsSeven = [];
+            var table = document.getElementById('scoreTableSeven');
+            
+            for (var i = 1; i < table.rows[0].cells.length; i++) {
+                var total = 0;
+                for (var j = 1; j < table.rows.length; j++) {
+                    total += parseInt(table.rows[j].cells[i].innerText) || 0;
+                }
+                totalPointsSeven.push(total);
+            }
+
+            // Afficher les scores finaux
+            var resultDivSeven = document.getElementById('resultSeven');
+            resultDivSeven.innerHTML = '<p>Scores Finaux :</p>';
+            for (var i = 0; i < totalPointsSeven.length; i++) {
+                resultDivSeven.innerHTML += '<p>Joueur ' + (i + 1) + ' : ' + totalPointsSeven[i] + ' points</p>';
+            }
+        }
