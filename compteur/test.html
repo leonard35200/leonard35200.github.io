@@ -1,0 +1,87 @@
+Bien sûr, voici le code modifié sans l'input et l'ancien bouton, et en appelant directement `updateTable()` lors du chargement de la page :
+
+```html
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feuille de Score 7 Wonders</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {}
+
+        .player-name {
+            font-weight: bold;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        #home-button {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            cursor: pointer;
+            font-size: 50px;
+        }
+    </style>
+
+    <script src="script.js"></script>
+</head>
+<body>
+    <div id="home-button">
+        <a href="index.html">🏡</a>
+    </div>
+
+    <h1>Feuille de Score 7 Wonders</h1>
+
+    <table id="scoreTable">
+        <thead>
+            <tr>
+                <th></th>
+                <!-- Colonnes générées dynamiquement pour les joueurs -->
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Lignes générées dynamiquement en fonction du nombre de joueurs -->
+        </tbody>
+    </table>
+
+    <button onclick="calculateScores()">Valider les Scores</button>
+
+    <div id="result"></div>
+
+    <script>
+        // Appelle updateTable() dès l'ouverture de la page
+        window.onload = function() {
+            updateTable();
+        };
+
+        function calculateScores() {
+            // ... (le reste de ton code calculateScores())
+        }
+    </script>
+</body>
+</html>
+```
+
+Cela affiche automatiquement le tableau lors de l'ouverture de la page

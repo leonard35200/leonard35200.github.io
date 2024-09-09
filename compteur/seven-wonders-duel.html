@@ -1,0 +1,88 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feuille de Score 7 Wonders duel</title>
+  <link rel="stylesheet" href="style.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {}
+
+        .player-name {
+            font-weight: bold;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        #home-button {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            cursor: pointer;
+            font-size: 50px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Bouton d'accueil -->
+    <div id="home-button">
+        <a href="index.html">🏡</a>
+    </div>
+
+    <h1>Feuille de Score 7 Wonders duel</h1>
+
+  <table id="scoreTableSeven">
+    <thead>
+        <tr>
+            <th></th>
+            <!-- Colonnes générées dynamiquement pour les joueurs -->
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Lignes générées dynamiquement en fonction du nombre de joueurs -->
+    </tbody>
+  </table>
+
+  <br />
+
+
+  <button 
+  class="styled-button";
+  onclick="calculateScoresSeven()">Valider les Scores</button>
+
+  <div id="resultSeven"></div>
+
+  
+  <script src="script.js">
+
+  </script>
+
+    
+</body>
+</html>
+
+
+
+
+

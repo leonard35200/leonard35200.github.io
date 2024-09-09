@@ -1,0 +1,92 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+th {}
+
+.player-name {
+    font-weight: bold;
+}
+
+#result {
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+#home-button {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+    cursor: pointer;
+    font-size: 50px;
+}
+
+
+
+body {
+  
+    background-color: purple;
+}
+
+
+.jeu {width: 22%;
+     border-radius: 20px;
+     }
+.nombre_joueur_btn {
+  background-color: red ;
+  border: none;
+  width: 22%;
+}
+
+
+.nombre_joueur_img {
+  width: 20%;
+  
+}
+        /* Style du bouton avec dégradé de couleur */
+        .styled-button {
+            background: linear-gradient( #3498db,#2c3e50); /* Dégradé de couleur de haut en bas */
+            color: #fff; /* Couleur du texte */
+            border: none; /* Supprimer la bordure */
+            padding: 10px 20px; /* Espacement interne */
+            text-align: center; /* Centrer le texte */
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            font-family: 'Arial', sans-serif; /* Police de caractères */
+            margin: 10px;
+            cursor: pointer;
+            border-radius: 5px; /* Coins arrondis */
+            transition: background 0.3s ease; /* Transition de couleur au survol */
+        }
+
+        /* Changement de couleur au survol */
+        .styled-button:hover {
+            background: linear-gradient(#3498db, #2c3e50);
+    }
+
+.numeric-cell {
+    border: none;
+    padding: 0;
+    width: 100%;
+    box-sizing: border-box;
+    outline: none; /* Supprime le contour d'activation par défaut */
+}
+#jeux{
+  display:none;
+}
+        
+

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+ <meta charset="UTF-8">
+ <title>Ajouter ou soustraire des points</title>
+</head>
+<body>
+ <script>
+
+  var nombreJoueurFinSabord = 5; // Initialiser avec le nombre de joueurs souhaité
+
+  // Tableau pour stocker les prénoms des joueurs
+  var nomsJoueurFin = ["Alice", "Bob", "Charlie", "David", "Eva"];
+
+  // Variables pour stocker les scores des joueurs
+  var nombrePointsJoueur1Sabord = 0;
+  var nombrePointsJoueur2Sabord = 0;
+  var nombrePointsJoueur3Sabord = 0;
+  var nombrePointsJoueur4Sabord = 0;
+  var nombrePointsJoueur5Sabord = 0;
+  // Fonction pour changer le nombre de joueurs
+  function changerNombreJoueursSabord(nouveauNombre) {
+   nombreJoueurFinSabord = nouveauNombre;
+   mettreAJourJoueursSabord();
+  }
+
+  // Fonction pour mettre à jour les joueurs en fonction du nombre
+  function mettreAJourJoueursSabord() {
+   // Supprimer tous les joueurs existants
+   var joueursExistantsSabord = document.querySelectorAll('.case');
+   joueursExistantsSabord.forEach(function(joueur) {
+    joueur.remove();
+   });
+
+   // Ajouter les nouveaux joueurs
+   for (var i = 0; i < nombreJoueurFinSabord; i++) {
+    ajouterJoueurSabord(i + 1);
+   }
+  }
+
+  // Fonction pour ajouter un nouveau joueur
+  function ajouterJoueurSabord(numeroJoueur) {
+   var nouveauJoueurSabord = document.createElement("div");
+   nouveauJoueurSabord.className = "case";
+
+   var prenomElementSabord = document.createElement("p");
+   prenomElementSabord.textContent = nomsJoueurFin[numeroJoueur - 1] ;
+   prenomElementSabord.className = "prenom";
+   nouveauJoueurSabord.appendChild(prenomElementSabord);
+
+   var scoreElementSabord = document.createElement("p");
+   scoreElementSabord.className = "score";
+   scoreElementSabord.textContent = getScoreJoueurSabord(numeroJoueur);
+
+   var boutonsSabord = document.createElement("div");
+   boutonsSabord.className = "boutons";
+
+   var boutonMoinsSabord = document.createElement("button");
+   boutonMoinsSabord.type = "button";
+   boutonMoinsSabord.className = "bouton-moins";
+   boutonMoinsSabord.textContent = "-";
+   boutonMoinsSabord.onclick = function() { retirerPointsSabord(numeroJoueur); };
+
+   var boutonPlusSabord = document.createElement("button");
+   boutonPlusSabord.type = "button";
+   boutonPlusSabord.className = "bouton-plus";
+   boutonPlusSabord.textContent = "+";
+   boutonPlusSabord.onclick = function() { ajouterPointsSabord(numeroJoueur); };
+
+   boutonsSabord.appendChild(boutonMoinsSabord);
+   boutonsSabord.appendChild(scoreElementSabord);
+   boutonsSabord.appendChild(boutonPlusSabord);
+
+   nouveauJoueurSabord.appendChild(boutonsSabord);
+   document.body.appendChild(nouveauJoueurSabord);
+  }
+
+  function retirerPointsSabord(numeroJoueur) {
+   var nombrePointsSabord = prompt("Combien de points voulez-vous retirer pour " + nomsJoueurFin[numeroJoueur - 1] + " Sabord ?");
+   if (nombrePointsSabord === null || nombrePointsSabord === "") {
+    return;
+   }
+
+   nombrePointsSabord = parseInt(nombrePointsSabord);
+   setScoreJoueurSabord(numeroJoueur, getScoreJoueurSabord(numeroJoueur) - nombrePointsSabord);
+   mettreAJourJoueursSabord();
+  }
+
+  function ajouterPointsSabord(numeroJoueur) {
+   var nombrePointsSabord = prompt("Combien de points voulez-vous ajouter pour " + nomsJoueurFin[numeroJoueur - 1] );
+   if (nombrePointsSabord === null || nombrePointsSabord === "") {
+    return;
+   }
+
+   nombrePointsSabord = parseInt(nombrePointsSabord);
+   setScoreJoueurSabord(numeroJoueur, getScoreJoueurSabord(numeroJoueur) + nombrePointsSabord);
+   mettreAJourJoueursSabord();
+  }
+
+  // Fonction pour récupérer le score d'un joueur
+  function getScoreJoueurSabord(numeroJoueur) {
+   return eval("nombrePointsJoueur" + numeroJoueur + "Sabord");
+  }
+
+  // Fonction pour définir le score d'un joueur
+  function setScoreJoueurSabord(numeroJoueur, score) {
+   eval("nombrePointsJoueur" + numeroJoueur + "Sabord = " + score);
+  }
+
+  // Initialiser les joueurs au chargement de la page
+  mettreAJourJoueursSabord();
+ </script>
+
+ <style>
+  .case {
+   width: 300px;
+   height: 200px;
+   border-radius: 10px;
+   background-color: #0000ff;
+   margin-bottom: 10px;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+  }
+
+  .prenom {
+   font-size: 18px;
+   font-weight: bold;
+   margin-bottom: 5px;
+  }
+
+  .score {
+   font-size: 24px;
+   margin: 5px 0;
+  }
+
+  .boutons {
+   width: 200px;
+   height: 50px;
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+  }
+
+  .bouton-moins,
+  .bouton-plus {
+   width: 50px;
+   height: 50px;
+   border-radius: 50%;
+   font-size: 24px;
+   cursor: pointer;
+  }
+
+  .bouton-moins {
+   background-color: red;
+   color: white;
+  }
+
+  .bouton-plus {
+   background-color: green;
+   color: white;
+  }
+ </style>
+</body>
+</html>

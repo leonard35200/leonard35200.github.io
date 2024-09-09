@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Écoute de musique</title>
+</head>
+<body>
+  <!-- home-button.html -->
+<style>
+  #home-button {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+    cursor: pointer;
+    font-size: 50px; /* Ajustez cette valeur selon vos besoins */
+  }
+</style>
+
+<!-- Bouton d'accueil -->
+<div id="home-button">
+  <a href="index.html">🏡</a>
+</div>
+
+<audio id="myAudio" controls>
+  <source src="7 WondersDuel Son.mp3" type="audio/mp3">
+  Votre navigateur ne supporte pas l'élément audio.
+</audio>
+
+<button onclick="playMusic()">Lancer la musique</button>
+
+<script>
+  let audio = document.getElementById("myAudio");
+
+  function playMusic() {
+    if (audio.paused) {
+      audio.play();
+    } else {
+      audio.pause();
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("visibilitychange", function() {
+      if (document.hidden) {
+        audio.pause();
+      } else {
+        audio.play();
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

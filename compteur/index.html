@@ -1,0 +1,236 @@
+<!doctype html>
+<html style="height: 100%; width: 100%;" lang="fr">
+ 
+<link rel="stylesheet" href="style.css" />
+<style>
+div {width: 100%
+    }
+  
+  .jeu {width: 23%;
+   border-radius: 30%;
+      
+     }
+
+  
+.nombre_joueur_btn {
+  background-color:purple;
+  border: none; 
+  width: 13%;
+}
+
+
+.nombre_joueur_img {
+  width: 100%;
+
+  }
+
+input{
+  width:23%;
+}
+  
+</style>
+
+<head>
+ <title>Compteur de score</title>
+</head>
+
+  
+<body>
+   
+  
+  <div>
+  <h2 style="text-align: center;"> Combien de joueurs êtes vous ?</h2>
+  <button class="nombre_joueur_btn"
+    >
+    <img onclick="unJoueur()"
+      class="nombre_joueur_img montrer"
+src="image/un.png" />
+  </button>
+
+  <button 
+    onclick="deuxJoueurs()"
+    class="nombre_joueur_btn montrer">
+    <img class="nombre_joueur_img"
+src="image/deux.png"
+  </button>
+
+  <button 
+    onclick="troisJoueurs()"
+    class="nombre_joueur_btn montrer">
+    <img class="nombre_joueur_img"
+src="image/trois.png">
+  </button>
+  
+  <button 
+    onclick="quatreJoueurs()"
+    class="nombre_joueur_btn montrer">
+    <img class="nombre_joueur_img"
+      src="image/quatre.png">
+  </button>
+  
+  <button
+    onclick="cinqJoueurs()"
+    class="nombre_joueur_btn montrer">
+    <img class="nombre_joueur_img"
+      src="image/cinq.png">
+  </button>
+
+  <button 
+    onclick="sixJoueurs()"
+    class="nombre_joueur_btn montrer">
+    <img class="nombre_joueur_img "
+      src="image/six.png">
+  </button>
+  
+  <button
+    onclick="septJoueurs()"
+    class="nombre_joueur_btn montrer">
+    <img class="nombre_joueur_img"
+      src="image/sept.png">
+  </button>
+
+
+<br />
+
+  
+    <p id="nombreJoueur"> </p>
+    
+    
+</div>
+  
+ 
+<div id="cacher" style="display:block;">
+
+
+<fieldset
+  style="border-radius: 30px;"
+  style="baground-color: blue;"
+  >
+  <legend> Nom des joueurs </legend>
+  
+  <h2 style="text-align: center;"> Entrez le nom des joueurs </h2>
+  <a href=mille-sabord2.html>maille sabors</a>
+  
+  <div id="inputsContainer"></div>
+
+  
+ <!-- <input class="input_nom_joueur" type="text" placeholder="Nom du joueur 1" id="nombreJoueurUn">
+  <input class="input_nom_joueur" type="text" placeholder="Nom du joueur 2" id="nombreJoueurDeux">
+  <input class="input_nom_joueur" type="text" placeholder="Nom du joueur 3" id="nombreJoueurTrois">
+  <input class="input_nom_joueur" type="text" placeholder="Nom du joueur 4" id="nombreJoueurQuatre"> -->
+  
+  <br />
+  <button
+    onclick="saveInputValues()"
+    id="camarche"> valider</button>
+
+
+  
+  <p id="nombb"> </p>
+</fieldset>
+
+    
+  </div> 
+
+  
+<div  display id="jeux">
+  
+<h2 style="text-align: center;">À quel jeu veut-tu jouer ?</h2>
+
+  <a  href="javascript:void(0)" 
+    onclick="choisirPremierJoueur()" > <img 
+      class="jeu"                          
+    src="image/dée.png" />
+   </a>
+  <a href=/mille-sabord.html > <img 
+    class="jeu"
+    src="image/mille-sabords (1).webp" />
+   </a>
+ <a href=/skydjo.html> <img 
+  class="jeu"                       src="image/skydjo.png" /> </a>
+  
+ <a href=/skull-king.html><img 
+ class="jeu"                       src="image/skull king.png"/>
+ </a>
+<a href="/petite-bourgade.html">
+  <img 
+ class="jeu"   src="image/petite bourgade.png" />
+</a>
+  <a href="/seven-wonders.html">
+    <img 
+   class="jeu"   src="image/7 wonders.jpg" />
+  </a>
+
+  <a href="/seven-wonders-duel.html">
+    <img 
+   class="jeu"   src="image/7 wonders duel.webp" />
+  </a>
+  
+  <a href="/seven-wonders-architects.html">
+    <img 
+     class="jeu" src="image/7 wonders architecte.png" />
+  </a>
+
+  <a href="Conspiracy.html">
+    <img
+       class="jeu" src="image/conspiracy.jpg" />
+  </a>
+
+  <a href="Nidavellir.html">
+    <img 
+     class="jeu"   src="image/nidavellir.png" />
+  </a>
+
+    <a href="https://turingmachine.info/">
+    <img 
+     class="jeu" src="image/turing machine.jpeg" />
+    </a>
+
+  <a href="musique seven wonders.html">
+    <img 
+     class="jeu" src="image/musique 7.jpg" />
+  </a>
+  
+  <a href="musique mysterium.html">
+    <img 
+     class="jeu" src="musoque mysterium.png" />
+  </a>
+
+  <a href="musique jaipur.html">
+    <img 
+     class="jeu" src="image/musique jaipur.png" />
+  </a>
+
+  <a href="musique nidevallir.html">
+    <img 
+     class="jeu" src="image/musique nidavellir.png" />
+  </a>
+  
+ <a href="Musique district noir.html">
+    <img 
+     class="jeu" src="musique-district-noir.png" />
+  </a>
+  <fieldset>
+    <legend> Chose a faire </legend>
+    <div>
+      <input placeholder="cc" style="background-color:red;"
+       />
+      
+       <ul>
+          <li>ajouter jardin de babylone zvec iput coloré pour les différentes fontaine ishtar.</li>
+         <li>peut etre ajouter un générateur de hasard qui choisi le premier joueur </li>
+         
+         
+         
+         
+       </ul>
+       
+    </div>
+  </fieldset>
+    
+  
+<a href="test.html">Lien vers la page test</a>
+  <a href="a.html"> lien vers la page a</a>
+  <script src="script.js"></script>
+</body>
+</html>
