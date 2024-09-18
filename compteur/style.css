@@ -44,6 +44,7 @@ body {
 
 .jeu {width: 22%;
      border-radius: 20px;
+     object-fit: cover;
      }
 .nombre_joueur_btn {
   background-color: red ;
