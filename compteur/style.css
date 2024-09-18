@@ -42,7 +42,7 @@ body {
 }
 
 
-.jeu {width: 22%;
+.jeu {width: 100%;
      border-radius: 20px;
      object-fit: cover;
      }
