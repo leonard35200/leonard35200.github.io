@@ -193,7 +193,6 @@ window.addEventListener('load', function() {
     // Vérifier si la page actuelle est "seven-wonders.html"
     if (window.location.pathname.endsWith("seven-wonders-architects.html") ) {
         updateTableSeven(categoriesSevenWonders, couleursSevenWonders);
-      alert("etape de la merveille, chat oui/non, carte bleu, victoire militaires, progres");
     }
 });
 
