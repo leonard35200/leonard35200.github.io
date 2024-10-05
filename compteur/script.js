@@ -205,9 +205,8 @@ window.addEventListener('load', function() {
 
 
 window.addEventListener('load', function() {
-    // Vérifier si la page actuelle est "seven-wonders.html"
-    if (window.location.pathname.endsWith("petite-bourgade.html") ) {
-        updateTableSeven(categoriesSevenWonders, couleursSevenWonders);
+     if (window.location.pathname.endsWith("petite-bourgade.html") ) {
+        updateTableSeven(categoriesPetitesBourgades, couleursPetitesBourgades, imagesPetitesBourgades);
     }
 });
 
