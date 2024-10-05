@@ -102,9 +102,20 @@ sessionStorage.setItem('nomsJoueur', JSON.stringify(nomsJoueur));
 
 function updateTableSeven(categorie, couleurs, images) {
     var nomsJoueurs = JSON.parse(sessionStorage.getItem('nomsJoueur'));
-    console.log(nomsJoueurs);
+    console.log('nomsJoueurs:', nomsJoueurs);
+    console.log('nombreJoueurFin:', nombreJoueurFin);
+
+    if (!nombreJoueurFin || isNaN(nombreJoueurFin)) {
+        console.error('Erreur : nombreJoueurFin est invalide ou non défini');
+        return;
+    }
 
     var table = document.getElementById('scoreTableSeven');
+    if (!table) {
+        console.error('Tableau non trouvé !');
+        return;
+    }
+
     table.innerHTML = '';
 
     var headerRowSeven = table.insertRow(0);
@@ -112,7 +123,7 @@ function updateTableSeven(categorie, couleurs, images) {
 
     for (var i = 1; i <= nombreJoueurFin; i++) {
         var cell = headerRowSeven.insertCell(i);
-        cell.innerHTML = nomsJoueurFin[i - 1];
+        cell.innerHTML = nomsJoueurs[i - 1] || 'Joueur ' + i;
         cell.style.backgroundColor = "BlanchedAlmond";
     }
 
@@ -120,14 +131,13 @@ function updateTableSeven(categorie, couleurs, images) {
         var row = table.insertRow(-1);
         var cell = row.insertCell(0);
 
-        // Condition pour éviter les images ou catégories vides
         if (images && images[i]) {
             cell.innerHTML = '<img src="' + images[i] + '" alt="' + (categorie[i] || 'Catégorie') + '" style="width:50px;height:50px;">';
         } else {
-            cell.innerHTML = categorie[i] || 'Catégorie';  // Utiliser 'Catégorie' si la catégorie est vide
+            cell.innerHTML = categorie[i] || 'Catégorie';
         }
 
-        cell.style.backgroundColor = couleurs[i] || 'white';  // Couleur par défaut si vide
+        cell.style.backgroundColor = couleurs[i] || 'white';
 
         for (var j = 1; j <= nombreJoueurFin; j++) {
             var cell = row.insertCell(j);
@@ -135,6 +145,14 @@ function updateTableSeven(categorie, couleurs, images) {
         }
     }
 }
+
+window.addEventListener('load', function() {
+    setTimeout(function() {
+        if (window.location.pathname.endsWith("petite-bourgade.html") ) {
+            updateTableSeven(categoriesPetitesBourgardes, couleursPetitesBourgades, imagesPetitesBourgardes);
+        }
+    }, 100);
+});
 function calculateScoresSeven() {
     // Logique de calcul des scores ici (omise pour la clartÃ©)
 
