@@ -101,37 +101,33 @@ sessionStorage.setItem('nomsJoueur', JSON.stringify(nomsJoueur));
 }
 
 function updateTableSeven(categorie, couleurs, images) {
-
     var nomsJoueurs = JSON.parse(sessionStorage.getItem('nomsJoueur'));
     console.log(nomsJoueurs);
-  
-    // Efface le contenu actuel du tableau
+
     var table = document.getElementById('scoreTableSeven');
     table.innerHTML = '';
 
-    // Génère les colonnes du tableau en fonction du nombre de joueurs
     var headerRowSeven = table.insertRow(0);
     headerRowSeven.insertCell(0);
 
     for (var i = 1; i <= nombreJoueurFin; i++) {
         var cell = headerRowSeven.insertCell(i);
-        cell.innerHTML = nomsJoueurFin[i-1];
+        cell.innerHTML = nomsJoueurFin[i - 1];
         cell.style.backgroundColor = "BlanchedAlmond";
     }
 
-    // Génère les lignes du tableau pour chaque catégorie avec les images
     for (var i = 0; i < categorie.length; i++) {
         var row = table.insertRow(-1);
         var cell = row.insertCell(0);
 
-        // Ajouter une image dans la cellule de la première colonne
+        // Condition pour éviter les images ou catégories vides
         if (images && images[i]) {
-            cell.innerHTML = '<img src="' + images[i] + '" alt="' + categorie[i] + '" style="width:50px;height:50px;">';
+            cell.innerHTML = '<img src="' + images[i] + '" alt="' + (categorie[i] || 'Catégorie') + '" style="width:50px;height:50px;">';
         } else {
-            cell.innerHTML = categorie[i];
+            cell.innerHTML = categorie[i] || 'Catégorie';  // Utiliser 'Catégorie' si la catégorie est vide
         }
 
-        cell.style.backgroundColor = couleurs[i];
+        cell.style.backgroundColor = couleurs[i] || 'white';  // Couleur par défaut si vide
 
         for (var j = 1; j <= nombreJoueurFin; j++) {
             var cell = row.insertCell(j);
