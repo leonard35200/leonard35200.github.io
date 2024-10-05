@@ -1,31 +1,68 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="fr">
 <head>
- <title>mille sabord</title>
- <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Score des Joueurs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        .player-container {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px;
+        }
+
+        .player {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 120px;
+        }
+
+        .player h3 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        .score {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
-  <!-- home-button.html -->
-<style>
-  #home-button {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    z-index: 1000;
-    cursor: pointer;
-    font-size: 50px; /* Ajustez cette valeur selon vos besoins */
-  }
-</style>
+    <div id="players" class="player-container"></div>
 
-<!-- Bouton d'accueil -->
-<div id="home-button">
-  <a href="index.html">🏡</a>
-</div>
+    <script>
+        // Définissez le nombre de joueurs ici
+        const nombreJoueurs = 4;
 
- <script src="script.js"></script>
- <h1>Bienvenue sur le compteur de score de mille sabord .</h1>
- </body>
+        // Fonction pour générer les cases des joueurs
+        function genererCasesJoueurs(nombre) {
+            const playerContainer = document.getElementById('players');
+
+            for (let i = 1; i <= nombre; i++) {
+                const playerDiv = document.createElement('div');
+                playerDiv.className = 'player';
+                playerDiv.innerHTML = `
+                    <h3>Joueur ${i}</h3>
+                    <div class="score">Score: ${Math.floor(Math.random() * 100)}</div>
+                `;
+                playerContainer.appendChild(playerDiv);
+            }
+        }
+
+        // Appel de la fonction pour afficher les joueurs
+        genererCasesJoueurs(nombreJoueurs);
+    </script>
+</body>
 </html>
-
- 
- 
