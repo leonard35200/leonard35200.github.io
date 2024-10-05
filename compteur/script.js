@@ -95,44 +95,45 @@ sessionStorage.setItem('nomsJoueur', JSON.stringify(nomsJoueur));
  divJeux.style.display = "block";
 }
 
-function updateTableSeven(categorie, couleurs) {
+function updateTableSeven(categorie, couleurs, images) {
 
-  var nomsJoueurs = JSON.parse(sessionStorage.getItem('nomsJoueur'));
-  console.log(nomsJoueurs);
-  console.log();
+    var nomsJoueurs = JSON.parse(sessionStorage.getItem('nomsJoueur'));
+    console.log(nomsJoueurs);
   
+    // Efface le contenu actuel du tableau
+    var table = document.getElementById('scoreTableSeven');
+    table.innerHTML = '';
 
-            // Efface le contenu actuel du tableau
-            var table = document.getElementById('scoreTableSeven');
-            table.innerHTML = '';
+    // Génère les colonnes du tableau en fonction du nombre de joueurs
+    var headerRowSeven = table.insertRow(0);
+    headerRowSeven.insertCell(0);
 
-            // Génère les colonnes du tableau en fonction du nombre de joueurs
-            var headerRowSeven= table.insertRow(0);
-            headerRowSeven.insertCell(0);
+    for (var i = 1; i <= nombreJoueurFin; i++) {
+        var cell = headerRowSeven.insertCell(i);
+        cell.innerHTML = nomsJoueurFin[i-1];
+        cell.style.backgroundColor = "BlanchedAlmond";
+    }
 
-            for (var i = 1; i <= nombreJoueurFin; i++) {
-                var cell = headerRowSeven.insertCell(i);
-                cell.innerHTML = nomsJoueurFin[i-1];
-           cell.style.backgroundColor ="BlanchedAlmond";
-            }
+    // Génère les lignes du tableau pour chaque catégorie avec les images
+    for (var i = 0; i < categorie.length; i++) {
+        var row = table.insertRow(-1);
+        var cell = row.insertCell(0);
 
-            // Génère les lignes du tableau pour chaque catégorie
-             // Ajoutez d'autres catégories au besoin
-             // Ajoutez d'autres couleurs au besoin
-            for (var i = 0; i < categorie.length; i++) {
-                var row = table.insertRow(-1);
-                var cell = row.insertCell(0);
-                cell.innerHTML = categorie[i];
-                cell.style.backgroundColor = couleurs[i];        
-
-
-                for (var j = 1; j <= nombreJoueurFin; j++) {
-                    var cell = row.insertCell(j);
-                    cell.contentEditable = true;
-                }
-            }
+        // Ajouter une image dans la cellule de la première colonne
+        if (images && images[i]) {
+            cell.innerHTML = '<img src="' + images[i] + '" alt="' + categorie[i] + '" style="width:50px;height:50px;">';
+        } else {
+            cell.innerHTML = categorie[i];
         }
 
+        cell.style.backgroundColor = couleurs[i];
+
+        for (var j = 1; j <= nombreJoueurFin; j++) {
+            var cell = row.insertCell(j);
+            cell.contentEditable = true;
+        }
+    }
+}
 function calculateScoresSeven() {
     // Logique de calcul des scores ici (omise pour la clartÃ©)
 
