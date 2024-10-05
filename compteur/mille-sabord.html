@@ -42,27 +42,8 @@
 <body>
     <div id="players" class="player-container"></div>
 
-    <script>
-        // Définissez le nombre de joueurs ici
-        const nombreJoueurs = 4;
-
-        // Fonction pour générer les cases des joueurs
-        function genererCasesJoueurs(nombre) {
-            const playerContainer = document.getElementById('players');
-
-            for (let i = 1; i <= nombre; i++) {
-                const playerDiv = document.createElement('div');
-                playerDiv.className = 'player';
-                playerDiv.innerHTML = `
-                    <h3>Joueur ${i}</h3>
-                    <div class="score">Score: ${Math.floor(Math.random() * 100)}</div>
-                `;
-                playerContainer.appendChild(playerDiv);
-            }
-        }
-
-        // Appel de la fonction pour afficher les joueurs
-        genererCasesJoueurs(nombreJoueurs);
+    <script src="script.js">
+        
     </script>
 </body>
 </html>
