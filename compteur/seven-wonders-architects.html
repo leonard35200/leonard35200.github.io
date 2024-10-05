@@ -1,8 +1,39 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="fr">
 <head>
- <title>7 wonders architects</title>
- <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feuille de seven wonders architects</title>
+  <link rel="stylesheet" href="style.css" />
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {}
+
+        .player-name {
+            font-weight: bold;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
   <!-- home-button.html -->
@@ -21,10 +52,21 @@
 <div id="home-button">
   <a href="index.html">🏡</a>
 </div>
- <script src="script.js"></script>
- <h1>Bienvenue sur le compteur de score de 7 wonders architects .</h1>
 
-  <table id="scoreTableSeven">
+    <h1>
+      Feuille de Score de Seven Wonders Architects</h1>
+<!--
+    <label for="numPlayers">Nombre de joueurs :</label>
+    <input type="number" id="numPlayersSeven" min="1" max="7" value="3">
+    <button onclick="updateTableSeven()">Mettre à jour le tableau</button>_
+  <button
+    onclick="test()">
+
+test
+  </button>
+  -->
+
+   <table id="scoreTableSeven">
      <thead>
          <tr>
              <th></th>
@@ -44,5 +86,71 @@
    onclick="calculateScoresSeven()">Valider les Scores</button>
 
    <div id="resultSeven"></div>
- </body>
+
+   <!-- Insérer votre commentaire  
+  
+  <script>
+        function updateTableSeven() {
+            var numPlayersSeven = parseInt(document.getElementById('numPlayersSeven').value);
+
+            // Efface le contenu actuel du tableau
+            var table = document.getElementById('scoreTableSeven');
+            table.innerHTML = '';
+
+            // Génère les colonnes du tableau en fonction du nombre de joueurs
+            var headerRowSeven= table.insertRow(0);
+            headerRowSeven.insertCell(0);
+
+            for (var i = 1; i <= numPlayersSeven; i++) {
+                var cell = headerRowSeven.insertCell(i);
+                cell.innerHTML = 'Joueur ' + i;
+           cell.style.backgroundColor ="BlanchedAlmond";
+            }
+
+            // Génère les lignes du tableau pour chaque catégorie
+            var categoriesSeven = [ 'Pièce', 'Merveille','Armée',' ',' ',' ',' ']; // Ajoutez d'autres catégories au besoin
+            var couleursSeven = [ 'grey','grey','red', 'blue', 'yellow', 'purple', 'green']; // Ajoutez d'autres couleurs au besoin
+            for (var i = 0; i < categoriesSeven.length; i++) {
+                var row = table.insertRow(-1);
+                var cell = row.insertCell(0);
+                cell.innerHTML = categoriesSeven[i];
+                cell.style.backgroundColor = couleursSeven[i];        
+                
+
+                for (var j = 1; j <= numPlayersSeven; j++) {
+                    var cell = row.insertCell(j);
+                    cell.contentEditable = true;
+                }
+            }
+        }
+
+        function calculateScoresSeven() {
+            // Logique de calcul des scores ici
+
+            // Exemple simple : addition des points par colonne
+            var totalPointsSeven = [];
+            var table = document.getElementById('scoreTableSeven');
+            
+            for (var i = 1; i < table.rows[0].cells.length; i++) {
+                var total = 0;
+                for (var j = 1; j < table.rows.length; j++) {
+                    total += parseInt(table.rows[j].cells[i].innerText) || 0;
+                }
+                totalPointsSeven.push(total);
+            }
+
+            // Afficher les scores finaux
+            var resultDivSeven = document.getElementById('resultSeven');
+            resultDivSeven.innerHTML = '<p>Scores Finaux :</p>';
+            for (var i = 0; i < totalPointsSeven.length; i++) {
+                resultDivSeven.innerHTML += '<p>Joueur ' + (i + 1) + ' : ' + totalPointsSeven[i] + ' points</p>';
+            }
+        }
+</script --->
+  <script src="script.js">
+
+  </script>
+
+
+</body>
 </html>
