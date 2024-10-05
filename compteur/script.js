@@ -101,6 +101,7 @@ sessionStorage.setItem('nomsJoueur', JSON.stringify(nomsJoueur));
 }
 
 function updateTableSeven(categorie, couleurs, images) {
+    console.log("salut");
     var nomsJoueurs = JSON.parse(sessionStorage.getItem('nomsJoueur'));
     console.log('nomsJoueurs:', nomsJoueurs);
     console.log('nombreJoueurFin:', nombreJoueurFin);
