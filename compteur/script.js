@@ -11,7 +11,7 @@ let couleursSevenWondersDuel = [ 'royalblue','green','gold',"#7B1FA2", '#FFECB3'
 
 let categoriesPetitesBourgardes = ["","","","","","","",""]
 let couleursPetitesBourgardes = ["","","","","","","",""]
-let categoriesPetitesBourgardes = ["Usine.png","Maison.png","Eglise.png","Taverne.png","jaune.png","puit.png","tour.png","casevide.png"]
+let imagesPetitesBourgardes = ["Usine.png","Maison.png","Eglise.png","Taverne.png","jaune.png","puit.png","tour.png","casevide.png"]
 
 
 function test(){
