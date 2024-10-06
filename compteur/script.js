@@ -1,4 +1,4 @@
-delet nombreJoueur = 1;
+let nombreJoueur = 1;
 let nomsJoueur = [];
 let nomsJoueurFin = JSON.parse(sessionStorage.getItem('nomsJoueur'));
 let nombreJoueurFin = sessionStorage.getItem('nombreJoueur');
