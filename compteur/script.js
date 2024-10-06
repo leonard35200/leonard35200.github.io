@@ -1,3 +1,4 @@
+let nombreJoueur = 1;
 let nomsJoueur = [];
 let nomsJoueurFin = JSON.parse(sessionStorage.getItem('nomsJoueur'));
 let nombreJoueurFin = sessionStorage.getItem('nombreJoueur');
@@ -8,9 +9,9 @@ let couleursSevenWonders = [ 'grey','grey','red', 'blue', 'yellow', 'purple', 'g
 let categoriesSevenWondersDuel = [" "," ", " "," ", "merveille","scientifique","pièces",""];
 let couleursSevenWondersDuel = [ 'royalblue','green','gold',"#7B1FA2", '#FFECB3',"#2E7D32", "#FDD835","#C62828"];
 
-let categoriesPetitesBourgardes = ["salut","","","","","","",""]
+let categoriesPetitesBourgardes = ["","","","","","","",""]
 let couleursPetitesBourgardes = ["","","","","","","",""]
-//let imagesPetitesBourgardes = ["Usine.png","Maison.png","Eglise.png","Taverne.png","jaune.png","puit.png","tour.png","casevide.png"]
+let imagesPetitesBourgardes = ["Usine.png","Maison.png","Eglise.png","Taverne.png","jaune.png","puit.png","tour.png","casevide.png"]
 
 
 function test(){
@@ -100,44 +101,37 @@ sessionStorage.setItem('nomsJoueur', JSON.stringify(nomsJoueur));
 }
 
 function updateTableSeven(categorie, couleurs, images) {
-    console.log("salut");
+
     var nomsJoueurs = JSON.parse(sessionStorage.getItem('nomsJoueur'));
-    console.log('nomsJoueurs:', nomsJoueurs);
-    console.log('nombreJoueurFin:', nombreJoueurFin);
-
-    if (!nombreJoueurFin || isNaN(nombreJoueurFin)) {
-        console.error('Erreur : nombreJoueurFin est invalide ou non défini');
-        return;
-    }
-
+    console.log(nomsJoueurs);
+  
+    // Efface le contenu actuel du tableau
     var table = document.getElementById('scoreTableSeven');
-    if (!table) {
-        console.error('Tableau non trouvé !');
-        return;
-    }
-
     table.innerHTML = '';
 
+    // Génère les colonnes du tableau en fonction du nombre de joueurs
     var headerRowSeven = table.insertRow(0);
     headerRowSeven.insertCell(0);
 
     for (var i = 1; i <= nombreJoueurFin; i++) {
         var cell = headerRowSeven.insertCell(i);
-        cell.innerHTML = nomsJoueurs[i - 1] || 'Joueur ' + i;
+        cell.innerHTML = nomsJoueurFin[i-1];
         cell.style.backgroundColor = "BlanchedAlmond";
     }
 
+    // Génère les lignes du tableau pour chaque catégorie avec les images
     for (var i = 0; i < categorie.length; i++) {
         var row = table.insertRow(-1);
         var cell = row.insertCell(0);
 
+        // Ajouter une image dans la cellule de la première colonne
         if (images && images[i]) {
-            cell.innerHTML = '<img src="' + images[i] + '" alt="' + (categorie[i] || 'Catégorie') + '" style="width:50px;height:50px;">';
+            cell.innerHTML = '<img src="' + images[i] + '" alt="' + categorie[i] + '" style="width:50px;height:50px;">';
         } else {
-            cell.innerHTML = categorie[i] || 'Catégorie';
+            cell.innerHTML = categorie[i];
         }
 
-        cell.style.backgroundColor = couleurs[i] || 'white';
+        cell.style.backgroundColor = couleurs[i];
 
         for (var j = 1; j <= nombreJoueurFin; j++) {
             var cell = row.insertCell(j);
@@ -145,14 +139,6 @@ function updateTableSeven(categorie, couleurs, images) {
         }
     }
 }
-
-window.addEventListener('load', function() {
-    setTimeout(function() {
-        if (window.location.pathname.endsWith("petite-bourgade.html") ) {
-            updateTableSeven(categoriesPetitesBourgardes, couleursPetitesBourgades, imagesPetitesBourgardes);
-        }
-    }, 100);
-});
 function calculateScoresSeven() {
     // Logique de calcul des scores ici (omise pour la clartÃ©)
 
@@ -220,7 +206,7 @@ window.addEventListener('load', function() {
 
 window.addEventListener('load', function() {
      if (window.location.pathname.endsWith("petite-bourgade.html") ) {
-        updateTableSeven(categoriesSevenWonders, couleursSevenWonders);
+        updateTableSeven(categoriesPetitesBourgades, couleursPetitesBourgades, imagesPetitesBourgades);
     }
 });
 
@@ -239,3 +225,4 @@ function choisirPremierJoueur() {
 }
 
 
+Pourquoi le tableau petite bourgade ne charge plus
