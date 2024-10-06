@@ -13,7 +13,7 @@ let couleursSevenWondersDuel = [ 'royalblue','green','gold',"#7B1FA2", '#FFECB3'
 
 let categoriesPetitesBourgardes = ["Usine","Maison","Eglise","Taverne","Jaune","Puit","Tour","Case Vide"];
 let couleursPetitesBourgardes = ["#CCCCCC","#FFFFFF","#FF0000","#00FF00","#FFFF00","#0000FF","#800080","#FFFFFF"];
-let imagesPetitesBourgardes = ["image/Usine.png","image/Maison.png","image/Eglise.png","image/Taverne.png","image/jaune.png","image/puit.png","image/tour.png","image/casevide.png"];
+let imagesPetitesBourgardes = ["image/Usine.png","image/Maison.png","image/Eglise.png","image/Taverne.png","image/Jaune.png","image/Puit.png","image/Tour.png","image/Casevide.png"];
 
 // Fonctions pour changer le nombre de joueurs
 function changerNombreJoueur(value) {
