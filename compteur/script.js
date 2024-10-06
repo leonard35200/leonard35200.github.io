@@ -221,7 +221,7 @@ window.addEventListener('load', function() {
 
 window.addEventListener('load', function() {
      if (window.location.pathname.endsWith("petite-bourgade.html") ) {
-        updateTableSeven(categoriesPetitesBourgades, couleursPetitesBourgades);
+        updateTableSeven(categoriesSevenWonders, couleursSevenWonders);
     }
 });
 
