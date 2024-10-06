@@ -9,7 +9,7 @@ let couleursSevenWonders = [ 'grey','grey','red', 'blue', 'yellow', 'purple', 'g
 let categoriesSevenWondersDuel = [" "," ", " "," ", "merveille","scientifique","pièces",""];
 let couleursSevenWondersDuel = [ 'royalblue','green','gold',"#7B1FA2", '#FFECB3',"#2E7D32", "#FDD835","#C62828"];
 
-let categoriesPetitesBourgardes = ["","","","","","","",""]
+let categoriesPetitesBourgardes = ["salut","","","","","","",""]
 let couleursPetitesBourgardes = ["","","","","","","",""]
 //let imagesPetitesBourgardes = ["Usine.png","Maison.png","Eglise.png","Taverne.png","jaune.png","puit.png","tour.png","casevide.png"]
 
