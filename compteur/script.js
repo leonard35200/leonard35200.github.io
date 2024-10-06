@@ -1,4 +1,4 @@
-let nombreJoueur = 1;
+delet nombreJoueur = 1;
 let nomsJoueur = [];
 let nomsJoueurFin = JSON.parse(sessionStorage.getItem('nomsJoueur'));
 let nombreJoueurFin = sessionStorage.getItem('nombreJoueur');
@@ -221,7 +221,7 @@ window.addEventListener('load', function() {
 
 window.addEventListener('load', function() {
      if (window.location.pathname.endsWith("petite-bourgade.html") ) {
-        updateTableSeven(categoriesPetitesBourgades, couleursPetitesBourgades, imagesPetitesBourgades);
+        updateTableSeven(categoriesPetitesBourgades, couleursPetitesBourgades);
     }
 });
 
