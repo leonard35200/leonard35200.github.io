@@ -560,4 +560,40 @@ document.getElementById('scoreForm').addEventListener('submit', function(event) 
 
 // Mettre à jour le joueur actuel et son affichage
 function mettreAJourJoueurActuel() {
-    const currentPlayerDiv = document
+       const currentPlayerDiv = document.getElementById('currentPlayer');
+    currentPlayerDiv.textContent = joueurs[joueurActuelIndex].nom; // Met à jour le texte avec le nom du joueur actuel
+}
+
+// Fonction pour déterminer le gagnant avec le score le plus élevé
+function determinerGagnant() {
+    let maxScore = -Infinity;
+    let gagnant = null;
+
+    joueurs.forEach(joueur => {
+        if (joueur.score > maxScore) {
+            maxScore = joueur.score;
+            gagnant = joueur;
+        }
+    });
+    
+    return gagnant;
+}
+
+
+// Fonction pour marquer le gagnant
+function marquerGagnant(gagnant) {
+  
+}
+   
+
+            document.getElementById('skullButton').addEventListener('click', function() {
+                activerSkullMode();
+            });
+
+            // Initialisation de la page
+            genererCasesJoueurs();
+            mettreAJourJoueurActuel();
+        });
+    </script>
+</body>
+</html>
