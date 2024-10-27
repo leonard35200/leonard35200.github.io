@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Score des Joueurs avec Suivi Graphique</title>
+    <title>feuille de score de mille sabord</title>
     <style>
         /* Réinitialisation des marges et padding */
         * {
@@ -254,8 +254,10 @@
         document.addEventListener('DOMContentLoaded', function() {
             
             
- let nomsJoueurFin = JSON.parse(sessionStorage.getItem('nomsJoueur')) || [];
-let nombreJoueurFin = parseInt(sessionStorage.getItem('nombreJoueur')) || 1; 
+ <!-- let nomsJoueurFin = JSON.parse(sessionStorage.getItem('nomsJoueur')) || [];-->
+<!--let nombreJoueurFin = parseInt(sessionStorage.getItem('nombreJoueur')) || 1; -->
+let nomsJoueurFin = ["leo","ars","fre"];
+let nombreJoueurFin = 3;
             const joueurs = [];
             const historiqueScores = {};
             let joueurActuelIndex = 0;
