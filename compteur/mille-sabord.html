@@ -264,7 +264,7 @@ let nombreJoueurFin = parseInt(sessionStorage.getItem('nombreJoueur')) || 1;
             let nombreDeTours = 1; // Initialisation du compteur de tours
 
             for (let i = 1; i <= nombreJoueurFin; i++) {
-                joueurs.push({ nom: `Joueur ${i}`, score: 0, aDepasse: false });
+                joueurs.push({ nom: `${nomsJoueurFin[i]}`, score: 0, aDepasse: false });
                 historiqueScores[`Joueur ${i}`] = [0];
             }
 
