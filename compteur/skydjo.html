@@ -298,3 +298,314 @@ let nombreJoueurFin = parseInt(sessionStorage.getItem('nombreJoueur')) || 1;
                     `;
                     playerContainer.appendChild(playerDiv);
                 });
+
+
+            function determinerLeader() {
+                let maxScore = -Infinity;
+                let leaderIndex = -1;
+
+                joueurs.forEach((joueur, index) => {
+                    if (joueur.score > maxScore) {
+                        maxScore = joueur.score;
+                        leaderIndex = index;
+                    }
+                });
+
+                return leaderIndex;
+            }
+
+            const ctx = document.getElementById('scoreChart').getContext('2d');
+            const couleurJoueurs = [
+                'rgba(255, 99, 132, 0.6)',
+                'rgba(54, 162, 235, 0.6)',
+                'rgba(255, 206, 86, 0.6)',
+                'rgba(75, 192, 192, 0.6)',
+                'rgba(153, 102, 255, 0.6)',
+                'rgba(255, 159, 64, 0.6)'
+            ];
+
+            const scoreChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Début'],
+                    datasets: joueurs.map((joueur, index) => ({
+                        label: joueur.nom,
+                        data: [0],
+                        borderColor: couleurJoueurs[index % couleurJoueurs.length],
+                        backgroundColor: couleurJoueurs[index % couleurJoueurs.length],
+                        fill: false,
+                        tension: 0.1
+                    }))
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false, // Permet de contrôler la taille via CSS
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Évolution des Scores'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            suggestedMax: 700, // Plage minimale initiale
+                            ticks: {
+                                stepSize: 100 // Ajustez en fonction de la plage des scores
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Tours'
+                            }
+                        }
+                    }
+                }
+            });
+
+ function mettreAJourGraphique() {
+    // Mettre à jour les données des datasets avec le score du joueur actuel
+    scoreChart.data.datasets[joueurActuelIndex].data.push(joueurs[joueurActuelIndex].score);
+
+    // Ajouter une nouvelle étiquette pour le tour si c'est le premier joueur qui marque
+    if (joueurActuelIndex === 0 && (scoreChart.data.labels.length === 0 || scoreChart.data.labels[scoreChart.data.labels.length - 1] !== `Tour ${nombreDeTours}`)) {
+        const nouveauTour = `Tour ${nombreDeTours}`;
+        scoreChart.data.labels.push(nouveauTour);
+    }
+
+    // Mettre à jour l'axe des y pour permettre les scores négatifs
+    const minMax = Math.min(...joueurs.map(joueur => joueur.score)); // Trouver le score minimum
+    scoreChart.options.scales.y.min = minMax < 0 ? minMax : 0; // Ajuster l'axe des y si min est négatif
+
+    // Actualiser le graphique
+    scoreChart.update();
+
+    // Incrémenter le nombre de tours seulement à la fin du tour
+    if (joueurActuelIndex === joueurs.length - 1) {
+        nombreDeTours++;
+    }
+}     function verifierDepassement() {
+                let depasse = false;
+                joueurs.forEach((joueur, index) => {
+                    if (joueur.score >= 6000 && !joueur.aDepasse) {
+                        joueur.aDepasse = true;
+                        depasse = true;
+                        document.getElementById(`player-${index}`).classList.add('leader');
+                    }
+                });
+                return depasse;
+            }
+
+            function determinerGagnant() {
+                let maxScore = -Infinity;
+                let gagnant = null;
+
+                joueurs.forEach(joueur => {
+                    if (joueur.score >= 6000 && joueur.score > maxScore) {
+                        maxScore = joueur.score;
+                        gagnant = joueur;
+                    }
+                });
+
+                return gagnant;
+            }
+
+            function terminerPartie() {
+                finDePartie = true;
+                document.getElementById('inputBox').style.display = 'none';
+                const gagnant = determinerGagnant();
+                const messageContainer = document.getElementById('messageContainer');
+                const winnerMessage = document.getElementById('winnerMessage');
+                winnerMessage.textContent = `Bravo ${gagnant.nom} ! Avec un score de ${gagnant.score} points  ! 🏆`;
+
+                // Mettre à jour le graphique une dernière fois
+                mettreAJourGraphique();
+
+                messageContainer.style.display = 'flex';
+            }
+
+// Tableau contenant toutes les phrases
+const phrases = [
+    "Chaque point perdu se dissout dans l'obscurité, comme un cri étouffé au fond de l'océan.",
+    "Vos scores se volatilisent comme des âmes maudites, emprisonnées dans les profondeurs du Kraken.",
+    "Chaque point perdu est un marin englouti, tiré par les sirènes vers les abysses sans retour.",
+    "Les points s'évaporent comme le souffle d'un fantôme, laissant votre navire naufragé dans la solitude.",
+    "Comme des cadavres flottants, vos scores se perdent dans les eaux sanglantes de l'échec.",
+    "Les points s’éclipsent tels des ombres traîtres, emprisonnés à jamais dans le ventre de la mer.",
+    "Chaque point abandonné est un cri silencieux, résonnant dans les ténèbres d'un océan sans fond.",
+    "Les scores se dérobent comme des esprits tourmentés, hurlant à jamais perdus dans les vagues maudites.",
+    "Vos points s’évanouissent dans la tempête comme des âmes condamnées, aspirées par l'obscurité éternelle.",
+    "Chaque point perdu est une malédiction, gravée sur le bois de votre navire, vous liant à l'échec.",
+    "Vos points s'évaporent comme des larmes de sang, noyées dans les vagues de la désespérance.",
+    "Chaque point est une pierre tombale, marquant le naufrage de vos rêves au fond des abysses.",
+    "Les points s'évaporent comme les âmes perdues des marins égarés.",
+    "Les vagues déchaînées engloutissent les points, les emportant vers des profondeurs sans retour.",
+    "Les ombres des naufragés réclament les points, les tirant dans l'abîme éternel.",
+    "Comme un bateau sombrant dans la nuit, les points disparaissent dans un cri silencieux.",
+    "Dans les ténèbres, les points se volatilisent, piégés par le souffle du vent maudit."
+];
+
+
+            function activerSkullMode() {
+    if (finDePartie) return;
+
+    modeSkull = true;
+    const inputBox = document.getElementById('inputBox');
+    const currentPlayerDiv = document.getElementById('currentPlayer');
+    inputBox.classList.add('skull-mode');
+
+    // Utilisez des backticks pour l'interpolation de chaîne
+    inputBox.querySelector('h2').textContent = `Bienvenue ${joueurs[joueurActuelIndex].nom} sur l'île de la tête de mort`;
+    currentPlayerDiv.textContent = phrases[Math.floor(Math.random() * phrases.length)];
+    document.getElementById('scoreInput').value = '';
+}
+         function desactiverSkullMode() {
+                modeSkull = false;
+                const inputBox = document.getElementById('inputBox');
+                const currentPlayerDiv = document.getElementById('currentPlayer');
+                inputBox.classList.remove('skull-mode');
+                inputBox.querySelector('h2').textContent = "Saisir le Score de";
+                currentPlayerDiv.textContent = joueurs[joueurActuelIndex].nom;
+            }
+
+document.getElementById('scoreForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    if (finDePartie) return;
+
+    const scoreInput = document.getElementById('scoreInput');
+    const scoreValue = parseInt(scoreInput.value, 10);
+
+    if (isNaN(scoreValue)) {
+        alert('Veuillez entrer un score valide.');
+        return;
+    }
+
+    if (!modeSkull) {
+        // Mode normal : Ajouter le score au joueur actuel
+        joueurs[joueurActuelIndex].score += scoreValue;
+
+        document.getElementById(`score-${joueurActuelIndex}`).textContent = `Score: ${joueurs[joueurActuelIndex].score}`;
+
+        // Vérifiez si le tableau existe, sinon initialisez-le
+        if (!historiqueScores[joueurs[joueurActuelIndex].nom]) {
+            historiqueScores[joueurs[joueurActuelIndex].nom] = []; // Initialisation du tableau
+        }
+        historiqueScores[joueurs[joueurActuelIndex].nom].push(joueurs[joueurActuelIndex].score);
+
+        mettreAJourGraphique();
+
+        // Déterminer le leader et mettre à jour les indicateurs
+        const leaderIndex = determinerLeader();
+        joueurs.forEach((joueur, index) => {
+            const playerDiv = document.getElementById(`player-${index}`);
+            if (index === leaderIndex) {
+                playerDiv.classList.add('leader');
+            } else {
+                playerDiv.classList.remove('leader');
+            }
+        });
+
+        // Passer au joueur suivant
+        joueurActuelIndex = (joueurActuelIndex + 1) % nombreJoueurFin;
+
+        // Vérifier si la partie doit se terminer à la fin du tour complet
+        if (joueurActuelIndex === 0) { // Fin du tour complet
+            const gagnant = determinerGagnant();
+            if (gagnant) {
+                // Si un joueur a dépassé 6000 points, marquer le gagnant et terminer la partie
+                if (gagnant.score >= 6000) {
+                    marquerGagnant(gagnant);
+                    terminerPartie();
+                    return;
+                }
+            }
+        }
+    } else {
+        // Mode Skull : Soustraire le score aux autres joueurs
+        if (scoreValue <= 0) {
+            alert('Veuillez entrer un score positif à soustraire.');
+            return;
+        }
+
+        joueurs.forEach((joueur, index) => {
+            if (index !== joueurActuelIndex) {
+                joueur.score -= scoreValue;
+
+                document.getElementById(`score-${index}`).textContent = `Score: ${joueur.score}`;
+
+                // Vérifiez si le tableau existe, sinon initialisez-le
+                if (!historiqueScores[joueur.nom]) {
+                    historiqueScores[joueur.nom] = []; // Initialisation du tableau
+                }
+                historiqueScores[joueur.nom].push(joueur.score);
+            }
+        });
+
+        mettreAJourGraphique();
+
+        // Passer au joueur suivant
+        joueurActuelIndex = (joueurActuelIndex + 1) % nombreJoueurFin;
+
+        // Vérifier si la partie doit se terminer à la fin du tour complet
+        if (joueurActuelIndex === 0) { // Fin du tour complet
+            const gagnant = determinerGagnant();
+            if (gagnant) {
+                // Si un joueur a dépassé 6000 points, marquer le gagnant et terminer la partie
+                if (gagnant.score >= 6000) {
+                    marquerGagnant(gagnant);
+                    terminerPartie();
+                    return;
+                }
+            }
+        }
+
+        desactiverSkullMode();
+    }
+
+    // Mettre à jour le joueur actuel après la soumission
+    mettreAJourJoueurActuel();
+
+    // Réinitialiser le formulaire
+    this.reset();
+});
+
+// Mettre à jour le joueur actuel et son affichage
+function mettreAJourJoueurActuel() {
+       const currentPlayerDiv = document.getElementById('currentPlayer');
+    currentPlayerDiv.textContent = joueurs[joueurActuelIndex].nom; // Met à jour le texte avec le nom du joueur actuel
+}
+
+// Fonction pour déterminer le gagnant avec le score le plus élevé
+function determinerGagnant() {
+    let maxScore = -Infinity;
+    let gagnant = null;
+
+    joueurs.forEach(joueur => {
+        if (joueur.score > maxScore) {
+            maxScore = joueur.score;
+            gagnant = joueur;
+        }
+    });
+
+    return gagnant;
+}
+
+
+// Fonction pour marquer le gagnant
+function marquerGagnant(gagnant) {
+
+}
+
+
+            document.getElementById('skullButton').addEventListener('click', function() {
+                activerSkullMode();
+            });
+
+            // Initialisation de la page
+            genererCasesJoueurs();
+            mettreAJourJoueurActuel();
+        });
+    </script>
+</body>
+</html>
