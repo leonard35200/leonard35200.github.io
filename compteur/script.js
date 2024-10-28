@@ -12,7 +12,7 @@ let categoriesSevenWondersArchitechte = [ '🏛️', '🐱','','⚔️ ',' 🧪'
 let couleursSevenWondersArchitechte = [ 'grey','grey','blue', 'red', 'green'];
 
 
-let categoriesSevenWondersDuel = [" "," ", " "," ", "merveille","scientifique","pièces",""];
+let categoriesSevenWondersDuel = [" "," ", " "," ", "🏛️","🧪","🪙",""];
 let couleursSevenWondersDuel = [ 'royalblue','green','gold',"#7B1FA2", '#FFECB3',"#2E7D32", "#FDD835","#C62828"];
 
 let categoriesPetitesBourgardes = ["Usine","Maison","Eglise","Taverne","Jaune","Puit","Tour","Case Vide"];
