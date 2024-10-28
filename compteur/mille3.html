@@ -1,0 +1,16 @@
+        let nombreDeTours = parseInt(localStorage.getItem('nombreDeTours')) || 1;
+
+            verifierFinDePartie();
+            mettreAJourLocalStorage();
+            genererCasesJoueurs();
+
+        function mettreAJourLocalStorage() {
+            localStorage.setItem('joueurActuelIndex', joueurActuelIndex);
+            localStorage.setItem('nombreJoueur', nombreJoueurFin);
+            joueurs.forEach((joueur, index) => {
+                localStorage.setItem(`scoreJoueur${index + 1}`, joueur.score);
+                localStorage.setItem(`historiqueScoresJoueur${index + 1}`, JSON.stringify(historiqueScores[`Joueur ${index + 1}`]));
+            });
+            localStorage.setItem('nomsJoueur', JSON.stringify(nomsJoueurFin));
+            localStorage.setItem('nombreDeTours', nombreDeTours);
+        }
