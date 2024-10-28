@@ -179,7 +179,7 @@ window.addEventListener('load', function() {
   } else if (pathname.endsWith("seven-wonders-duel.html") && nombreJoueurFin === 2) {
     updateTableSeven(categoriesSevenWondersDuel, couleursSevenWondersDuel);
   } else if (pathname.endsWith("seven-wonders-architects.html")) {
-    updateTableSeven(categoriesSevenWonders, couleursSevenWonders);
+    updateTableSeven(categoriesSevenWondersArchitechte, couleursSevenWondersArchitechte);
   } else if (pathname.endsWith("petite-bourgade.html")) {
     updateTableSeven(categoriesPetitesBourgardes, couleursPetitesBourgardes, imagesPetitesBourgardes);
   }
