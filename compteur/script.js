@@ -8,7 +8,7 @@ let nombreJoueurFin = parseInt(sessionStorage.getItem('nombreJoueur')) || 1;
 let categoriesSevenWonders = [ 'Pièce', 'Merveille','Armée',' ',' ',' ',' '];
 let couleursSevenWonders = [ 'grey','grey','red', 'blue', 'yellow', 'purple', 'green'];
 
-let categoriesSevenWondersArchitechte = [ '🏛️', '🐱','bleu','⚔️ ',' 🧪'];
+let categoriesSevenWondersArchitechte = [ '🏛️', '🐱','','⚔️ ',' 🧪'];
 let couleursSevenWondersArchitechte = [ 'grey','grey','blue', 'red', 'green'];
 
 
