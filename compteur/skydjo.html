@@ -272,3 +272,67 @@
         const couleurJoueurs = [
             'rgba(255, 99, 132, 0.6)',
             'rgba(54, 162, 235, 0.6)',
+            'rgba(255, 206, 86, 0.6)',
+            'rgba(75, 192, 192, 0.6)',
+            'rgba(153, 102, 255, 0.6)',
+            'rgba(255, 159, 64, 0.6)'
+        ];
+
+        const scoreChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: joueurs.map(joueur => joueur.nom),
+                datasets: [{
+                    label: 'Scores',
+                    data: joueurs.map(joueur => joueur.score),
+                    backgroundColor: couleurJoueurs,
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: Math.max(...joueurs.map(joueur => joueur.score)) + 10
+                    }
+                },
+                responsive: true,
+                maintainAspectRatio: false,
+            }
+        });
+
+        document.getElementById('scoreForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const scoreInput = document.getElementById('scoreInput').value;
+            const score = parseInt(scoreInput);
+            joueurs[joueurActuelIndex].score += score;
+
+            // Mise à jour du graphique
+            scoreChart.data.datasets[0].data[joueurActuelIndex] = joueurs[joueurActuelIndex].score;
+            scoreChart.update();
+
+            // Mettre à jour l'affichage des scores
+            document.getElementById(`score-${joueurActuelIndex}`).innerText = `Score: ${joueurs[joueurActuelIndex].score}`;
+
+            // Vérification si un joueur a atteint 6 points
+            if (joueurs[joueurActuelIndex].score >= 6) {
+                finDePartie = true;
+                const winnerIndex = determinerLeader();
+                const winnerMessage = document.getElementById('winnerMessage');
+                winnerMessage.innerText = `Le gagnant est ${joueurs[winnerIndex].nom} avec ${joueurs[winnerIndex].score} points !`;
+                document.getElementById('messageContainer').style.display = 'flex';
+            } else {
+                // Passer au joueur suivant
+                joueurActuelIndex = (joueurActuelIndex + 1) % joueurs.length;
+                document.getElementById('currentPlayer').innerText = `Joueur ${joueurActuelIndex + 1}`;
+            }
+
+            // Réinitialiser le champ de saisie
+            document.getElementById('scoreInput').value = '';
+        });
+
+        genererCasesJoueurs();
+        document.getElementById('currentPlayer').innerText = `Joueur ${joueurActuelIndex + 1}`;
+    });
+</script>
+</body>
+</html>
