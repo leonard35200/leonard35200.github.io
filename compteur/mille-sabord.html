@@ -607,7 +607,26 @@ function determinerGagnant() {
 function marquerGagnant(gagnant) {
   
 }
-   
+ function recupererDonnees() {
+            try {
+                // Récupérer l'objet depuis le localStorage
+                const donnees = localStorage.getItem('mesDonnees');
+                if (donnees) {
+                    // Convertir la chaîne JSON en objet
+                    let donneesObjet = JSON.parse(donnees);
+                    }
+            }
+        }
+
+        window.onload = recupererDonnees;
+
+    </script>
+</body>
+</html>
+
+
+
+
 document.addEventListener('DOMContentLoaded', function() {
     let nomsJoueurFin = JSON.parse(localStorage.getItem('nomsJoueur')) || [];
     let nombreJoueurFin = parseInt(localStorage.getItem('nombreJoueur')) || 1;
@@ -633,6 +652,3 @@ document.addEventListener('DOMContentLoaded', function() {
             genererCasesJoueurs();
             mettreAJourJoueurActuel();
         });
-    </script>
-</body>
-</html>
