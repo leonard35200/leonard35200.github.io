@@ -298,7 +298,78 @@ let nombreJoueurFin = parseInt(sessionStorage.getItem('nombreJoueur')) || 1;
                     `;
                     playerContainer.appendChild(playerDiv);
                 });
+            }      
+  function mettreAJourLocalStorage() {
+            localStorage.setItem('joueurActuelIndex', joueurActuelIndex);
+            localStorage.setItem('nombreJoueur', nombreJoueurFin);
+            joueurs.forEach((joueur, index) => {
+                localStorage.setItem(`scoreJoueur${index + 1}`, joueur.score);
+                localStorage.setItem(`historiqueScoresJoueur${index + 1}`, JSON.stringify(historiqueScores[`Joueur ${index + 1}`]));
+            });
+            localStorage.setItem('nomsJoueur', JSON.stringify(nomsJoueurFin));
+            localStorage.setItem('nombreDeTours', nombreDeTours);
+        }
+
+        function verifierFinDePartie() {
+            if (joueurs.some(joueur => joueur.score >= 6)) {
+                finDePartie = true;
+                afficherMessageGagnant();
             }
+        }
+
+        function afficherMessageGagnant() {
+            const messageContainer = document.getElementById('messageContainer');
+            const winnerMessage = document.getElementById('winnerMessage');
+            const gagnant = joueurs.find(joueur => joueur.score >= 6);
+            if (gagnant) {
+                winnerMessage.textContent = `${gagnant.nom} a gagné avec ${gagnant.score} points !`;
+            }
+            messageContainer.style.display = 'flex';
+        }
+
+        document.getElementById('scoreForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const scoreInput = document.getElementById('scoreInput');
+            let score = parseInt(scoreInput.value);
+
+            if (modeSkull) {
+                // Mode spécial : retire les points aux autres joueurs
+                joueurs.forEach((joueur, index) => {
+                    if (index !== joueurActuelIndex) {
+                        joueur.score -= score;
+                        historiqueScores[`Joueur ${index + 1}`].push(joueur.score);
+                    }
+                });
+                alert('Bienvenue sur l\'île de la tête de mort');
+            }
+
+            // Ajoute le score au joueur actuel
+            joueurs[joueurActuelIndex].score += score;
+            historiqueScores[`Joueur ${joueurActuelIndex + 1}`].push(joueurs[joueurActuelIndex].score);
+
+            // Vérification de la fin de partie
+            verifierFinDePartie();
+            mettreAJourLocalStorage();
+            genererCasesJoueurs();
+
+            // Passer au joueur suivant
+            joueurActuelIndex = (joueurActuelIndex + 1) % nombreJoueurFin;
+            document.getElementById('currentPlayer').textContent = `Joueur ${joueurActuelIndex + 1}`;
+            scoreInput.value = '';
+        });
+
+        document.getElementById('skullButton').addEventListener('click', function() {
+            modeSkull = !modeSkull;
+            const inputBox = document.getElementById('inputBox');
+            inputBox.classList.toggle('skull-mode', modeSkull);
+        });
+
+        genererCasesJoueurs();
+        document.getElementById('currentPlayer').textContent = `Joueur ${joueurActuelIndex + 1}`;
+    });
+</script>
+</body>
+</html>
 
 
         let nombreDeTours = parseInt(localStorage.getItem('nombreDeTours')) || 1;
