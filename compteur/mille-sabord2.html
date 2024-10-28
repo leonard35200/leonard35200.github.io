@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Score des Joueurs avec Suivi Graphique</title>
+    <title>feuille de score de mille sabord</title>
     <style>
         /* Réinitialisation des marges et padding */
         * {
@@ -218,9 +218,25 @@
             from { opacity: 0; transform: scale(0.95); }
             to { opacity: 1; transform: scale(1); }
         }
+
+
+  #home-button {
+    position: fixed;
+   /* top: 10px;*/
+    right: 10px;
+    z-index: 1000;
+    cursor: pointer;
+    font-size: 30px; /* Ajustez cette valeur selon vos besoins */
+  }
+#debut{
+height: 40px}
     </style>
 </head>
 <body>
+<div id="home-button">
+  <a href="index.html">🏡</a>
+</div>
+<div id="debut"> </div>
     <div id="players" class="player-container"></div>
 
     <div class="input-container">
@@ -252,12 +268,10 @@
     <!-- Script personnalisé avec l'attribut defer -->
     <script defer>
         document.addEventListener('DOMContentLoaded', function() {
-            
-            
- <!-- let nomsJoueurFin = JSON.parse(sessionStorage.getItem('nomsJoueur')) || [];-->
-<!--let nombreJoueurFin = parseInt(sessionStorage.getItem('nombreJoueur')) || 1; -->
-let nomsJoueurFin = ["leo","ars","fre"];
-let nombreJoueurFin = 3;
+
+
+ let nomsJoueurFin = JSON.parse(sessionStorage.getItem('nomsJoueur')) || [];
+let nombreJoueurFin = parseInt(sessionStorage.getItem('nombreJoueur')) || 1;
             const joueurs = [];
             const historiqueScores = {};
             let joueurActuelIndex = 0;
@@ -285,9 +299,6 @@ let nombreJoueurFin = 3;
                     playerContainer.appendChild(playerDiv);
                 });
             }
-
-            
-
             function determinerLeader() {
                 let maxScore = -Infinity;
                 let leaderIndex = -1;
@@ -442,7 +453,7 @@ const phrases = [
     const inputBox = document.getElementById('inputBox');
     const currentPlayerDiv = document.getElementById('currentPlayer');
     inputBox.classList.add('skull-mode');
-    
+
     // Utilisez des backticks pour l'interpolation de chaîne
     inputBox.querySelector('h2').textContent = `Bienvenue ${joueurs[joueurActuelIndex].nom} sur l'île de la tête de mort`;
     currentPlayerDiv.textContent = phrases[Math.floor(Math.random() * phrases.length)];
@@ -575,16 +586,16 @@ function determinerGagnant() {
             gagnant = joueur;
         }
     });
-    
+
     return gagnant;
 }
 
 
 // Fonction pour marquer le gagnant
 function marquerGagnant(gagnant) {
-  
+
 }
-   
+
 
             document.getElementById('skullButton').addEventListener('click', function() {
                 activerSkullMode();
@@ -596,4 +607,4 @@ function marquerGagnant(gagnant) {
         });
     </script>
 </body>
-</html>
+</html> 
