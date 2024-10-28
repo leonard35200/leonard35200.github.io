@@ -278,38 +278,76 @@
             'rgba(255, 159, 64, 0.6)'
         ];
 
-        const scoreChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: joueurs.map(joueur => joueur.nom),
-                datasets: [{
-                    label: 'Scores',
-                    data: joueurs.map(joueur => joueur.score),
-                    backgroundColor: couleurJoueurs,
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: Math.max(...joueurs.map(joueur => joueur.score)) + 10
-                    }
+                    const scoreChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Début'],
+                    datasets: joueurs.map((joueur, index) => ({
+                        label: joueur.nom,
+                        data: [0],
+                        borderColor: couleurJoueurs[index % couleurJoueurs.length],
+                        backgroundColor: couleurJoueurs[index % couleurJoueurs.length],
+                        fill: false,
+                        tension: 0.1
+                    }))
                 },
-                responsive: true,
-                maintainAspectRatio: false,
-            }
-        });
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false, // Permet de contrôler la taille via CSS
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Évolution des Scores'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            suggestedMax: 700, // Plage minimale initiale
+                            ticks: {
+                                stepSize: 100 // Ajustez en fonction de la plage des scores
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Tours'
+                            }
+                        }
+                    }
+                }
+            });
 
-        document.getElementById('scoreForm').addEventListener('submit', function(event) {
+ function mettreAJourGraphique() {
+    // Mettre à jour les données des datasets avec le score du joueur actuel
+    scoreChart.data.datasets[joueurActuelIndex].data.push(joueurs[joueurActuelIndex].score);
+
+    // Ajouter une nouvelle étiquette pour le tour si c'est le premier joueur qui marque
+    if (joueurActuelIndex === 0 && (scoreChart.data.labels.length === 0 || scoreChart.data.labels[scoreChart.data.labels.length - 1] !== `Tour ${nombreDeTours}`)) {
+        const nouveauTour = `Tour ${nombreDeTours}`;
+        scoreChart.data.labels.push(nouveauTour);
+    }
+
+    // Mettre à jour l'axe des y pour permettre les scores négatifs
+    const minMax = Math.min(...joueurs.map(joueur => joueur.score)); // Trouver le score minimum
+    scoreChart.options.scales.y.min = minMax < 0 ? minMax : 0; // Ajuster l'axe des y si min est négatif
+
+    // Actualiser le graphique
+    scoreChart.update();
+
+    // Incrémenter le nombre de tours seulement à la fin du tour
+    if (joueurActuelIndex === joueurs.length - 1) {
+        nombreDeTours++;
+    }
+}      document.getElementById('scoreForm').addEventListener('submit', function(event) {
             event.preventDefault();
             const scoreInput = document.getElementById('scoreInput').value;
             const score = parseInt(scoreInput);
             joueurs[joueurActuelIndex].score += score;
 
             // Mise à jour du graphique
-            scoreChart.data.datasets[0].data[joueurActuelIndex] = joueurs[joueurActuelIndex].score;
-            scoreChart.update();
-
+            
+mettreAJourGraphique()
             // Mettre à jour l'affichage des scores
             document.getElementById(`score-${joueurActuelIndex}`).innerText = `Score: ${joueurs[joueurActuelIndex].score}`;
 
