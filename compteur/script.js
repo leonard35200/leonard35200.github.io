@@ -8,6 +8,10 @@ let nombreJoueurFin = parseInt(sessionStorage.getItem('nombreJoueur')) || 1;
 let categoriesSevenWonders = [ 'Pièce', 'Merveille','Armée',' ',' ',' ',' '];
 let couleursSevenWonders = [ 'grey','grey','red', 'blue', 'yellow', 'purple', 'green'];
 
+let categoriesSevenWondersArchitechte = [ '🏛️', '🐱','bleu','⚔️ ',' 🧪'];
+let couleursSevenWondersArchitechte = [ 'grey','grey','blue', 'red', 'green'];
+
+
 let categoriesSevenWondersDuel = [" "," ", " "," ", "merveille","scientifique","pièces",""];
 let couleursSevenWondersDuel = [ 'royalblue','green','gold',"#7B1FA2", '#FFECB3',"#2E7D32", "#FDD835","#C62828"];
 
