@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Feuille de Score de Mille Sabord</title>
+    <title>Feuille de Score de skydjo</title>
     <style>
         /* Réinitialisation des marges et padding */
         * {
@@ -314,7 +314,7 @@
             document.getElementById(`score-${joueurActuelIndex}`).innerText = `Score: ${joueurs[joueurActuelIndex].score}`;
 
             // Vérification si un joueur a atteint 6 points
-            if (joueurs[joueurActuelIndex].score >= 6) {
+            if (joueurs[joueurActuelIndex].score >= 100) {
                 finDePartie = true;
                 const winnerIndex = determinerLeader();
                 const winnerMessage = document.getElementById('winnerMessage');
