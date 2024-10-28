@@ -180,6 +180,7 @@ window.addEventListener('load', function() {
     updateTableSeven(categoriesSevenWondersDuel, couleursSevenWondersDuel);
   }else if (pathname.endsWith("seven-wonders-duel.html") && nombreJoueurFin !== 2) {
     alert('Vous devez être deux joueurs pour jouer a seven wonders duel')
+window.location.href = "index.html";
   } else if (pathname.endsWith("seven-wonders-architects.html")) {
     updateTableSeven(categoriesSevenWondersArchitechte, couleursSevenWondersArchitechte);
   } else if (pathname.endsWith("petite-bourgade.html")) {
