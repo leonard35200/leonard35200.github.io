@@ -68,28 +68,7 @@
             color: #333;
         }
 
-        /* Bouton Skull toujours noir */
-        .skull-button {
-            background-color: #000 !important;
-            color: #fff !important;
-            border: none;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            cursor: pointer;
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            transition: background-color 0.2s;
-        }
-
-        .skull-button:hover {
-            background-color: #333 !important;
-        }
+        
 
         .input-container {
             display: flex;
@@ -120,9 +99,6 @@
             font-size: 22px;
         }
 
-        .input-box.skull-mode h2 {
-            color: #000;
-        }
 
         .input-box .current-player {
             font-size: 16px;
@@ -130,9 +106,7 @@
             color: #28A745;
         }
 
-        .input-box.skull-mode .current-player {
-            color: #000;
-        }
+        
 
         .input-box input {
             width: 90%;
@@ -143,9 +117,7 @@
             font-size: 16px;
         }
 
-        .input-box.skull-mode input {
-            border-color: #000;
-        }
+        
 
         /* Styles pour les boutons dans .input-box, excluant le bouton skull */
         .input-box button:not(.skull-button) {
@@ -248,7 +220,6 @@ height: 40px}
                 <br>
                 <button type="submit">Ajouter Score</button>
             </form>
-            <button class="skull-button" id="skullButton">☠️</button>
         </div>
         <div class="message-container" id="messageContainer">
             <div class="message-box">
@@ -276,7 +247,6 @@ let nombreJoueurFin = parseInt(sessionStorage.getItem('nombreJoueur')) || 1;
             const historiqueScores = {};
             let joueurActuelIndex = 0;
             let finDePartie = false;
-            let modeSkull = false;
             let nombreDeTours = 1; // Initialisation du compteur de tours
 
             for (let i = 1; i <= nombreJoueurFin; i++) {
@@ -425,49 +395,7 @@ let nombreJoueurFin = parseInt(sessionStorage.getItem('nombreJoueur')) || 1;
                 messageContainer.style.display = 'flex';
             }
 
-// Tableau contenant toutes les phrases
-const phrases = [
-    "Chaque point perdu se dissout dans l'obscurité, comme un cri étouffé au fond de l'océan.",
-    "Vos scores se volatilisent comme des âmes maudites, emprisonnées dans les profondeurs du Kraken.",
-    "Chaque point perdu est un marin englouti, tiré par les sirènes vers les abysses sans retour.",
-    "Les points s'évaporent comme le souffle d'un fantôme, laissant votre navire naufragé dans la solitude.",
-    "Comme des cadavres flottants, vos scores se perdent dans les eaux sanglantes de l'échec.",
-    "Les points s’éclipsent tels des ombres traîtres, emprisonnés à jamais dans le ventre de la mer.",
-    "Chaque point abandonné est un cri silencieux, résonnant dans les ténèbres d'un océan sans fond.",
-    "Les scores se dérobent comme des esprits tourmentés, hurlant à jamais perdus dans les vagues maudites.",
-    "Vos points s’évanouissent dans la tempête comme des âmes condamnées, aspirées par l'obscurité éternelle.",
-    "Chaque point perdu est une malédiction, gravée sur le bois de votre navire, vous liant à l'échec.",
-    "Vos points s'évaporent comme des larmes de sang, noyées dans les vagues de la désespérance.",
-    "Chaque point est une pierre tombale, marquant le naufrage de vos rêves au fond des abysses.",
-    "Les points s'évaporent comme les âmes perdues des marins égarés.",
-    "Les vagues déchaînées engloutissent les points, les emportant vers des profondeurs sans retour.",
-    "Les ombres des naufragés réclament les points, les tirant dans l'abîme éternel.",
-    "Comme un bateau sombrant dans la nuit, les points disparaissent dans un cri silencieux.",
-    "Dans les ténèbres, les points se volatilisent, piégés par le souffle du vent maudit."
-];
 
-
-            function activerSkullMode() {
-    if (finDePartie) return;
-
-    modeSkull = true;
-    const inputBox = document.getElementById('inputBox');
-    const currentPlayerDiv = document.getElementById('currentPlayer');
-    inputBox.classList.add('skull-mode');
-
-    // Utilisez des backticks pour l'interpolation de chaîne
-    inputBox.querySelector('h2').textContent = `Bienvenue ${joueurs[joueurActuelIndex].nom} sur l'île de la tête de mort`;
-    currentPlayerDiv.textContent = phrases[Math.floor(Math.random() * phrases.length)];
-    document.getElementById('scoreInput').value = '';
-}
-         function desactiverSkullMode() {
-                modeSkull = false;
-                const inputBox = document.getElementById('inputBox');
-                const currentPlayerDiv = document.getElementById('currentPlayer');
-                inputBox.classList.remove('skull-mode');
-                inputBox.querySelector('h2').textContent = "Saisir le Score de";
-                currentPlayerDiv.textContent = joueurs[joueurActuelIndex].nom;
-            }
 
 document.getElementById('scoreForm').addEventListener('submit', function(event) {
     event.preventDefault();
@@ -521,13 +449,7 @@ document.getElementById('scoreForm').addEventListener('submit', function(event) 
                 }
             }
         }
-    } else {
-        // Mode Skull : Soustraire le score aux autres joueurs
-        if (scoreValue <= 0) {
-            alert('Veuillez entrer un score positif à soustraire.');
-            return;
-        }
-
+    } 
         joueurs.forEach((joueur, index) => {
             if (index !== joueurActuelIndex) {
                 joueur.score -= scoreValue;
@@ -560,7 +482,7 @@ document.getElementById('scoreForm').addEventListener('submit', function(event) 
             }
         }
 
-        desactiverSkullMode();
+        
     }
 
     // Mettre à jour le joueur actuel après la soumission
@@ -598,9 +520,7 @@ function marquerGagnant(gagnant) {
 }
 
 
-            document.getElementById('skullButton').addEventListener('click', function() {
-                activerSkullMode();
-            });
+            
 
             // Initialisation de la page
             genererCasesJoueurs();
