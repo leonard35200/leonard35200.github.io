@@ -5,7 +5,7 @@ let nomsJoueurFin = JSON.parse(sessionStorage.getItem('nomsJoueur')) || [];
 let nombreJoueurFin = parseInt(sessionStorage.getItem('nombreJoueur')) || 1;
 
 // Définition des catégories et couleurs
-let categoriesSevenWonders = [ 'Pièce', 'Merveille','Armée',' ',' ',' ',' '];
+let categoriesSevenWonders = [ '🪙', '🏛️','⚔️',' ',' ',' ',' '];
 let couleursSevenWonders = [ 'grey','grey','red', 'blue', 'yellow', 'purple', 'green'];
 
 let categoriesSevenWondersArchitechte = [ '🏛️', '🐱','','⚔️ ',' 🧪'];
