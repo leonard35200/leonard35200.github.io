@@ -272,6 +272,7 @@ height: 40px}
             
  let nomsJoueurFin = JSON.parse(sessionStorage.getItem('nomsJoueur')) || [];
 let nombreJoueurFin = parseInt(sessionStorage.getItem('nombreJoueur')) || 1;
+            let mesValeurs = []
             const joueurs = [];
             const historiqueScores = {};
             let joueurActuelIndex = 0;
@@ -567,13 +568,16 @@ document.getElementById('scoreForm').addEventListener('submit', function(event) 
 
     // Mettre à jour le joueur actuel après la soumission
     mettreAJourJoueurActuel();
-localStorage.setItem('nomsJoueur', JSON.stringify(nomsJoueurFin));
-localStorage.setItem('nombreJoueur', nombreJoueurFin);
-localStorage.setItem('scores', JSON.stringify(joueurs.map(joueur => joueur.score)));
-localStorage.setItem('joueurActuelIndex', joueurActuelIndex);
-localStorage.setItem('modeSkull', modeSkull);
 
-    // Réinitialiser le formulaire
+mesValeurs = {
+nomsJoueurFin : nomsJoueurFin,
+nombreJoueurFin : nombreJoueurFin,
+joueur : joueur,
+joueur actuel index : joueurActuelIndex
+}
+localStorage.setItem('mesValeurs', JSON.stringify(mesValeurs));
+
+// Réinitialiser le formulaire
     this.reset();
 });
 
