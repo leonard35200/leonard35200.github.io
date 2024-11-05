@@ -588,7 +588,7 @@ function sauvegarderEtat() {
 
 // Fonction pour restaurer l'état depuis le localStorage au chargement de la page
 function restaurerEtat() {
-    const noms = localStorage.getItem("nomsjoueursfin");
+    const noms = localStorage.getItem("nomsJoueursFin");
     const nombre = localStorage.getItem("nombreJoueurFin");
     const jou = localStorage.getItem("joueurs");
     const historique = localStorage.getItem("historiqueScores");
@@ -598,7 +598,7 @@ function restaurerEtat() {
     const tours = localStorage.getItem("nombreDeTours");
 
 
-    if (noms) nomsjoueursfin = JSON.parse(noms);
+    if (noms) nomsJoueursFin = JSON.parse(noms);
     if (nombre) nombreJoueurFin = parseInt(nombre);
     if (jou) joueurs = JSON.parse(jou);
     if (historique) historiqueScores = JSON.parse(historique);
