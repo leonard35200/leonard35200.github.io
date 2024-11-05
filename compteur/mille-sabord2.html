@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>feuille de score de mille sabord</title>
+    <title>Score des Joueurs avec Suivi Graphique</title>
     <style>
         /* Réinitialisation des marges et padding */
         * {
@@ -218,25 +218,9 @@
             from { opacity: 0; transform: scale(0.95); }
             to { opacity: 1; transform: scale(1); }
         }
-
-
-  #home-button {
-    position: fixed;
-   /* top: 10px;*/
-    right: 10px;
-    z-index: 1000;
-    cursor: pointer;
-    font-size: 30px; /* Ajustez cette valeur selon vos besoins */
-  }
-#debut{
-height: 40px}
     </style>
 </head>
 <body>
-<div id="home-button">
-  <a href="index.html">🏡</a>
-</div>
-<div id="debut"> </div>
     <div id="players" class="player-container"></div>
 
     <div class="input-container">
@@ -268,10 +252,12 @@ height: 40px}
     <!-- Script personnalisé avec l'attribut defer -->
     <script defer>
         document.addEventListener('DOMContentLoaded', function() {
-
-
- let nomsJoueurFin = JSON.parse(sessionStorage.getItem('nomsJoueur')) || [];
-let nombreJoueurFin = parseInt(sessionStorage.getItem('nombreJoueur')) || 1;
+            
+            
+let nomsJoueurFin = JSON.parse(sessionStorage.getItem('nomsJoueur')) || [];
+let nombreJoueurFin = parseInt(sessionStorage.getItem('nombreJoueur')) || 1; 
+<!--let nomsJoueurFin = ["leo","ars","fre"];-->
+<!--let nombreJoueurFin = 3;-->
             const joueurs = [];
             const historiqueScores = {};
             let joueurActuelIndex = 0;
@@ -299,6 +285,12 @@ let nombreJoueurFin = parseInt(sessionStorage.getItem('nombreJoueur')) || 1;
                     playerContainer.appendChild(playerDiv);
                 });
             }
+
+            function mettreAJourJoueurActuel() {
+                const currentPlayerDiv = document.getElementById('currentPlayer');
+                currentPlayerDiv.textContent = joueurs[joueurActuelIndex].nom;
+            }
+
             function determinerLeader() {
                 let maxScore = -Infinity;
                 let leaderIndex = -1;
@@ -424,42 +416,19 @@ let nombreJoueurFin = parseInt(sessionStorage.getItem('nombreJoueur')) || 1;
                 messageContainer.style.display = 'flex';
             }
 
-// Tableau contenant toutes les phrases
-const phrases = [
-    "Chaque point perdu se dissout dans l'obscurité, comme un cri étouffé au fond de l'océan.",
-    "Vos scores se volatilisent comme des âmes maudites, emprisonnées dans les profondeurs du Kraken.",
-    "Chaque point perdu est un marin englouti, tiré par les sirènes vers les abysses sans retour.",
-    "Les points s'évaporent comme le souffle d'un fantôme, laissant votre navire naufragé dans la solitude.",
-    "Comme des cadavres flottants, vos scores se perdent dans les eaux sanglantes de l'échec.",
-    "Les points s’éclipsent tels des ombres traîtres, emprisonnés à jamais dans le ventre de la mer.",
-    "Chaque point abandonné est un cri silencieux, résonnant dans les ténèbres d'un océan sans fond.",
-    "Les scores se dérobent comme des esprits tourmentés, hurlant à jamais perdus dans les vagues maudites.",
-    "Vos points s’évanouissent dans la tempête comme des âmes condamnées, aspirées par l'obscurité éternelle.",
-    "Chaque point perdu est une malédiction, gravée sur le bois de votre navire, vous liant à l'échec.",
-    "Vos points s'évaporent comme des larmes de sang, noyées dans les vagues de la désespérance.",
-    "Chaque point est une pierre tombale, marquant le naufrage de vos rêves au fond des abysses.",
-    "Les points s'évaporent comme les âmes perdues des marins égarés.",
-    "Les vagues déchaînées engloutissent les points, les emportant vers des profondeurs sans retour.",
-    "Les ombres des naufragés réclament les points, les tirant dans l'abîme éternel.",
-    "Comme un bateau sombrant dans la nuit, les points disparaissent dans un cri silencieux.",
-    "Dans les ténèbres, les points se volatilisent, piégés par le souffle du vent maudit."
-];
-
-
             function activerSkullMode() {
-    if (finDePartie) return;
+                if (finDePartie) return;
 
-    modeSkull = true;
-    const inputBox = document.getElementById('inputBox');
-    const currentPlayerDiv = document.getElementById('currentPlayer');
-    inputBox.classList.add('skull-mode');
+                modeSkull = true;
+                const inputBox = document.getElementById('inputBox');
+                const currentPlayerDiv = document.getElementById('currentPlayer');
+                inputBox.classList.add('skull-mode');
+                inputBox.querySelector('h2').textContent = "Bienvenue sur l'île de la tête de mort";
+                currentPlayerDiv.textContent = "Bienvenue sur l'île de la tête de mort";
+                document.getElementById('scoreInput').value = '';
+            }
 
-    // Utilisez des backticks pour l'interpolation de chaîne
-    inputBox.querySelector('h2').textContent = `Bienvenue ${joueurs[joueurActuelIndex].nom} sur l'île de la tête de mort`;
-    currentPlayerDiv.textContent = phrases[Math.floor(Math.random() * phrases.length)];
-    document.getElementById('scoreInput').value = '';
-}
-         function desactiverSkullMode() {
+            function desactiverSkullMode() {
                 modeSkull = false;
                 const inputBox = document.getElementById('inputBox');
                 const currentPlayerDiv = document.getElementById('currentPlayer');
@@ -520,6 +489,7 @@ document.getElementById('scoreForm').addEventListener('submit', function(event) 
                 }
             }
         }
+
     } else {
         // Mode Skull : Soustraire le score aux autres joueurs
         if (scoreValue <= 0) {
@@ -530,7 +500,7 @@ document.getElementById('scoreForm').addEventListener('submit', function(event) 
         joueurs.forEach((joueur, index) => {
             if (index !== joueurActuelIndex) {
                 joueur.score -= scoreValue;
-
+                
                 document.getElementById(`score-${index}`).textContent = `Score: ${joueur.score}`;
 
                 // Vérifiez si le tableau existe, sinon initialisez-le
@@ -562,18 +532,9 @@ document.getElementById('scoreForm').addEventListener('submit', function(event) 
         desactiverSkullMode();
     }
 
-    // Mettre à jour le joueur actuel après la soumission
-    mettreAJourJoueurActuel();
-
     // Réinitialiser le formulaire
     this.reset();
 });
-
-// Mettre à jour le joueur actuel et son affichage
-function mettreAJourJoueurActuel() {
-       const currentPlayerDiv = document.getElementById('currentPlayer');
-    currentPlayerDiv.textContent = joueurs[joueurActuelIndex].nom; // Met à jour le texte avec le nom du joueur actuel
-}
 
 // Fonction pour déterminer le gagnant avec le score le plus élevé
 function determinerGagnant() {
@@ -586,16 +547,16 @@ function determinerGagnant() {
             gagnant = joueur;
         }
     });
-
+    
     return gagnant;
 }
 
 
 // Fonction pour marquer le gagnant
 function marquerGagnant(gagnant) {
-
+  
 }
-
+   
 
             document.getElementById('skullButton').addEventListener('click', function() {
                 activerSkullMode();
@@ -607,4 +568,4 @@ function marquerGagnant(gagnant) {
         });
     </script>
 </body>
-</html> 
+</html>
