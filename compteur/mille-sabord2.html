@@ -533,6 +533,7 @@ document.getElementById('scoreForm').addEventListener('submit', function(event) 
     }
 
     // Réinitialiser le formulaire
+    sauvegarderEtat();
     this.reset();
 });
 
@@ -566,6 +567,71 @@ function marquerGagnant(gagnant) {
             genererCasesJoueurs();
             mettreAJourJoueurActuel();
         });
+
+
+
+
+
+// Fonction pour sauvegarder l'état dans le localStorage
+function sauvegarderEtat() {
+    localStorage.setItem("nomsjoueursfin", JSON.stringify(nomsjoueursfin));
+    localStorage.setItem("nombreJoueurFin", JSON.stringify(nombreJoueurFin));
+    localStorage.setItem("joueurs", JSON.stringify(joueurs));
+    localStorage.setItem("historiqueScores", JSON.stringify(historiqueScores)); 
+    localStorage.setItem("joueurActuelIndex", JSON.stringify(joueurActuelIndex));
+    localStorage.setItem("finDePartie", JSON.stringify(finDePartie)); 
+    localStorage.setItem("modeSkull", JSON.stringify(modeSkull));
+    localStorage.setItem("nombreDeTours", JSON.stringify(nombreDeTours));
+}
+
+
+
+// Fonction pour restaurer l'état depuis le localStorage au chargement de la page
+function restaurerEtat() {
+    const noms = localStorage.getItem("nomsjoueursfin");
+    const nombre = localStorage.getItem("nombreJoueurFin");
+    const jou = localStorage.getItem("joueurs");
+    const historique = localStorage.getItem("historiqueScores");
+    const actuel = localStorage.getItem("joueurActuelIndex");
+    const fin = localStorage.getItem("finDePartie");
+    const skull = localStorage.getItem("modeSkull");
+    const tours = localStorage.getItem("nombreDeTours");
+
+
+    if (noms) nomsjoueursfin = JSON.parse(noms);
+    if (nombre) nombreJoueurFin = parseInt(nombre);
+    if (jou) joueurs = JSON.parse(jou);
+    if (historique) historiqueScores = JSON.parse(historique);
+    if (actuel) joueurActuelIndex = parseInt(actuel);
+    if (fin) finDePartie = (fin === 'true');
+    if (skull) modeSkull = (fin === 'true');
+    if (tours) nombreDeTours = parseInt(tours);
+    
+}
+
+// Restaurer l'état au chargement de la page
+window.onload = restaurerEtat;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
     </script>
 </body>
 </html>
