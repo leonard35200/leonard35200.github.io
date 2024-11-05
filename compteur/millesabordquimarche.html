@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Score des Joueurs avec Suivi Graphique</title>
+    <style>
+        /* Réinitialisation des marges et padding */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .player-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* Trois colonnes */
+            grid-gap: 15px;
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+
+        .player {
+            background-color: #fff;
+            border: 2px solid #007BFF;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+        }
+
+        .player:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .player.leader {
+            border-color: #FFD700;
+            box-shadow: 0 4px 8px rgba(255, 215, 0, 0.5);
+        }
+
+        .player.leader::after {
+            content: "🏆";
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 20px;
+        }
+
+        .player h3 {
+            margin-bottom: 10px;
+            font-size: 18px;
+            color: #007BFF;
+        }
+
+        .score {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* Bouton Skull toujours noir */
+        .skull-button {
+            background-color: #000 !important;
+            color: #fff !important;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            transition: background-color 0.2s;
+        }
+
+        .skull-button:hover {
+            background-color: #333 !important;
+        }
+
+        .input-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .input-box {
+            background-color: #fff;
+            border: 2px solid #28A745;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .input-box.skull-mode {
+            border-color: #000;
+        }
+
+        .input-box h2 {
+            margin-bottom: 15px;
+            color: #28A745;
+            font-size: 22px;
+        }
+
+        .input-box.skull-mode h2 {
+            color: #000;
+        }
+
+        .input-box .current-player {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #28A745;
+        }
+
+        .input-box.skull-mode .current-player {
+            color: #000;
+        }
+
+        .input-box input {
+            width: 90%;
+            padding: 8px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .input-box.skull-mode input {
+            border-color: #000;
+        }
+
+        /* Styles pour les boutons dans .input-box, excluant le bouton skull */
+        .input-box button:not(.skull-button) {
+            padding: 8px 16px;
+            background-color: #28A745;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.2s;
+        }
+
+        .input-box.skull-mode button:not(.skull-button) {
+            background-color: #000;
+        }
+
+        .input-box.skull-mode button:not(.skull-button):hover {
+            background-color: #333;
+        }
+
+        .message-container {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            margin: 20px;
+            padding: 0 10px;
+        }
+
+        .message-box {
+            background-color: #fff;
+            border: 2px solid #FFD700;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 350px;
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .message-box h2 {
+            color: #FFD700;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .message-box p {
+            font-size: 18px;
+            color: #333;
+        }
+
+        .chart-container {
+            width: 100%; /* Utiliser toute la largeur disponible */
+            max-width: 700px; /* Augmenter la largeur maximale */
+            height: 400px; /* Définir une hauteur suffisante */
+            margin: 30px auto;
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        #scoreChart {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div id="players" class="player-container"></div>
+
+    <div class="input-container">
+        <div class="input-box" id="inputBox">
+            <h2>Saisir le Score</h2>
+            <div class="current-player" id="currentPlayer">Joueur §{joueurActuelIndex}</div>
+            <form id="scoreForm">
+                <input type="number" id="scoreInput" placeholder="Entrez le score" required>
+                <br>
+                <button type="submit">Ajouter Score</button>
+            </form>
+            <button class="skull-button" id="skullButton">☠️</button>
+        </div>
+        <div class="message-container" id="messageContainer">
+            <div class="message-box">
+                <h2>Bravo !</h2>
+                <p id="winnerMessage">Joueur X a gagné !</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="chart-container">
+        <canvas id="scoreChart"></canvas>
+    </div>
+
+    <!-- Inclusion de Chart.js via CDN avec l'attribut defer -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+
+    <!-- Script personnalisé avec l'attribut defer -->
+    <script defer>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            
+ <!-- let nomsJoueurFin = JSON.parse(sessionStorage.getItem('nomsJoueur')) || [];-->
+<!--let nombreJoueurFin = parseInt(sessionStorage.getItem('nombreJoueur')) || 1; -->
+let nomsJoueurFin = ["leo","ars","fre"];
+let nombreJoueurFin = 3;
+            const joueurs = [];
+            const historiqueScores = {};
+            let joueurActuelIndex = 0;
+            let finDePartie = false;
+            let modeSkull = false;
+            let nombreDeTours = 1; // Initialisation du compteur de tours
+
+            for (let i = 1; i <= nombreJoueurFin; i++) {
+                joueurs.push({ nom: `${nomsJoueurFin[i-1]}`, score: 0, aDepasse: false });
+                historiqueScores[`Joueur ${i}`] = [0];
+            }
+
+            function genererCasesJoueurs() {
+                const playerContainer = document.getElementById('players');
+                playerContainer.innerHTML = ''; // Vider le container avant de générer
+
+                joueurs.forEach((joueur, index) => {
+                    const playerDiv = document.createElement('div');
+                    playerDiv.className = 'player';
+                    playerDiv.id = `player-${index}`;
+                    playerDiv.innerHTML = `
+                        <h3>${joueur.nom}</h3>
+                        <div class="score" id="score-${index}">Score: ${joueur.score}</div>
+                    `;
+                    playerContainer.appendChild(playerDiv);
+                });
+            }
+
+            function mettreAJourJoueurActuel() {
+                const currentPlayerDiv = document.getElementById('currentPlayer');
+                currentPlayerDiv.textContent = joueurs[joueurActuelIndex].nom;
+            }
+
+            function determinerLeader() {
+                let maxScore = -Infinity;
+                let leaderIndex = -1;
+
+                joueurs.forEach((joueur, index) => {
+                    if (joueur.score > maxScore) {
+                        maxScore = joueur.score;
+                        leaderIndex = index;
+                    }
+                });
+
+                return leaderIndex;
+            }
+
+            const ctx = document.getElementById('scoreChart').getContext('2d');
+            const couleurJoueurs = [
+                'rgba(255, 99, 132, 0.6)',
+                'rgba(54, 162, 235, 0.6)',
+                'rgba(255, 206, 86, 0.6)',
+                'rgba(75, 192, 192, 0.6)',
+                'rgba(153, 102, 255, 0.6)',
+                'rgba(255, 159, 64, 0.6)'
+            ];
+
+            const scoreChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Début'],
+                    datasets: joueurs.map((joueur, index) => ({
+                        label: joueur.nom,
+                        data: [0],
+                        borderColor: couleurJoueurs[index % couleurJoueurs.length],
+                        backgroundColor: couleurJoueurs[index % couleurJoueurs.length],
+                        fill: false,
+                        tension: 0.1
+                    }))
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false, // Permet de contrôler la taille via CSS
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Évolution des Scores'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            suggestedMax: 700, // Plage minimale initiale
+                            ticks: {
+                                stepSize: 100 // Ajustez en fonction de la plage des scores
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Tours'
+                            }
+                        }
+                    }
+                }
+            });
+
+ function mettreAJourGraphique() {
+    // Mettre à jour les données des datasets avec le score du joueur actuel
+    scoreChart.data.datasets[joueurActuelIndex].data.push(joueurs[joueurActuelIndex].score);
+
+    // Ajouter une nouvelle étiquette pour le tour si c'est le premier joueur qui marque
+    if (joueurActuelIndex === 0 && (scoreChart.data.labels.length === 0 || scoreChart.data.labels[scoreChart.data.labels.length - 1] !== `Tour ${nombreDeTours}`)) {
+        const nouveauTour = `Tour ${nombreDeTours}`;
+        scoreChart.data.labels.push(nouveauTour);
+    }
+
+    // Mettre à jour l'axe des y pour permettre les scores négatifs
+    const minMax = Math.min(...joueurs.map(joueur => joueur.score)); // Trouver le score minimum
+    scoreChart.options.scales.y.min = minMax < 0 ? minMax : 0; // Ajuster l'axe des y si min est négatif
+
+    // Actualiser le graphique
+    scoreChart.update();
+
+    // Incrémenter le nombre de tours seulement à la fin du tour
+    if (joueurActuelIndex === joueurs.length - 1) {
+        nombreDeTours++;
+    }
+}     function verifierDepassement() {
+                let depasse = false;
+                joueurs.forEach((joueur, index) => {
+                    if (joueur.score >= 6000 && !joueur.aDepasse) {
+                        joueur.aDepasse = true;
+                        depasse = true;
+                        document.getElementById(`player-${index}`).classList.add('leader');
+                    }
+                });
+                return depasse;
+            }
+
+            function determinerGagnant() {
+                let maxScore = -Infinity;
+                let gagnant = null;
+
+                joueurs.forEach(joueur => {
+                    if (joueur.score >= 6000 && joueur.score > maxScore) {
+                        maxScore = joueur.score;
+                        gagnant = joueur;
+                    }
+                });
+
+                return gagnant;
+            }
+
+            function terminerPartie() {
+                finDePartie = true;
+                document.getElementById('inputBox').style.display = 'none';
+                const gagnant = determinerGagnant();
+                const messageContainer = document.getElementById('messageContainer');
+                const winnerMessage = document.getElementById('winnerMessage');
+                winnerMessage.textContent = `Bravo ${gagnant.nom} ! Avec un score de ${gagnant.score} points  ! 🏆`;
+
+                // Mettre à jour le graphique une dernière fois
+                mettreAJourGraphique();
+
+                messageContainer.style.display = 'flex';
+            }
+
+            function activerSkullMode() {
+                if (finDePartie) return;
+
+                modeSkull = true;
+                const inputBox = document.getElementById('inputBox');
+                const currentPlayerDiv = document.getElementById('currentPlayer');
+                inputBox.classList.add('skull-mode');
+                inputBox.querySelector('h2').textContent = "Bienvenue sur l'île de la tête de mort";
+                currentPlayerDiv.textContent = "Bienvenue sur l'île de la tête de mort";
+                document.getElementById('scoreInput').value = '';
+            }
+
+            function desactiverSkullMode() {
+                modeSkull = false;
+                const inputBox = document.getElementById('inputBox');
+                const currentPlayerDiv = document.getElementById('currentPlayer');
+                inputBox.classList.remove('skull-mode');
+                inputBox.querySelector('h2').textContent = "Saisir le Score de";
+                currentPlayerDiv.textContent = joueurs[joueurActuelIndex].nom;
+            }
+
+document.getElementById('scoreForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    if (finDePartie) return;
+
+    const scoreInput = document.getElementById('scoreInput');
+    const scoreValue = parseInt(scoreInput.value, 10);
+
+    if (isNaN(scoreValue)) {
+        alert('Veuillez entrer un score valide.');
+        return;
+    }
+
+    if (!modeSkull) {
+        // Mode normal : Ajouter le score au joueur actuel
+        joueurs[joueurActuelIndex].score += scoreValue;
+
+        document.getElementById(`score-${joueurActuelIndex}`).textContent = `Score: ${joueurs[joueurActuelIndex].score}`;
+
+        // Vérifiez si le tableau existe, sinon initialisez-le
+        if (!historiqueScores[joueurs[joueurActuelIndex].nom]) {
+            historiqueScores[joueurs[joueurActuelIndex].nom] = []; // Initialisation du tableau
+        }
+        historiqueScores[joueurs[joueurActuelIndex].nom].push(joueurs[joueurActuelIndex].score);
+
+        mettreAJourGraphique();
+
+        // Déterminer le leader et mettre à jour les indicateurs
+        const leaderIndex = determinerLeader();
+        joueurs.forEach((joueur, index) => {
+            const playerDiv = document.getElementById(`player-${index}`);
+            if (index === leaderIndex) {
+                playerDiv.classList.add('leader');
+            } else {
+                playerDiv.classList.remove('leader');
+            }
+        });
+
+        // Passer au joueur suivant
+        joueurActuelIndex = (joueurActuelIndex + 1) % nombreJoueurFin;
+
+        // Vérifier si la partie doit se terminer à la fin du tour complet
+        if (joueurActuelIndex === 0) { // Fin du tour complet
+            const gagnant = determinerGagnant();
+            if (gagnant) {
+                // Si un joueur a dépassé 6000 points, marquer le gagnant et terminer la partie
+                if (gagnant.score >= 6000) {
+                    marquerGagnant(gagnant);
+                    terminerPartie();
+                    return;
+                }
+            }
+        }
+
+    } else {
+        // Mode Skull : Soustraire le score aux autres joueurs
+        if (scoreValue <= 0) {
+            alert('Veuillez entrer un score positif à soustraire.');
+            return;
+        }
+
+        joueurs.forEach((joueur, index) => {
+            if (index !== joueurActuelIndex) {
+                joueur.score -= scoreValue;
+                
+                document.getElementById(`score-${index}`).textContent = `Score: ${joueur.score}`;
+
+                // Vérifiez si le tableau existe, sinon initialisez-le
+                if (!historiqueScores[joueur.nom]) {
+                    historiqueScores[joueur.nom] = []; // Initialisation du tableau
+                }
+                historiqueScores[joueur.nom].push(joueur.score);
+            }
+        });
+
+        mettreAJourGraphique();
+
+        // Passer au joueur suivant
+        joueurActuelIndex = (joueurActuelIndex + 1) % nombreJoueurFin;
+
+        // Vérifier si la partie doit se terminer à la fin du tour complet
+        if (joueurActuelIndex === 0) { // Fin du tour complet
+            const gagnant = determinerGagnant();
+            if (gagnant) {
+                // Si un joueur a dépassé 6000 points, marquer le gagnant et terminer la partie
+                if (gagnant.score >= 6000) {
+                    marquerGagnant(gagnant);
+                    terminerPartie();
+                    return;
+                }
+            }
+        }
+
+        desactiverSkullMode();
+    }
+
+    // Réinitialiser le formulaire
+    this.reset();
+});
+
+// Fonction pour déterminer le gagnant avec le score le plus élevé
+function determinerGagnant() {
+    let maxScore = -Infinity;
+    let gagnant = null;
+
+    joueurs.forEach(joueur => {
+        if (joueur.score > maxScore) {
+            maxScore = joueur.score;
+            gagnant = joueur;
+        }
+    });
+    
+    return gagnant;
+}
+
+
+// Fonction pour marquer le gagnant
+function marquerGagnant(gagnant) {
+  
+}
+   
+
+            document.getElementById('skullButton').addEventListener('click', function() {
+                activerSkullMode();
+            });
+
+            // Initialisation de la page
+            genererCasesJoueurs();
+            mettreAJourJoueurActuel();
+        });
+    </script>
+</body>
+</html>
