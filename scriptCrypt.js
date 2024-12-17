@@ -33,7 +33,15 @@ function validation(){
   h4.innerHTML = "Voici votre texte " + chiffrage
   
   const texte = entree.value;
+  if(methode==='ROT13'){
+    cesar(texte,13);
+  }
+  else if(methode==='Cesar'){
+    cesar(texte,3);
+  }
+  else{
   cryptage(texte);
+  }
 }
 function cryptage(text){
   p1.innerHTML = TexteCode+text
@@ -69,3 +77,22 @@ document.getElementById('decryptage').addEventListener('click', function () {
   document.getElementById('validation').addEventListener('click', function () {
     validation() 
   }); 
+  function cesar(phrase, decalage) {
+    let cryptee = '';
+    for (let index = 0; index < phrase.length; index++) {
+        let lettreDebut = phrase.charCodeAt(index);
+        let lettreFin;
+
+        if (lettreDebut >= 97 && lettreDebut <= 122) {
+            lettreFin = String.fromCharCode(((lettreDebut - 97 + decalage) % 26) + 97);
+        } else if (lettreDebut >= 65 && lettreDebut <= 90) {
+            lettreFin = String.fromCharCode(((lettreDebut - 65 + decalage) % 26) + 65);
+        } else {
+            lettreFin = phrase[index];
+        }
+
+        cryptee += lettreFin;
+    }
+    console.log(cryptee)
+    return cryptee;
+}
