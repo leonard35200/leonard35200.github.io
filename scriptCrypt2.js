@@ -34,11 +34,12 @@ function validation() {
   div3.innerHTML = "";
   btnValidation.style.opacity = "0";
   entree.style.opacity = "0";
-  h4_1.innerHTML = "Voici votre texte " + chiffrage;
-  
+  decalage.style.opacity ="0"
+  h4_1.innerHTML = "Voici vo;tre texte " + chiffrage;
+  let decalage = Number(decalageEntree.value);
   const texte = entree.value;
   if (methode === 'ROT13') {
-    cesar(texte, 13); 
+    cesar(texte, decalage); 
   } else if (methode === 'Cesar') {
     cesar(texte, 3);
   } else {
@@ -86,6 +87,9 @@ document.getElementById('validation').addEventListener('click', function () {
 
 function cesar(phrase, decalage) {
   let cryptee = '';
+  if (chiffrage == 'crypté'){
+        decalage=-decalage
+  }
   for (let index = 0; index < phrase.length; index++) {
     let lettreDebut = phrase.charCodeAt(index);
     let lettreFin;
