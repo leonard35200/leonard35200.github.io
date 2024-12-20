@@ -77,6 +77,8 @@ document.getElementById('decryptage').addEventListener('click', function () {
   document.getElementById('validation').addEventListener('click', function () {
     validation() 
   }); 
+
+
   function cesar(phrase, decalage) {
     let cryptee = '';
     for (let index = 0; index < phrase.length; index++) {
@@ -93,6 +95,5 @@ document.getElementById('decryptage').addEventListener('click', function () {
 
         cryptee += lettreFin;
     }
-    console.log(cryptee)
-    return cryptee;
+    p1.innerHTML = cryptee
 }
