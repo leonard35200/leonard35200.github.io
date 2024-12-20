@@ -5,6 +5,7 @@ const p1 = document.getElementById('p1');
 const h4_1 = document.getElementById('h4');
 const btnValidation = document.getElementById('validation');
 const entree = document.getElementById('entree');
+const decalageEntree = document.getElementById('decalageEntree');
 let methode = ''
 let chiffrage= ''
 let TexteCode = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. "
@@ -25,6 +26,10 @@ function textarea() {
     h4.innerHTML = ""
     btnValidation.style.opacity = "1";
   entree.style.opacity = "1";
+  if(methode==='Cesar'){
+    decalageEntree.style.opacity = "1";
+
+  }
 }
 function validation(){
   div3.innerHTML =""
