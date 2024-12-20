@@ -143,7 +143,7 @@ html {
     margin-top: 20px; /* Retirez la marge négative */
     text-align: center;
   }
-  #validation,#entree{
+  #validation,#entree,#decalageEntree{
     opacity: 0;
   }
         
