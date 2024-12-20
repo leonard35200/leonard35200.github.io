@@ -39,7 +39,7 @@ function validation(){
   
   const texte = entree.value;
   if(methode==='ROT13'){
-    cesar(texte,13);
+    cesar(texte,13); 
   }
   else if(methode==='Cesar'){
     cesar(texte,3);
