@@ -121,7 +121,7 @@ html {
   @media (max-width: 600px) {
     button {
       width: 100%; /* Boutons prennent toute la largeur sur petits écrans */
-    }
+    }}
     #entree {
     width: 100%; /* Largeur adaptative */
     max-width: 100%; /* Empêche de dépasser */
@@ -151,7 +151,7 @@ html {
   }
   
   
-  }
+  
   h1 {
     margin-top: 20px; /* Retirez la marge négative */
     text-align: center;
@@ -164,5 +164,4 @@ html {
     padding-top: 50px; /* Ajoute un espace entre le haut de la page et le contenu */
     overflow: auto; /* Ajoute un défilement si nécessaire */
           
-  }
-      
+        }
