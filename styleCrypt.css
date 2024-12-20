@@ -122,7 +122,7 @@ html {
     button {
       width: 100%; /* Boutons prennent toute la largeur sur petits écrans */
     }
-    textarea {
+    #entree {
     width: 100%; /* Largeur adaptative */
     max-width: 100%; /* Empêche de dépasser */
     box-sizing: border-box; /* Gère correctement padding et bordures */
@@ -135,7 +135,20 @@ html {
   
     margin: 0 auto; /* Centré */
   }
+  #decalageEntree {
+    width: 50%; /* Largeur adaptative */
+    max-width: 50%; /* Empêche de dépasser */
+    height: 1cm;
+    box-sizing: border-box; /* Gère correctement padding et bordures */
+    margin: 0 auto; /* Centre la textarea si nécessaire */
+    padding: 10px; /* Ajoute un espacement interne */
+    border-radius: 10px; /* Bords arrondis pour un meilleur design */
+    }
+    .container {
+    width: 95%; /* Conteneur adaptatif */
   
+    margin: 0 auto; /* Centré */
+  }
   
   
   }
