@@ -35,6 +35,7 @@ function validation(){
   div3.innerHTML =""
   btnValidation.style.opacity = "0";
   entree.style.opacity = "0";
+  decalageEntree.style.opacity = "0";
   h4.innerHTML = "Voici votre texte " + chiffrage
   
   const texte = entree.value;

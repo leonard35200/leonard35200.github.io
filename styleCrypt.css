@@ -143,6 +143,7 @@ html {
     margin: 0 auto; /* Centre la textarea si nécessaire */
     padding: 10px; /* Ajoute un espacement interne */
     border-radius: 10px; /* Bords arrondis pour un meilleur design */
+    margin-top: 20px;
     }
     .container {
     width: 95%; /* Conteneur adaptatif */
