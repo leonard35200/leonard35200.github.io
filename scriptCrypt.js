@@ -35,7 +35,6 @@ function validation(){
   div3.innerHTML =""
   btnValidation.style.opacity = "0";
   entree.style.opacity = "0";
-  decalageEntree.style.opacity = "0";
   h4.innerHTML = "Voici votre texte " + chiffrage
   
   const texte = entree.value;
@@ -103,43 +102,4 @@ document.getElementById('decryptage').addEventListener('click', function () {
         cryptee += lettreFin;
     }
     p1.innerHTML = cryptee
-}
-function cesar(phrase, decalage) {
-  let cryptee = '';
-  for (let index = 0; index < phrase.length; index++) {
-      let lettreDebut = phrase.charCodeAt(index);
-      let lettreFin;
-
-      if (lettreDebut >= 97 && lettreDebut <= 122) {
-          lettreFin = String.fromCharCode(((lettreDebut - 97 + decalage) % 26) + 97);
-      } else if (lettreDebut >= 65 && lettreDebut <= 90) {
-          lettreFin = String.fromCharCode(((lettreDebut - 65 + decalage) % 26) + 65);
-      } else {
-          lettreFin = phrase[index];
-      }
-
-      cryptee += lettreFin;
-  }
-  p1.innerHTML = cryptee
-}
-function cesar(phrase, decalage) {
-  let cryptee = '';
-  if (chiffrage === 'decrypté';) {
-    decalage = -decalage;
-  }
-  for (let index = 0; index < phrase.length; index++) {
-      let lettreDebut = phrase.charCodeAt(index);
-      let lettreFin;
-
-      if (lettreDebut >= 97 && lettreDebut <= 122) {
-          lettreFin = String.fromCharCode(((lettreDebut - 97 + decalage) % 26) + 97);
-      } else if (lettreDebut >= 65 && lettreDebut <= 90) {
-          lettreFin = String.fromCharCode(((lettreDebut - 65 + decalage) % 26) + 65);
-      } else {
-          lettreFin = phrase[index];
-      }
-
-      cryptee += lettreFin;
-  }
-  p1.innerHTML = cryptee
 }
