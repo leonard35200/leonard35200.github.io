@@ -38,6 +38,7 @@ function validation(){
   h4.innerHTML = "Voici votre texte " + chiffrage
   
   const texte = entree.value;
+  const decalage = Number(decalageEntree.value);
   if(methode==='ROT13'){
     cesar(texte,13);
   }
