@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cryptage</title>
+  <link href="styleCrypt2.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+  <div class="container">
+    <h1>Cryptage</h1>
+    <h4 id="h4">Quelle méthode de cryptage voulez-vous utiliser ?</h4>
+    <div id="div1">
+      <button id="ROT13"><p>ROT13</p></button>
+      <button id="Cesar"><p>Code César</p></button>
+      <button id="Vigenere"><p>Code de Vigenère</p></button>
+      <button id="Polybe"><p>Carré de Polybe</p></button>
+    </div>
+    <div id="div2" style="display: none;">
+      <button id="cryptage"><p>Cryptage</p></button>
+      <button id="decryptage"><p>Décryptage</p></button>
+    </div>
+    <textarea id="entree" cols="60" rows="2" placeholder="Entrez votre texte" style="display: none;"></textarea>
+    <textarea id="decalageEntree" cols="10" rows="2" placeholder="Décalage (pour César)" style="display: none;"></textarea>
+    <button id="validation" style="display: none;"><p>Valider</p></button>
+    <p id="p1"></p>
+  </div>
+  <script src="scriptCrypt2.js"></script>
+</body>
+</html>
