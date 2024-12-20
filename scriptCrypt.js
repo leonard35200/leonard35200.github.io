@@ -35,6 +35,8 @@ function validation(){
   div3.innerHTML =""
   btnValidation.style.opacity = "0";
   entree.style.opacity = "0";
+  decalageEntree.style.opacity ="0";
+  let decalage = Number(decalageEntree.value);
   h4.innerHTML = "Voici votre texte " + chiffrage
   
   const texte = entree.value;
@@ -85,6 +87,9 @@ document.getElementById('decryptage').addEventListener('click', function () {
 
 
   function cesar(phrase, decalage) {
+    if (chiffrage == 'crypté'){
+      decalage=-decalage
+}
     let cryptee = '';
     for (let index = 0; index < phrase.length; index++) {
         let lettreDebut = phrase.charCodeAt(index);
