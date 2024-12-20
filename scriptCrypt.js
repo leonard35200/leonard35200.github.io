@@ -104,3 +104,42 @@ document.getElementById('decryptage').addEventListener('click', function () {
     }
     p1.innerHTML = cryptee
 }
+function cesar(phrase, decalage) {
+  let cryptee = '';
+  for (let index = 0; index < phrase.length; index++) {
+      let lettreDebut = phrase.charCodeAt(index);
+      let lettreFin;
+
+      if (lettreDebut >= 97 && lettreDebut <= 122) {
+          lettreFin = String.fromCharCode(((lettreDebut - 97 + decalage) % 26) + 97);
+      } else if (lettreDebut >= 65 && lettreDebut <= 90) {
+          lettreFin = String.fromCharCode(((lettreDebut - 65 + decalage) % 26) + 65);
+      } else {
+          lettreFin = phrase[index];
+      }
+
+      cryptee += lettreFin;
+  }
+  p1.innerHTML = cryptee
+}
+function cesar(phrase, decalage) {
+  let cryptee = '';
+  if (chiffrage === 'decrypté';) {
+    decalage = -decalage;
+  }
+  for (let index = 0; index < phrase.length; index++) {
+      let lettreDebut = phrase.charCodeAt(index);
+      let lettreFin;
+
+      if (lettreDebut >= 97 && lettreDebut <= 122) {
+          lettreFin = String.fromCharCode(((lettreDebut - 97 + decalage) % 26) + 97);
+      } else if (lettreDebut >= 65 && lettreDebut <= 90) {
+          lettreFin = String.fromCharCode(((lettreDebut - 65 + decalage) % 26) + 65);
+      } else {
+          lettreFin = phrase[index];
+      }
+
+      cryptee += lettreFin;
+  }
+  p1.innerHTML = cryptee
+}
