@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Le tour de télépathie</title>
+<style>
+body { font-family: sans-serif; text-align: center; background: #fdf6e3; font-size: 25px; margin-top: 5px; }
+.grid { display: grid; grid-template-columns: repeat(11, 1fr); gap: 10px; max-width: 70%; margin: auto; }
+.cell { padding: 5px; font-size: 23px; }
+.big-button {
+margin-top: 20px;
+padding: 15px 30px;
+font-size: 15px;
+background: none;
+border: none;
+cursor: pointer;
+}
+#retour {
+    display: none;
+}
+#balle {
+    width: 100px;
+    height: 100px;
+    vertical-align: middle;
+    margin-bottom: 21px;
+}
+
+</style>
+</head>
+<body>
+<h1 class="magie">Le tour de télépathie</h1>
+<p class="magie">Choisis un nombre de deux chiffres. Additionne ses chiffres, puis soustrais-les de ton nombre.<br>
+Trouve le symbole associé à ce nouveau nombre et clique sur la boule magique.</p>
+
+<div id="symbolGrid" class="grid"></div>
+
+<button  class="big-button" onclick="reveal()">
+    <img id="balle" src="balle-magique.png" alt="boule de cristal">
+<br> Clique sur la boule magique !  
+</button>
+
+<h2 class="resultat"id="result" style="margin-top: 30px;"></h2>
+<button class="resultat" id="retour" >Clique ici pour que je lise dans ton esprit !</button>
+
+
+<a href="https://www.flaticon.com/fr/icones-gratuites/boule-de-cristal" title="boule de cristal icônes">Boule de cristal icônes créées par Freepik - Flaticon</a>
+<script>
+const symbols = [ "😀", "😁", "😂", "😇", "😉", "😊", "😋", "😌", "😍", "😎", "😏", "😑", "😒", "😓", "😕", "😖", "😘", "😜", "😞", "😟",  "😢", "😣", "😤", "😥", "😧", "😨", "😩", "😪", "😬", "😭", "😮", "😱", "😲", "😳", "😴", "😵", "😶", "🙁", "🙂", "🙃", "🙄"];
+const secretSymbol = symbols[Math.floor(Math.random() * symbols.length)];
+const grid = document.getElementById("symbolGrid");
+
+for (let i = 0; i < 100; i++) {
+const sym = (i % 9 === 0) ? secretSymbol : symbols[Math.floor(Math.random() * symbols.length)];
+const div = document.createElement("div");
+div.className = "cell";
+div.textContent = `${i}: ${sym}`;
+grid.appendChild(div);
+}
+
+function reveal() {
+    document.querySelectorAll(".magie").forEach(el => el.style.display = "none");
+    document.querySelector(".big-button").style.display = "none";
+    document.getElementById("result").textContent = `Le symbole auquel tu penses est : ${secretSymbol}`;
+    document.getElementById("retour").style.display = "block";
+}
+
+
+</script>
+</body>
+</html>
