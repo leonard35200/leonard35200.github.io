@@ -52,6 +52,9 @@ const grid = document.getElementById("symbolGrid");
 
 for (let i = 0; i < 100; i++) {
 const sym = (i % 9 === 0) ? secretSymbol : symbols[Math.floor(Math.random() * symbols.length)];
+if (i % 2 === 0 { document.getElmentById("symboleGrid").style.color("blue");
+} else { document.getElmentById("symboleGrid").style.color("pink");;
+}
 const div = document.createElement("div");
 div.className = "cell";
 div.textContent = `${i}: ${sym}`;
