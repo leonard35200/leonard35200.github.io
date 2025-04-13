@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <title>Le tour de télépathie</title>
 <style>
-body { font-family: sans-serif; text-align: center; background: #fdf6e3; font-size: 25px; margin-top: -20px; }
-.grid { display: grid; grid-template-columns: repeat(11, 1fr); gap: 10px; max-width: 70%; margin: auto; }
-.cell { padding: 5px; font-size: 23px; }
+body { font-family: sans-serif; text-align: center; background: #fdf6e3; font-size: 22px; margin-top: -20px; }
+.grid { display: grid;  gap: 10px; max-width: 80%; margin: auto; }
+.cell { padding: 5px; font-size: 22px; }
 .big-button {
 margin-top: 20px;
 padding: 15px 30px;
@@ -14,6 +14,10 @@ font-size: 15px;
 background: none;
 border: none;
 cursor: pointer;
+}
+#titre {
+    margin-top: 30px;
+    color: #631c73;
 }
 #retour {
     display: none;
@@ -23,15 +27,17 @@ cursor: pointer;
     height: 100px;
     vertical-align: middle;
     margin-bottom: 21px;
-    margin-top: -30px;
+}
+footer{
+    font-size: 15px;
 }
 
 </style>
 </head>
 <body>
-<h1 class="magie">Le tour de télépathie</h1>
-<p class="magie">Choisis un nombre de deux chiffres. Additionne ses chiffres, puis soustrais-les de ton nombre.<br>
-Trouve le symbole associé à ce nouveau nombre et clique sur la boule magique.</p>
+<h2 id="titre" >Le tour de télépathie</h2>
+<p id="texte" >Choisis un nombre de deux chiffres. Soustrait lui, la somme de ses chiffres<br>
+Trouve le symbole associé à ce nouveau nombre, retient le, et clique sur la boule magique.</p>
 
 <div id="symbolGrid" class="grid"></div>
 
@@ -39,36 +45,73 @@ Trouve le symbole associé à ce nouveau nombre et clique sur la boule magique.<
     <img id="balle" src="balle-magique.png" alt="boule de cristal">
 <br> Clique sur la boule magique !  
 </button>
-
-<h2 class="resultat"id="result" style="margin-top: 30px;"></h2>
+<div class="flex-container">
+<h1 class="resultat"id="result" style="margin-top: 30px;"></h1>
+</div>
 <button class="resultat" id="retour" >Clique ici pour que je lise dans ton esprit !</button>
 
 
-<a href="https://www.flaticon.com/fr/icones-gratuites/boule-de-cristal" title="boule de cristal icônes">Boule de cristal icônes créées par Freepik - Flaticon</a>
+
 <script>
 const symbols = [ "😀", "😁", "😂", "😇", "😉", "😊", "😋", "😌", "😍", "😎", "😏", "😑", "😒", "😓", "😕", "😖", "😘", "😜", "😞", "😟",  "😢", "😣", "😤", "😥", "😧", "😨", "😩", "😪", "😬", "😭", "😮", "😱", "😲", "😳", "😴", "😵", "😶", "🙁", "🙂", "🙃", "🙄"];
 const secretSymbol = symbols[Math.floor(Math.random() * symbols.length)];
 const grid = document.getElementById("symbolGrid");
 
+let largeurEcran = window.innerWidth;
+console.log(largeurEcran);
+let nombreColonnesDébut =  Math.floor(largeurEcran / 117);
+let nombreColonnesFin = 0;
+let listeColonnesPossibles = [4,5,7,11,12,13];
+
+document.addEventListener('DOMContentLoaded', function() {trouverPlusProche(nombreColonnesDébut, listeColonnesPossibles);});
+
+function trouverPlusProche(nombre, liste) {
+    let plusProche = liste[0];
+    let differenceMin = Math.abs(nombre - liste[0]);
+
+    for (let i = 1; i < liste.length; i++) {
+        let differenceActuelle = Math.abs(nombre - liste[i]);
+
+        if (differenceActuelle < differenceMin || (differenceActuelle === differenceMin && liste[i] < plusProche)) {
+            plusProche = liste[i];
+            differenceMin = differenceActuelle;
+        }
+    }
+
+    nombreColonnesFin = plusProche;
+    console.log(nombreColonnesFin);
+    grid.style.gridTemplateColumns = `repeat(${nombreColonnesFin}, 1fr)`;
+}
+
+
+
 for (let i = 0; i < 100; i++) {
 const sym = (i % 9 === 0) ? secretSymbol : symbols[Math.floor(Math.random() * symbols.length)];
 const div = document.createElement("div");
 div.className = "cell";
-if (i % 2 === 0) { div.style.color="blue";
-} else { div.style.color="black";
-};
 div.textContent = `${i}: ${sym}`;
 grid.appendChild(div);
 }
 
 function reveal() {
-    document.querySelectorAll(".magie").forEach(el => el.style.display = "none");
+    document.getElementById("titre").style.display = "none";
+    document.getElementById("texte").style.display = "none";
+    document.getElementById("symbolGrid").style.display = "none";
     document.querySelector(".big-button").style.display = "none";
     document.getElementById("result").textContent = `Le symbole auquel tu penses est : ${secretSymbol}`;
     document.getElementById("retour").style.display = "block";
+    document.getElementById("result").style.marginTop = "5%";
 }
+
+
+
+
 
 
 </script>
 </body>
+<footer class="footer">
+    <p>&copy; 2025 Léonard Loquet. Tous droits réservés.</p>
+    <a href="https://www.flaticon.com/fr/icones-gratuites/boule-de-cristal" title="boule de cristal icônes" >Boule de cristal icônes créées par Freepik - Flaticon</a>
+</footer>
 </html>
