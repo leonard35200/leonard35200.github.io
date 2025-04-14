@@ -6,8 +6,24 @@
 <title>Le tour de télépathie</title>
 <style>
 body { font-family: sans-serif; text-align: center; background: #fdf6e3; font-size: 22px; margin-top: -20px; }
-.grid { display: grid;  gap: 10px; max-width: 80%; margin: auto; }
-.cell { padding: 5px; font-size: 22px; }
+.grid {
+    display: grid;
+    gap: 10px;
+    margin: auto;
+    white-space: nowrap;
+ }
+  
+  
+ .cell {
+    white-space: nowrap;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 22px;
+    min-width: 80px;
+  }
+  
+  
 .big-button {
 margin-top: 20px;
 padding: 15px 30px;
@@ -33,7 +49,15 @@ cursor: pointer;
 footer{
     font-size: 15px;
 }
-
+.nombre, .smiley {
+    display: inline;
+    white-space: nowrap;
+  }
+  
+  .smiley {
+    margin-left: 4px;
+  }
+  
 </style>
 </head>
 <body>
@@ -41,7 +65,10 @@ footer{
 <p id="texte" >Choisis un nombre de deux chiffres. Soustrait lui, la somme de ses chiffres<br>
 Trouve le symbole associé à ce nouveau nombre, retient le, et clique sur la boule magique.</p>
 
-<div id="symbolGrid" class="grid"></div>
+<div style="overflow-x: auto;">
+    <div id="symbolGrid" class="grid"></div>
+</div>
+  
 
 <button  class="big-button" onclick="reveal()">
     <img id="balle" src="balle-magique.png" alt="boule de cristal">
@@ -90,7 +117,7 @@ for (let i = 0; i < 100; i++) {
 const sym = (i % 9 === 0) ? secretSymbol : symbols[Math.floor(Math.random() * symbols.length)];
 const div = document.createElement("div");
 div.className = "cell";
-div.textContent = `${i}: ${sym}`;
+div.innerHTML = `<span class="nombre">${i}:</span><span class="smiley">${sym}</span>`;
 grid.appendChild(div);
 }
 
