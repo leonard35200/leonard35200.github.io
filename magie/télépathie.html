@@ -2,16 +2,34 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0"
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Le tour de télépathie</title>
 <style>
-body { font-family: sans-serif; text-align: center; background: #fdf6e3; font-size: 22px; margin-top: -20px; }
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif; 
+    text-align: center; 
+    background: linear-gradient(rgba(249, 252, 190, 0.66),rgba(187, 233, 243, 0.567)); 
+    font-size: 22px; 
+}
+
+footer {
+    font-size: 15px;
+    margin-top: 20px;  /* Ajuste le margin-top si nécessaire */
+    padding: 10px;
+    
+    width: 100%;
+    text-align: center;
+}
+
+
 .grid {
     display: grid;
     gap: 10px;
     margin: auto;
     white-space: nowrap;
-    row-gap: 3%
  }
   
   
@@ -80,10 +98,11 @@ Trouve le symbole associé à ce nouveau nombre, retient le, et clique sur la bo
 </div>
 <button class="resultat" id="retour" >Recommencer</button>
 
-
+<audio id="musiqueBalle" src="MUSCChim_Metallophone ascendant (ID 0920)_LS.mp3" preload="auto"></audio>
 <script>
-const symbols = [ "😀", "😁", "😂", "😇", "😉", "😊", "😋", "😌", "😍", "😎", "😏", "😑", "😒", "😓", "😕", "😖", "😘", "😜", "😞", "😟",  "😢", "😣", "😤", "😥", "😧", "😨", "😩", "😪", "😬", "😭", "😮", "😱", "😲", "😳", "😴", "😵", "😶", "🙁", "🙂", "🙃", "🙄"];
-const secretSymbol = symbols[Math.floor(Math.random() * symbols.length)];
+const symbolesDebut = [ "😀", "😁", "😂", "😇", "😉", "😊", "😋", "😌", "😍", "😎", "😏", "😑", "😒", "😓", "😕", "😖", "😘", "😜", "😞", "😟",  "😢", "😣", "😤", "😥", "😧", "😨", "😩", "😪", "😬", "😭", "😮", "😱", "😲", "😳", "😴", "😵", "😶", "🙁", "🙂", "🙃", "🙄"];
+let symbolesFin = []
+let secretSymbol = ""
 const grid = document.getElementById("symbolGrid");
 
 let largeurEcran = window.innerWidth;
@@ -92,9 +111,13 @@ let nombreColonnesDébut =  Math.floor(largeurEcran / 117);
 let nombreColonnesFin = 0;
 let listeColonnesPossibles = [4,5,7,11,12,13];
 
-document.addEventListener('DOMContentLoaded', function() {trouverPlusProche(nombreColonnesDébut, listeColonnesPossibles);});
+document.addEventListener('DOMContentLoaded', function() {smiley()});
+document.addEventListener('DOMContentLoaded', function() {colonne(nombreColonnesDébut, listeColonnesPossibles)});
+document.addEventListener('DOMContentLoaded', function() {test()});
 
-function trouverPlusProche(nombre, liste) {
+
+
+function colonne(nombre, liste) {
     let plusProche = liste[0];
     let differenceMin = Math.abs(nombre - liste[0]);
 
@@ -112,16 +135,27 @@ function trouverPlusProche(nombre, liste) {
     grid.style.gridTemplateColumns = `repeat(${nombreColonnesFin}, 1fr)`;
 }
 
-
-
-for (let i = 0; i < 100; i++) {
-const sym = (i % 9 === 0) ? secretSymbol : symbols[Math.floor(Math.random() * symbols.length)];
-const div = document.createElement("div");
-div.className = "cell";
-div.innerHTML = `<span class="nombre">${i}:</span><span class="smiley">${sym}</span>`;
-grid.appendChild(div);
+function smiley(){
+    while (symbolesFin.length < 10) {
+       symboleProvisoire = symbolesDebut[Math.floor(Math.random() * symbolesDebut.length)];
+       symbolesFin.push(symboleProvisoire)
+       index = symbolesDebut.indexOf(symboleProvisoire);
+       symbolesDebut.splice(index, 1);
+    }
+    secretSymbol = symbolesFin[Math.floor(Math.random() * symbolesFin.length)];
+    console.log(symbolesFin)
 }
-
+function test (){
+    for (let i = 0; i < 100; i++) {
+        console.log(symbolesDebut)
+        console.log(symbolesFin)
+        const sym = (i % 9 === 0) ? secretSymbol : symbolesFin[Math.floor(Math.random() * symbolesFin.length)];
+        const div = document.createElement("div");
+        div.className = "cell";
+        div.innerHTML = `<span class="nombre">${i}:</span><span class="smiley">${sym}</span>`;
+        grid.appendChild(div);
+    }
+}
 function reveal() {
     document.getElementById("titre").style.display = "none";
     document.getElementById("texte").style.display = "none";
@@ -134,6 +168,8 @@ function reveal() {
     };
     document.getElementById("retour").style.marginBottom = "40%";
     document.getElementById("result").style.marginTop = "5%";
+    var audio = document.getElementById("musiqueBalle");
+    audio.play();
 }
 
 
