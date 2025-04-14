@@ -2,6 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0"
 <title>Le tour de télépathie</title>
 <style>
 body { font-family: sans-serif; text-align: center; background: #fdf6e3; font-size: 22px; margin-top: -20px; }
@@ -49,7 +50,7 @@ Trouve le symbole associé à ce nouveau nombre, retient le, et clique sur la bo
 <div class="flex-container">
 <h1 class="resultat"id="result" style="margin-top: 30px;"></h1>
 </div>
-<button class="resultat" id="retour" >Clique ici pour que je lise dans ton esprit !</button>
+<button class="resultat" id="retour" >Recommencer</button>
 
 
 <script>
@@ -101,7 +102,7 @@ function reveal() {
     document.getElementById("result").textContent = `Le symbole auquel tu penses est : ${secretSymbol}`;
     document.getElementById("retour").style.display = "block";
     document.getElementById("retour").onclick = function() {
-        window.location.href = "index.html";
+        window.location.href = "magie.html";
     };
     document.getElementById("retour").style.marginBottom = "40%";
     document.getElementById("result").style.marginTop = "5%";
