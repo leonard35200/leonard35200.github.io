@@ -14,7 +14,7 @@ let listeColonnesPossibles = [4,5,7,11,12,13];
 
 document.addEventListener('DOMContentLoaded', function() {smiley()});
 document.addEventListener('DOMContentLoaded', function() {colonne(nombreColonnesDébut, listeColonnesPossibles)});
-document.addEventListener('DOMContentLoaded', function() {test()});
+document.addEventListener('DOMContentLoaded', function() {remplissage()});
 
 
 
@@ -45,7 +45,7 @@ function smiley(){
     secretSymbol = symbolesFin[Math.floor(Math.random() * symbolesFin.length)];
    
 }
-function test (){
+function remplissage (){
     if (nombreColonnesFin === 4)
         { ajout = 0}
     else if (nombreColonnesFin === 5)
