@@ -47,7 +47,9 @@ cursor: pointer;
     min-height: 100px;
    
 }
-
+footer{
+    font-size: 15px;
+}
 .nombre, .smiley {
     display: inline;
     white-space: nowrap;
@@ -74,4 +76,56 @@ cursor: pointer;
     min-width: 100px;
     min-height: 100px;
     
+}
+.btn-2 {
+    background: #E1332D; /* Fond rouge */
+    color: #fff;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 45px;
+    margin: 0 0 2em;
+    max-width: 160px;
+    position: relative;
+    text-decoration: none;
+    text-transform: uppercase;
+    width: 100%;
+    padding: 0 1em;
+    transition: all 0.6s ease;
+
+    @media(min-width: 600px) {
+        margin: 0 1em 2em;
+    }
+}
+
+.btn-2:hover,
+.btn-2:active {
+    letter-spacing: 5px;
+}
+
+.btn-2:after,
+.btn-2:before {
+    backface-visibility: hidden;
+    border: 1px solid rgba(#fff, 0);
+    bottom: 0px;
+    content: " ";
+    display: block;
+    margin: 0 auto;
+    position: relative;
+    transition: all 280ms ease-in-out;
+    width: 0;
+}
+
+.btn-2:hover:after,
+.btn-2:hover:before {
+    backface-visibility: hidden;
+    border-color: #fff;
+    transition: width 350ms ease-in-out;
+    width: 70%;
+}
+
+.btn-2:hover:before {
+    bottom: auto;
+    top: 0;
+    width: 70%;
 }

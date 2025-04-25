@@ -7,10 +7,11 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Le tour de télépathie </title>
 <style>
-
 </style>
 </head>
 <body>
+<div class="page-container">
+<main>
 <div id="home-button">
     <a href="index.html">🏡</a>
 </div>    
@@ -37,6 +38,16 @@ Trouve le symbole associé à ce nouveau nombre, retient le, et clique sur la bo
     </button>
 </div>
 <audio id="musiqueBalle" src="musiqueBalle.mp3" preload="auto"></audio>
+</main>
+
+<footer class="footer">
+    <p>Inspirée par l'œuvre de Thérèse Eveilleau, <a href="https://www.mathsmagiques.fr" title="https://www.mathsmagiques.fr" > maths magiques.fr </a> </p>
+    <p>&copy; 2025 Léonard Loquet. Tous droits réservés.</p>
+    <a href="https://www.flaticon.com/fr/icones-gratuites/boule-de-cristal" title="boule de cristal icônes" >Boule de cristal icônes créées par Freepik - Flaticon</a> <br>
+    <a href="https://www.flaticon.com/fr/icones-gratuites/resynchroniser" title="resynchroniser icônes">Resynchroniser icônes créées par saif71 - Flaticon</a>
+</footer>
+
+</div>
 <script>
 const symbolesDebut = [ "😀", "😁", "😂", "😇", "😉", "😊", "😋", "😌", "😍", "😎", "😏", "😑", "😒", "😓", "😕", "😖", "😘", "😜", "😞", "😟",  "😢", "😣", "😤", "😥", "😧", "😨", "😩", "😪", "😬", "😭", "😮", "😱", "😲", "😳", "😴", "😵", "😶", "🙁", "🙂", "🙃", "🙄"];
 const symbolesDebut2 = ["🙂","🙃","😐","😑","😶","😮","😦","😕","😠","☹️"];
@@ -125,7 +136,7 @@ function reveal() {
         setTimeout(() => {
             button.classList.remove('rotate');
             window.location.reload();
-        }, 500); 
+        }, 500); // Durée de l'animation (1 seconde)
     });
 
     
@@ -143,11 +154,6 @@ function reveal() {
 
 
 </script>
-<footer class="footer">
-    <p>Inspirée par l'œuvre de Thérèse Eveilleau, <a href="https://www.mathsmagiques.fr" title="https://www.mathsmagiques.fr" > maths magiques.fr </a> </p>
-    <p>&copy; 2025 Léonard Loquet. Tous droits réservés.</p>
-    <a href="https://www.flaticon.com/fr/icones-gratuites/boule-de-cristal" title="boule de cristal icônes" >Boule de cristal icônes créées par Freepik - Flaticon</a> <br>
-    <a href="https://www.flaticon.com/fr/icones-gratuites/resynchroniser" title="resynchroniser icônes">Resynchroniser icônes créées par saif71 - Flaticon</a>
-</footer>
+
 </body>
 </html>

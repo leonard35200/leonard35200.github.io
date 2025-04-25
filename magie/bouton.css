@@ -1,0 +1,42 @@
+#joliBouton {
+    margin-top: 30px;
+    padding: 20px 50px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    border: 0;
+    color: #000000;
+    background: transparent;
+    position: relative;
+    transition: all .25s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#joliBouton::after, #joliBouton::before {
+    border: 3px solid #000000;
+    content: '';
+    position: absolute;
+    border-radius: inherit;
+    width: 100%;
+    height: 100%;
+    left: 0px;
+    bottom: 0px;
+    transition: all .25s;
+}
+
+#joliBouton:hover::after {
+    transform: translate(-5px, -5px);
+}
+
+#joliBouton:hover::before {
+    transform: translate(5px, 5px);
+}
+
+#test {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; 
+    text-align: center;
+}

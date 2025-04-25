@@ -1,28 +1,24 @@
-html {
-    min-height:110vh;
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: sans-serif;
+    text-align: center;
+    font-size: 22px;
 }
 
 body {
-    margin: 0;
-    padding: 0;
-    font-family: sans-serif; 
-    text-align: center; 
-    background: linear-gradient(rgba(249, 252, 190, 0.66),rgba(187, 233, 243, 0.567)); 
-    font-size: 22px; 
+    background: linear-gradient(rgba(249, 252, 190, 0.66), rgba(187, 233, 243, 0.567));
+    height: 100vh;
 }
 
-footer {
-    font-size: 15px;
-    margin-top: 20px;  /* Ajuste le margin-top si nécessaire */
-    padding: 10px;
-    
-    width: 100%;
-    text-align: center;
+.page-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
-#titre {
-    margin-top: 30px;
-    color: #631c73;
+main {
+    flex: 1;
 }
 
 #home-button {
@@ -31,8 +27,45 @@ footer {
     right: 10px;
     z-index: 1000;
     cursor: pointer;
-    font-size: 50px; 
-  }
+    font-size: 50px;
+}
+
 #home-button a {
-    text-decoration: none; 
-  }
+    text-decoration: none;
+}
+
+#titre {
+    margin-top: 30px;
+    color: #631c73;
+}
+
+.footer {
+    background-color: #2c3e50;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+    font-size: 0.9em;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.footer p {
+    margin: 0;
+    padding: 0;
+}
+
+.footer a {
+    color: #f39c12;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
+
+footer p, .footer a {
+    transition: all 0.3s ease;
+}
