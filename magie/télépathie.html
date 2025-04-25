@@ -7,7 +7,7 @@
 <style>
 
 html {
-    min-height:140vh;
+    min-height:110vh;
 }
 
 body {
@@ -59,15 +59,27 @@ cursor: pointer;
     margin-top: 30px;
     color: #631c73;
 }
-#retour {
-    display: none;
 
+@keyframes rotation {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(720deg); 
+    }
 }
+
+
+
+#retour.rotate {
+    animation: rotation .6s;}
+
 #balle {
-    width: 100px;
-    height: 100px;
-    vertical-align: middle;
-    margin-bottom: 21px;
+    width: 10vw;
+    height: 10vw;
+    min-width: 100px;
+    min-height: 100px;
+   
 }
 footer{
     font-size: 15px;
@@ -80,7 +92,25 @@ footer{
   .smiley {
     margin-left: 4px;
   }
-  
+
+  #retour {
+    display: none;
+    background-color: transparent;
+    border: none;
+    transition: transform .5s;
+    width:10vw;
+    height: 10vw;
+    min-width: 100px;
+    min-height: 100px;
+}
+
+#tourner{
+    width:10vw;
+    height: 10vw;
+    min-width: 100px;
+    min-height: 100px;
+    
+}
 </style>
 </head>
 <body>
@@ -97,20 +127,25 @@ Trouve le symbole associé à ce nouveau nombre, retient le, et clique sur la bo
     <img id="balle" src="balle-magique.png" alt="boule de cristal">
 <br> Clique sur la boule magique !  
 </button>
-<div class="flex-container">
-<h1 class="resultat"id="result" style="margin-top: 30px;"></h1>
-</div>
-<button class="resultat" id="retour" >Recommencer</button>
 
+<h1 class="resultat"id="result" style="margin-top: 30px;"></h1>
+
+
+<div class="flex-container"></div>
+    <button class="resultat" id="retour" >
+        <img id="tourner" src="tourne.png" alt="Recommencer">
+    </button>
+</div>
 <audio id="musiqueBalle" src="musiqueBalle.mp3" preload="auto"></audio>
 <script>
 const symbolesDebut = [ "😀", "😁", "😂", "😇", "😉", "😊", "😋", "😌", "😍", "😎", "😏", "😑", "😒", "😓", "😕", "😖", "😘", "😜", "😞", "😟",  "😢", "😣", "😤", "😥", "😧", "😨", "😩", "😪", "😬", "😭", "😮", "😱", "😲", "😳", "😴", "😵", "😶", "🙁", "🙂", "🙃", "🙄"];
+const symbolesDebut2 = ["🙂","🙃","😐","😑","😶","😮","😦","😕","😠","☹️"];
 let symbolesFin = []
 let secretSymbol = ""
 const grid = document.getElementById("symbolGrid");
 
 let largeurEcran = window.innerWidth;
-console.log(largeurEcran);
+
 let nombreColonnesDébut =  Math.floor(largeurEcran / 117);
 let nombreColonnesFin = 0;
 let listeColonnesPossibles = [4,5,7,11,12,13];
@@ -135,24 +170,34 @@ function colonne(nombre, liste) {
     }
 
     nombreColonnesFin = plusProche;
-    console.log(nombreColonnesFin);
     grid.style.gridTemplateColumns = `repeat(${nombreColonnesFin}, 1fr)`;
 }
 
 function smiley(){
     while (symbolesFin.length < 10) {
-       symboleProvisoire = symbolesDebut[Math.floor(Math.random() * symbolesDebut.length)];
+       symboleProvisoire = symbolesDebut2[Math.floor(Math.random() * symbolesDebut2.length)];
        symbolesFin.push(symboleProvisoire)
-       index = symbolesDebut.indexOf(symboleProvisoire);
-       symbolesDebut.splice(index, 1);
+       index = symbolesDebut2.indexOf(symboleProvisoire);
+       symbolesDebut2.splice(index, 1);
     }
     secretSymbol = symbolesFin[Math.floor(Math.random() * symbolesFin.length)];
-    console.log(symbolesFin)
+   
 }
 function test (){
-    for (let i = 0; i < 100; i++) {
-        console.log(symbolesDebut)
-        console.log(symbolesFin)
+    if (nombreColonnesFin === 4)
+        { ajout = 0}
+    else if (nombreColonnesFin === 5)
+        {  ajout= 0}
+    else if (nombreColonnesFin === 7)
+        { ajout = 5}
+    else if (nombreColonnesFin === 11)
+        { ajout = 10}
+    else if (nombreColonnesFin === 12)
+        { ajout = 8}
+    else if (nombreColonnesFin === 13)
+        { ajout = 4}
+    for (let i = 0; i < 100+ajout; i++) {
+        console.log(symbolesDebut2)
         const sym = (i % 9 === 0) ? secretSymbol : symbolesFin[Math.floor(Math.random() * symbolesFin.length)];
         const div = document.createElement("div");
         div.className = "cell";
@@ -167,18 +212,29 @@ function reveal() {
     document.querySelector(".big-button").style.display = "none";
     document.getElementById("result").textContent = `Le symbole auquel tu penses est : ${secretSymbol}`;
     document.getElementById("retour").style.display = "block";
-    document.getElementById("retour").onclick = function() {
-        window.location.href = "télépathie.html";
-    };
-    document.getElementById("retour").style.marginBottom = "40px";
+    document.getElementById("retour").style.margin = "40px auto 0 auto";
 
-document.getElementById("retour").style.marginLeft = "5%";
+    // Ajout de l'animation sur le bouton "retour"
+    document.getElementById('retour').addEventListener('click', function(event) {
+        const button = this;
+
+        // Ajoute la classe pour déclencher l'animation
+        button.classList.add('rotate');
+
+        // Attendre la fin de l'animation avant de rediriger
+        setTimeout(() => {
+            button.classList.remove('rotate');
+            window.location.href = "télépathie2.html";
+        }, 500); // Durée de l'animation (1 seconde)
+    });
+
+    
     document.getElementById("result").style.marginTop = "15%";
+
     var audio = document.getElementById("musiqueBalle");
     audio.play();
 
-window.scrollTo({top: 0, behavior: 'smooth'});
-
+    window.scrollTo({ top: 0 });
 }
 
 
@@ -190,7 +246,8 @@ window.scrollTo({top: 0, behavior: 'smooth'});
 <footer class="footer">
     <p>Inspirée par l'œuvre de Thérèse Eveilleau, <a href="https://www.mathsmagiques.fr" title="https://www.mathsmagiques.fr" > maths magiques.fr </a> </p>
     <p>&copy; 2025 Léonard Loquet. Tous droits réservés.</p>
-    <a href="https://www.flaticon.com/fr/icones-gratuites/boule-de-cristal" title="boule de cristal icônes" >Boule de cristal icônes créées par Freepik - Flaticon</a>
+    <a href="https://www.flaticon.com/fr/icones-gratuites/boule-de-cristal" title="boule de cristal icônes" >Boule de cristal icônes créées par Freepik - Flaticon</a> <br>
+    <a href="https://www.flaticon.com/fr/icones-gratuites/resynchroniser" title="resynchroniser icônes">Resynchroniser icônes créées par saif71 - Flaticon</a>
 </footer>
 </body>
 </html>
