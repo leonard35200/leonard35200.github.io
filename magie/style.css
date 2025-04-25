@@ -7,7 +7,8 @@ html, body {
 }
 
 body {
-    background: linear-gradient(rgba(249, 252, 190, 0.66), rgba(187, 233, 243, 0.567));
+    /*background: linear-gradient(rgba(249, 252, 190, 0.66), rgba(187, 233, 243, 0.567));*/
+    background-color: rgba(249, 252, 190, 0.66);
     height: 100vh;
 }
 
@@ -27,7 +28,7 @@ main {
     right: 10px;
     z-index: 1000;
     cursor: pointer;
-    font-size: 50px;
+    font-size: 2em;
 }
 
 #home-button a {
