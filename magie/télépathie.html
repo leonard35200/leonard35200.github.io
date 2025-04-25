@@ -8,117 +8,12 @@
 <title>Le tour de télépathie </title>
 <style>
 
-html {
-    min-height:110vh;
-}
-
-body {
-    margin: 0;
-    padding: 0;
-    font-family: sans-serif; 
-    text-align: center; 
-    background: linear-gradient(rgba(249, 252, 190, 0.66),rgba(187, 233, 243, 0.567)); 
-    font-size: 22px; 
-}
-
-footer {
-    font-size: 15px;
-    margin-top: 20px;  /* Ajuste le margin-top si nécessaire */
-    padding: 10px;
-    
-    width: 100%;
-    text-align: center;
-}
-
-
-.grid {
-    display: grid;
-    gap: 10px;
-    margin: auto;
-    white-space: nowrap;
- }
-  
-  
- .cell {
-    white-space: nowrap;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 22px;
-    min-width: 80px;
-  }
-  
-  
-.big-button {
-margin-top: 20px;
-padding: 15px 30px;
-font-size: 15px;
-background: none;
-border: none;
-cursor: pointer;
-}
-#titre {
-    margin-top: 30px;
-    color: #631c73;
-}
-
-@keyframes rotation {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(720deg); 
-    }
-}
-
-
-
-#retour.rotate {
-    animation: rotation .6s;}
-
-#balle {
-    width: 10vw;
-    height: 10vw;
-    min-width: 100px;
-    min-height: 100px;
-   
-}
-footer{
-    font-size: 15px;
-}
-.nombre, .smiley {
-    display: inline;
-    white-space: nowrap;
-  }
-  
-  .smiley {
-    margin-left: 4px;
-  }
-
-  #retour {
-    display: none;
-    background-color: transparent;
-    border: none;
-    transition: transform .5s;
-    width:10vw;
-    height: 10vw;
-    min-width: 100px;
-    min-height: 100px;
-}
-
-#tourner{
-    width:10vw;
-    height: 10vw;
-    min-width: 100px;
-    min-height: 100px;
-    
-}
 </style>
 </head>
 <body>
-
-
-    
+<div id="home-button">
+    <a href="index.html">🏡</a>
+</div>    
 <h2 id="titre" >Le tour de télépathie</h2>
 <p id="texte" >Choisis un nombre de deux chiffres. Soustrait lui, la somme de ses chiffres<br>
 Trouve le symbole associé à ce nouveau nombre, retient le, et clique sur la boule magique.</p>

@@ -1,0 +1,38 @@
+html {
+    min-height:110vh;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif; 
+    text-align: center; 
+    background: linear-gradient(rgba(249, 252, 190, 0.66),rgba(187, 233, 243, 0.567)); 
+    font-size: 22px; 
+}
+
+footer {
+    font-size: 15px;
+    margin-top: 20px;  /* Ajuste le margin-top si nécessaire */
+    padding: 10px;
+    
+    width: 100%;
+    text-align: center;
+}
+
+#titre {
+    margin-top: 30px;
+    color: #631c73;
+}
+
+#home-button {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+    cursor: pointer;
+    font-size: 50px; 
+  }
+#home-button a {
+    text-decoration: none; 
+  }

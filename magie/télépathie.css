@@ -1,0 +1,77 @@
+.grid {
+    display: grid;
+    gap: 10px;
+    margin: auto;
+    white-space: nowrap;
+ }
+  
+  
+ .cell {
+    white-space: nowrap;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 22px;
+    min-width: 80px;
+  }
+  
+  
+.big-button {
+margin-top: 20px;
+padding: 15px 30px;
+font-size: 15px;
+background: none;
+border: none;
+cursor: pointer;
+}
+
+
+@keyframes rotation {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(720deg); 
+    }
+}
+
+
+
+#retour.rotate {
+    animation: rotation .6s;}
+
+#balle {
+    width: 10vw;
+    height: 10vw;
+    min-width: 100px;
+    min-height: 100px;
+   
+}
+
+.nombre, .smiley {
+    display: inline;
+    white-space: nowrap;
+  }
+  
+  .smiley {
+    margin-left: 4px;
+  }
+
+  #retour {
+    display: none;
+    background-color: transparent;
+    border: none;
+    transition: transform .5s;
+    width:10vw;
+    height: 10vw;
+    min-width: 100px;
+    min-height: 100px;
+}
+
+#tourner{
+    width:10vw;
+    height: 10vw;
+    min-width: 100px;
+    min-height: 100px;
+    
+}
