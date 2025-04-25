@@ -16,7 +16,7 @@
         <a href="index.html">🏡</a>
     </div>
     <div id="test">
-        <a id="joliBouton" href="télépathie.html">télépathie</a><br>
+        <a id="joliBouton">télépathie</a><br>
     </div>
 </main>
     <footer class="footer">
@@ -27,6 +27,23 @@
     </footer>
 </div>    
 <script>
+document.getElementById("joliBouton").addEventListener("click", function(event) {
+    event.preventDefault(); // Empêche le clic immédiat de changer de page
+
+    // Ajoutez une classe pour démarrer l'animation (en ajoutant un délai)
+    this.classList.add("animating");
+
+    // Utilisez un délai d'animation plus long pour qu'elle dure réellement avant de changer la page
+    let animationDuration = 250; // Temps d'animation en millisecondes
+
+    // Ajoutez un délai pour attendre la fin de l'animation avant de rediriger
+    setTimeout(() => {
+        // Redirige après l'animation
+        window.location.href = "télépathie.html"; // ou toute autre action
+    }, animationDuration);
+});
+
+
 </script>
 </body>
 </html>

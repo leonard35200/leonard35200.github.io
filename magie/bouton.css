@@ -7,7 +7,7 @@
     color: #000000;
     background: transparent;
     position: relative;
-    transition: all .25s;
+    transition: all .25s ease-in-out;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -22,7 +22,7 @@
     height: 100%;
     left: 0px;
     bottom: 0px;
-    transition: all .25s;
+    transition: all .25s ease-in-out;
 }
 
 #joliBouton:hover::after {
