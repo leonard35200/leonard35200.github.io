@@ -86,7 +86,7 @@ function reveal() {
         // Attendre la fin de l'animation avant de rediriger
         setTimeout(() => {
             button.classList.remove('rotate');
-            window.location.href="télépathie.html"();
+            window.location.href="télépathie.html";
         }, 500); // Durée de l'animation (1 seconde)
     });
 
