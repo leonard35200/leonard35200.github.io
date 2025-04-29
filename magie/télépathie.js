@@ -15,7 +15,7 @@ let listeColonnesPossibles = [4,5,7,11,12,13];
 document.addEventListener('DOMContentLoaded', function() {smiley()});
 document.addEventListener('DOMContentLoaded', function() {colonne(nombreColonnesDébut, listeColonnesPossibles)});
 document.addEventListener('DOMContentLoaded', function() {remplissage()});
-
+document.addEventListener('DOMContentLoaded', function() {window.scrollTo({ top: 0 })});
 
 
 function colonne(nombre, liste) {
