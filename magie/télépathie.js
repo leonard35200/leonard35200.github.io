@@ -75,19 +75,13 @@ function reveal() {
     document.getElementById("result").textContent = `Le symbole auquel tu penses est : ${secretSymbol}`;
     document.getElementById("retour").style.display = "block";
     document.getElementById("retour").style.margin = "40px auto 0 auto";
-
-    // Ajout de l'animation sur le bouton "retour"
     document.getElementById('retour').addEventListener('click', function(event) {
         const button = this;
-
-        // Ajoute la classe pour déclencher l'animation
         button.classList.add('rotate');
-
-        // Attendre la fin de l'animation avant de rediriger
         setTimeout(() => {
             button.classList.remove('rotate');
             window.location.href="télépathie.html";
-        }, 500); // Durée de l'animation (1 seconde)
+        }, 500);
     });
 
     
