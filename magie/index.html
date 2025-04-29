@@ -13,8 +13,8 @@
 <div class="page-container">
 <main>
     <div id="test">
-        <a id="joliBouton">télépathie</a><br>
-        <a id="joliBouton">télépathie</a><br>
+        <a class="joliBouton" id="télépathie">Télépathie</a><br>
+        <a class="joliBouton" id="nbCaché">Le nombre caché</a><br>
     </div>
 </main>
     <footer class="footer">
@@ -25,22 +25,22 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {window.scrollTo({ top: 0 })});
 
-document.getElementById("joliBouton").addEventListener("click", function(event) {
-    event.preventDefault(); // Empêche le clic immédiat de changer de page
-
-    // Ajoutez une classe pour démarrer l'animation (en ajoutant un délai)
+document.getElementById("télépathie").addEventListener("click", function(event) {
+    event.preventDefault(); 
     this.classList.add("animating");
-
-    // Utilisez un délai d'animation plus long pour qu'elle dure réellement avant de changer la page
-    let animationDuration = 250; // Temps d'animation en millisecondes
-
-    // Ajoutez un délai pour attendre la fin de l'animation avant de rediriger
+    let animationDuration = 250;
     setTimeout(() => {
-        // Redirige après l'animation
-        window.location.href = "télépathie.html"; // ou toute autre action
+        window.location.href = "télépathie.html"; 
     }, animationDuration);
 });
-
+document.getElementById("nbCaché").addEventListener("click", function(event) {
+    event.preventDefault(); 
+    this.classList.add("animating");
+    let animationDuration = 250;
+    setTimeout(() => {
+        window.location.href = "nombre-caché.html"; 
+    }, animationDuration);
+});
 
 </script>
 </body>

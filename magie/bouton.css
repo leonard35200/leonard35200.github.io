@@ -1,4 +1,4 @@
-#joliBouton {
+.joliBouton {
     margin-top: 30px;
     padding: 20px 50px;
     font-size: 1.5rem;
@@ -13,7 +13,7 @@
     align-items: center;
 }
 
-#joliBouton::after, #joliBouton::before {
+.joliBouton::after, #joliBouton::before {
     border: 3px solid #000000;
     content: '';
     position: absolute;
@@ -25,11 +25,11 @@
     transition: all .25s ease-in-out;
 }
 
-#joliBouton:hover::after {
+.joliBouton:hover::after {
     transform: translate(-5px, -5px);
 }
 
-#joliBouton:hover::before {
+.joliBouton:hover::before {
     transform: translate(5px, 5px);
 }
 
