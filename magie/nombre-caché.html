@@ -73,10 +73,10 @@
 }
 
 .ligne-consigne {
-  white-space: nowrap;        /* empêche le retour à la ligne */
-  overflow: hidden;           /* masque ce qui dépasse */
-  text-overflow: ellipsis;    /* ajoute "..." si trop long (optionnel) */
-  font-size: clamp(12px, 2vw, 18px); /* taille responsive entre 12px et 18px */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: min(2.5vw, 18px); /* 2.5vw s’adapte à l’écran, max 18px */
   display: block;
 }
   </style>
