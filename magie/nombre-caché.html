@@ -71,6 +71,14 @@
   color: #007BFF; /* ou toute autre couleur de ton choix */
   font-weight: bold; /* optionnel, pour mieux ressortir */
 }
+
+.ligne-consigne {
+  white-space: nowrap;        /* empêche le retour à la ligne */
+  overflow: hidden;           /* masque ce qui dépasse */
+  text-overflow: ellipsis;    /* ajoute "..." si trop long (optionnel) */
+  font-size: clamp(12px, 2vw, 18px); /* taille responsive entre 12px et 18px */
+  display: block;
+}
   </style>
 </head>
 <body>
@@ -80,16 +88,15 @@
         <a href="index.html">🏡</a>
     </div>  
   <h2>Je devine le nombre caché</h2>
-    <div id="cc"> 
-    <p>
-  1 : Choisis un nombre <span class="exemple">7146</span><br>
-  2: Calcule la somme de ses chiffres <span class="exemple">7+1+4+6 = 18</span><br>
-  3: Raye un des chiffres du nombre initial ( sauf 0)<span class="exemple">746</span><br>
-  4: Soustrais lui la somme obtenue en 2  <span class="exemple">746-18 = 727</span><br> 
-  5: Rentre ce résultat dans la case ci-dessous<br>
-  6: Clique sur le bouton "VALIDER" et je devinerai le chiffre que tu as rayé ! 
-</p>
-    <label for="resultat">Résultat : </label> 
+<div id="cc"> 
+  <span class="ligne-consigne">1 : Choisis un nombre par exemple /// <span class="exemple">7146</span></span><br>
+  <span class="ligne-consigne">2: Calcule la somme de ses chiffres /// <span class="exemple">7+1+4+6 = 18</span></span><br>
+  <span class="ligne-consigne">3: Raye un des chiffres du nombre initial (sauf 0) /// <span class="exemple">746</span></span><br>
+  <span class="ligne-consigne">4: Soustrais lui la somme en 2 /// <span class="exemple">746-18 = 727</span></span><br>
+  <span class="ligne-consigne">5: Rentre ce résultat dans la case ci-dessous</span><br>
+  <span class="ligne-consigne">6: Clique sur le bouton "VALIDER" et je devinerai le chiffre que tu as rayé !</span><br>
+</div>
+<label for="resultat">Résultat : </label> 
     <input type="text" id="resultat"><br>
     <button class="btnImage" id="valider" onclick="devinerChiffre()">
         <img id="ok" src="valider.png" alt="Valider" >
