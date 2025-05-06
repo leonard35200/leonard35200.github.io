@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>L’oracle modulaire</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+    }
+
+    #contenu {
+      display: inline-block;
+      max-width: 90%;
+    }
+
+    /* 1. On s’assure que zoneMasquee s’adapte à son contenu */
+#zoneMasquee {
+  position: relative;
+  width: min(90vw, 400px);
+  margin: auto;
+  /* aspect-ratio supprimé (vous l’avez déjà fait) */
+  /* on enlève tout overflow qui pourrait couper la popup */
+  overflow: visible;
+}
+
+/* 2. On fait de la popup un full-overlay avec un padding généreux */
+.popup {
+  /* ON ANNULE totalement l’absolu pour que la popup soit dans le flux */
+  position: static;
+  display: none;          /* cachée par défaut */
+  
+  /* taille et alignement */
+  width: 100%;            /* prend toute la largeur de zoneMasquee */
+  /* hauteur auto : s’ajuste au contenu */
+  
+  /* style visuel */
+  background: rgba(255, 221, 221, 0.95);
+  border: 2px solid #cc0000;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+
+  /* espacement intérieur */
+  padding: 2em;
+  box-sizing: border-box;
+  
+  /* on affiche le contenu en colonne */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.popup p {
+  width: 100%;
+  margin: 0.8em 0;
+  text-align: center;
+  word-break: break-word;
+}
+
+
+    #contenu {
+  position: relative;
+  width: min(90vw, 400px);
+  margin: auto;
+  background: #ffcaca; 
+  border-radius: 8px; 
+  box-shadow: 10 2px 8px rgba(0, 0, 0, 0.1); 
+  padding: 1em; 
+}
+
+#formulaire {
+  position: static;
+  width: 100%;
+  height: auto;
+  z-index: 1;
+}
+
+
+    #formulaire input {
+      width: 80px;
+      text-align: center;
+    }
+  
+    #formulaire button {
+      padding: 0.2em 1.2em;
+      font-size: 1rem;
+    }
+
+    
+
+    .popup-close {
+      position: absolute;
+      top: 5px;
+      right: 10px;
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #cc0000;
+      cursor: pointer;
+    }
+
+    
+
+   
+
+    ul { list-style: none; margin: 1rem 0; padding-left: 1em; }
+    ul li::before { content: "• "; color: #007BFF; }
+
+    #ok{
+    width:7.5vw;
+    height: 7.5vw;
+    min-width: 75px;
+    min-height: 75px;}
+    
+    .btnImage{
+    background-color: transparent;
+    border: none;
+    transition: transform .5s;
+    width:7.5vw;
+    height: 7.5vw;
+    min-width: 75px;
+    min-height: 75px;
+}
+#valider {
+  display: block;
+  margin: 1em auto 0 auto;
+}
+
+
+
+#retour {
+      display: inline-block;
+      display: none;
+      transform-origin: center center;
+    }
+#tourner{
+  display: inline-block;
+    width:10vw;
+    height: 10vw;
+    min-width: 100px;
+    min-height: 100px;
+    transform-origin: center center;
+}
+@keyframes rotation {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(720deg); 
+    }
+}
+
+
+
+#retour.rotate {
+    animation: rotation .6s;
+    transform-origin: 50% 50%;}
+#tourner.rotate {
+  animation: rotation .6s;
+}
+  </style>
+</head>
+<body onload="initialiserPage()">
+  <div class="page-container">
+    <main>
+    <div id="home-button">
+        <a href="index.html">🏡</a>
+    </div>
+  <h1>L’oracle modulaire</h1>
+
+  <div id="contenu">
+    <p>Choisis un nombre inférieur à 129014</p>
+    <p>Calcule les restes de sa division par :</p>
+    <ul style="list-style: none; padding: 0;">
+      <li>49</li>
+      <li>82</li>
+      <li>89</li>
+    </ul>
+
+    <div id="zoneMasquee">
+      <div id="formulaire">
+        <label>Reste de la division par 49 : <input type="text" id="r49"></label><br>
+        <label>Reste de la division  par 82 : <input type="text" id="r82"></label><br>
+        <label>Reste de la division par 89 : <input type="text" id="r89"></label><br><br>
+      </div>
+      <button class="btnImage" id="valider" onclick="retrouverNombre()">
+        <img id="ok" src="valider.png" alt="Valider" >
+    </button>
+      <div class="popup" id="popupErreur">
+        <span class="popup-close" onclick="fermerErreur()">×</span>
+        <p>❌ Erreur de calcul.</p>
+        <p>Vérifie que les restes sont bien positifs et inférieurs aux diviseurs.</p>
+      </div>
+    </div>
+  </div>
+
+  <h2 id="resultat"></h2>
+
+  <button class="btnImage" id="retour" onclick="recommencer()" >
+    <img id="tourner" src="tourne.png" alt="Recommencer">
+</button>
+
+
+</main>
+</div>
+<footer class="footer">
+  <p>Inspirée par l'œuvre de Thérèse Eveilleau, <a href="https://www.mathsmagiques.fr" title="https://www.mathsmagiques.fr" > maths magiques.fr </a> </p><br>
+  <p>&copy; 2025 Léonard Loquet. Tous droits réservés.</p><br>
+  <a href="https://www.flaticon.com/fr/icones-gratuites/boule-de-cristal" title="boule de cristal icônes" >Boule de cristal icônes créées par Freepik - Flaticon</a> <br>
+  <a href="https://www.flaticon.com/fr/icones-gratuites/resynchroniser" title="resynchroniser icônes">Resynchroniser icônes créées par saif71 - Flaticon</a><br><br>
+</footer>
+  <script>
+    function initialiserPage() {
+      ['r49', 'r82', 'r89'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('resultat').textContent = '';
+      document.getElementById('popupErreur').style.display = 'none';    }
+
+    function afficherErreur() {
+      document.getElementById('formulaire').style.display = 'none';
+      document.getElementById('valider').style.display = 'none'; 
+      document.getElementById('popupErreur').style.display = 'flex';
+    }
+
+    function fermerErreur() {
+      document.getElementById('popupErreur').style.display = 'none';
+      document.getElementById('formulaire').style.display = 'block';
+      document.getElementById('valider').style.display = 'inline-block';
+    }
+
+    function modInverse(a, m) {
+      let m0 = m, x0 = 0, x1 = 1;
+      if (m === 1) return 0;
+      while (a > 1) {
+        let q = Math.floor(a / m);
+        [a, m] = [m, a % m];
+        [x0, x1] = [x1 - q * x0, x0];
+      }
+      return (x1 + m0) % m0;
+    }
+
+    function retrouverNombre() {
+      const r49 = parseInt(document.getElementById('r49').value);
+      const r82 = parseInt(document.getElementById('r82').value);
+      const r89 = parseInt(document.getElementById('r89').value);
+
+      console.log(`r49: ${r49}, r82: ${r82}, r89: ${r89}`);
+
+      if (
+        isNaN(r49) || r49 < 0 || r49 >= 49 ||
+        isNaN(r82) || r82 < 0 || r82 >= 82 ||
+        isNaN(r89) || r89 < 0 || r89 >= 89
+      ) {
+        console.log("Erreur de saisie");
+        afficherErreur();
+        return;
+      }
+
+      const n1 = 49, n2 = 82, n3 = 89;
+      const N = n1 * n2 * n3;
+      const N1 = N / n1, N2 = N / n2, N3 = N / n3;
+      const m1 = modInverse(N1, n1), m2 = modInverse(N2, n2), m3 = modInverse(N3, n3);
+
+      let x = (r49 * N1 * m1 + r82 * N2 * m2 + r89 * N3 * m3) % N;
+      while (x >= 129014) x -= N;
+
+      document.getElementById('contenu').style.display = 'none';
+      document.getElementById("retour").style.margin = "40px auto 0 auto";
+      document.getElementById("retour").style.display = "block";
+      document.getElementById('resultat').textContent = `Ton nombre était : ${x}`;
+      
+    }
+
+
+    document.getElementById('retour').addEventListener('click', function(event) {
+      const img = document.getElementById('tourner');
+  img.classList.add('rotate');
+  setTimeout(() => {
+    img.classList.remove('rotate');
+    window.location.href = "reste.html";
+  }, 500);
+    });
+  </script>
+</body>
+</html>
