@@ -307,20 +307,7 @@
 console.log(`La largeur de l'écran est de ${window.innerWidth}px et la hauteur est de ${window.innerHeight}px.`);
 
 
-function verifierTailleEcran() {
-  const popup = document.getElementById('popupErreur');
-  const estPetitEcran = window.innerHeight < 500 || window.innerWidth < 350;
 
-  if (estPetitEcran) {
-    popup.style.display = 'none';
-  }
-}
-
-// À l'ouverture de la page
-verifierTailleEcran();
-
-// Et à chaque redimensionnement
-window.addEventListener('resize', verifierTailleEcran);
   </script>
 </body>
 </html>
