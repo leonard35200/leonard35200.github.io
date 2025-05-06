@@ -15,6 +15,7 @@
     <div id="test">
         <a class="joliBouton" id="télépathie">Télépathie</a><br>
         <a class="joliBouton" id="nbCaché">Le nombre caché</a><br>
+        <a class="joliBouton" id="reste">L'oracle modulaire'</a><br>
     </div>
 </main>
     <footer class="footer">
@@ -39,6 +40,14 @@ document.getElementById("nbCaché").addEventListener("click", function(event) {
     let animationDuration = 250;
     setTimeout(() => {
         window.location.href = "nombre-caché.html"; 
+    }, animationDuration);
+});
+document.getElementById("reste").addEventListener("click", function(event) {
+    event.preventDefault(); 
+    this.classList.add("animating");
+    let animationDuration = 250;
+    setTimeout(() => {
+        window.location.href = "reste.html"; 
     }, animationDuration);
 });
 
