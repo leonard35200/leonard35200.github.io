@@ -1,1 +1,1 @@
-salut moi c léo loquet 
+Bienvenue sur la page de Léonard LOQUET 
