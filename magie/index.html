@@ -22,7 +22,8 @@
        <p>Inspirée par l'œuvre de Thérèse Eveilleau, <a href="https://www.mathsmagiques.fr" title="https://www.mathsmagiques.fr" > maths magiques.fr </a> </p><br>
     <p id="copyright"></p><br>
 </footer>
-</div>    
+</div>
+<script src="footer.js"></script>    
 <script>
     document.addEventListener('DOMContentLoaded', function() {window.scrollTo({ top: 0 })});
 
@@ -51,12 +52,7 @@ document.getElementById("reste").addEventListener("click", function(event) {
     }, animationDuration);
 });
 
-  const anneeActuelle = new Date().getFullYear();
-  const texte = (anneeActuelle === 2025)
-    ? "© 2025 Léonard Loquet. Tous droits réservés."
-    : `© 2025 - ${anneeActuelle} Léonard Loquet. Tous droits réservés.`;
-  const copyright = document.getElementById("copyright");
-  if (copyright) copyright.textContent = texte;
+ 
 </script>
 </body>
 </html>

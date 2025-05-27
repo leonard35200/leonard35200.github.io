@@ -237,13 +237,9 @@ function reveal() {
     window.scrollTo({ top: 0 });
 }
 
-const anneeActuelle = new Date().getFullYear();
-  const texte = (anneeActuelle === 2025)
-    ? "© 2025 Léonard Loquet. Tous droits réservés."
-    : `© 2025 - ${anneeActuelle} Léonard Loquet. Tous droits réservés.`;
-  const copyright = document.getElementById("copyright");
-  if (copyright) copyright.textContent = texte;
+
 </script>
+<script src="footer.js"></script>
 <footer class="footer">
     <p>Inspirée par l'œuvre de Thérèse Eveilleau, <a href="https://www.mathsmagiques.fr" title="https://www.mathsmagiques.fr" > maths magiques.fr </a> </p><br>
     <p id="copyright"></p><br>
