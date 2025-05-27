@@ -1,5 +1,4 @@
-
-   .box {
+.box {
       border: 1px solid #000;
       padding: 20px;
       display: inline-block;
@@ -88,9 +87,9 @@
 
 #contenu {
       display: inline-block;
-      max-width: 90%;
+      max-width: 98vw;
       position: relative;
-      width: min(90vw, 400px);
+      width: min(98vw, 600px);
       margin: auto;
       background: #ffcaca; 
       border-radius: 8px; 
