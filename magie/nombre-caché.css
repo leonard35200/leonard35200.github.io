@@ -87,9 +87,8 @@
 
 #contenu {
       display: inline-block;
-      max-width: 98vw;
       position: relative;
-      width: min(98vw, 600px);
+      width: auto;
       margin: auto;
       background: #ffcaca; 
       border-radius: 8px; 
