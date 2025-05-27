@@ -67,6 +67,5 @@ function initialiserPage() {
     window.location.href = "reste.html";
   }, 500);
     });
-console.log(`La largeur de l'écran est de ${window.innerWidth}px et la hauteur est de ${window.innerHeight}px.`);
 
 

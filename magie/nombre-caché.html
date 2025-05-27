@@ -37,11 +37,19 @@
 </div>
 <footer class="footer">
     <p>Inspirée par l'œuvre de Thérèse Eveilleau, <a href="https://www.mathsmagiques.fr" title="https://www.mathsmagiques.fr" > maths magiques.fr </a> </p><br>
-    <p>&copy; 2025 Léonard Loquet. Tous droits réservés.</p><br>
+    <p id="copyright"></p><br>
     <a href="https://www.flaticon.com/fr/icones-gratuites/correct" title="correct icônes">Correct icônes créées par meaicon - Flaticon</a><br>
     <a href="https://www.flaticon.com/fr/icones-gratuites/resynchroniser" title="resynchroniser icônes">Resynchroniser icônes créées par saif71 - Flaticon</a><br><br>
 </footer>
   <script src="nombre-caché.js">
   </script>
+  <script>
+  const anneeActuelle = new Date().getFullYear();
+  const texte = (anneeActuelle === 2025)
+    ? "© 2025 Léonard Loquet. Tous droits réservés."
+    : `© 2025 - ${anneeActuelle} Léonard Loquet. Tous droits réservés.`;
+  const copyright = document.getElementById("copyright");
+  if (copyright) copyright.textContent = texte;
+</script>
 </body>
 </html>
