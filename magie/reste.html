@@ -25,7 +25,15 @@
     #contenu {
       display: inline-block;
       max-width: 90%;
+       position: relative;
+  width: min(90vw, 400px);
+  margin: auto;
+  background: #ffcaca; 
+  border-radius: 8px; 
+  box-shadow: 10 2px 8px rgba(0, 0, 0, 0.1); 
+  padding: 1em; 
     }
+  
 
     /* 1. On s’assure que zoneMasquee s’adapte à son contenu */
 #zoneMasquee {
@@ -73,15 +81,7 @@
 }
 
 
-    #contenu {
-  position: relative;
-  width: min(90vw, 400px);
-  margin: auto;
-  background: #ffcaca; 
-  border-radius: 8px; 
-  box-shadow: 10 2px 8px rgba(0, 0, 0, 0.1); 
-  padding: 1em; 
-}
+    
 
 #formulaire {
   position: static;
