@@ -83,3 +83,15 @@
   font-size: min(2.5vw, 18px); /* 2.5vw s’adapte à l’écran, max 18px */
   display: block;
 }
+
+#contenu {
+      display: inline-block;
+      max-width: 90%;
+      position: relative;
+      width: min(90vw, 400px);
+      margin: auto;
+      background: #ffcaca; 
+      border-radius: 8px; 
+      box-shadow: 10 2px 8px rgba(0, 0, 0, 0.1); 
+      padding: 1em; 
+    }
