@@ -7,8 +7,7 @@ html, body {
 }
 
 body {
-    /*background: linear-gradient(rgba(249, 252, 190, 0.66), rgba(187, 233, 243, 0.567));*/
-    background-color: rgba(249, 252, 190, 0.66);
+    background: #ffcaca;
     height: 100vh;
 }
 
@@ -69,4 +68,13 @@ main {
 
 footer p, .footer a {
     transition: all 0.3s ease;
+}
+
+.box-rose {
+    background: #ffcaca;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    padding: 1em;
+    width: min(90vw, 400px);
+    margin: 2em auto;
 }
