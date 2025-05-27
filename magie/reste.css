@@ -1,0 +1,176 @@
+.popup {
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+
+
+
+
+
+    body {
+      font-family: sans-serif;
+      text-align: center;
+    }
+
+    #contenu {
+      display: inline-block;
+      max-width: 90%;
+      position: relative;
+      width: min(90vw, 400px);
+      margin: auto;
+      background: #ffcaca; 
+      border-radius: 8px; 
+      box-shadow: 10 2px 8px rgba(0, 0, 0, 0.1); 
+      padding: 1em; 
+    }
+  
+
+    /* 1. On s’assure que zoneMasquee s’adapte à son contenu */
+#zoneMasquee {
+  position: relative;
+  width: min(90vw, 400px);
+  margin: auto;
+  /* aspect-ratio supprimé (vous l’avez déjà fait) */
+  /* on enlève tout overflow qui pourrait couper la popup */
+  overflow: visible;
+}
+
+/* 2. On fait de la popup un full-overlay avec un padding généreux */
+.popup {
+  /* ON ANNULE totalement l’absolu pour que la popup soit dans le flux */
+  position: static;
+  display: none;          /* cachée par défaut */
+  
+  /* taille et alignement */
+  width: 100%;            /* prend toute la largeur de zoneMasquee */
+  /* hauteur auto : s’ajuste au contenu */
+  
+  /* style visuel */
+  background: rgba(255, 221, 221, 0.95);
+  border: 2px solid #cc0000;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+
+  /* espacement intérieur */
+  padding: 2em;
+  box-sizing: border-box;
+  
+  /* on affiche le contenu en colonne */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.popup p {
+  width: 100%;
+  margin: 0.8em 0;
+  text-align: center;
+  word-break: break-word;
+}
+
+
+    
+
+#formulaire {
+  position: static;
+  width: 100%;
+  height: auto;
+  z-index: 1;
+}
+
+
+    #formulaire input {
+      width: 80px;
+      text-align: center;
+    }
+  
+    #formulaire button {
+      padding: 0.2em 1.2em;
+      font-size: 1rem;
+    }
+
+    
+
+    .popup-close {
+      position: absolute;
+      top: 5px;
+      right: 10px;
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #cc0000;
+      cursor: pointer;
+    }
+
+    
+
+   
+
+    ul { list-style: none; margin: 1rem 0; padding-left: 1em; }
+    ul li::before { content: "• "; color: #007BFF; }
+
+    #ok{
+    width:7.5vw;
+    height: 7.5vw;
+    min-width: 75px;
+    min-height: 75px;}
+    
+    .btnImage{
+    background-color: transparent;
+    border: none;
+    transition: transform .5s;
+    width:7.5vw;
+    height: 7.5vw;
+    min-width: 75px;
+    min-height: 75px;
+}
+#valider {
+  display: block;
+  margin: 1em auto 0 auto;
+}
+
+
+
+#retour {
+      display: inline-block;
+      display: none;
+      transform-origin: center center;
+    }
+#tourner{
+  display: inline-block;
+    width:10vw;
+    height: 10vw;
+    min-width: 100px;
+    min-height: 100px;
+    transform-origin: center center;
+}
+@keyframes rotation {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(720deg); 
+    }
+}
+
+
+
+#retour.rotate {
+    animation: rotation .6s;
+    transform-origin: 50% 50%;}
+#tourner.rotate {
+  animation: rotation .6s;
+}
+
+
+
+@media screen and (max-height: 500px), screen and (max-width: 350px) {
+  #contenu {
+    background : white;
+  }
+}
+
+
+  
