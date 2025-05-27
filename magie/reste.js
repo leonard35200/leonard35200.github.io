@@ -51,7 +51,7 @@ function initialiserPage() {
       let x = (r49 * N1 * m1 + r82 * N2 * m2 + r89 * N3 * m3) % N;
       while (x >= 129014) x -= N;
 
-      // document.getElementById('contenu').style.display = 'none';
+      document.getElementById('debut').style.display = 'none';
       document.getElementById("retour").style.margin = "40px auto 0 auto";
       document.getElementById("retour").style.display = "block";
       document.getElementById('resultat').textContent = `Ton nombre était : ${x}`;
