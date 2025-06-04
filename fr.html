@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Lecture du jour</title>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background-color: #f6f8fa;
+      color: #333;
+      padding: 40px;
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    .livre {
+      background-color: #ffffff;
+      border-left: 5px solid #3498db;
+      padding: 15px 20px;
+      margin: 20px auto;
+      max-width: 500px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .titre {
+      font-weight: bold;
+      font-size: 1.2em;
+    }
+    .page {
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Lecture du jour</h1>
+
+  <div class="livre">
+    <div class="titre">Mes forêts</div>
+    <div class="page" id="mesForets"></div>
+  </div>
+
+  <div class="livre">
+    <div class="titre">Les Caractères</div>
+    <div class="page" id="caracteres"></div>
+  </div>
+
+  <div class="livre">
+    <div class="titre">La Peau de chagrin</div>
+    <div class="page" id="chagrin"></div>
+  </div>
+
+  <div class="livre">
+    <div class="titre">On ne badine pas avec l'amour</div>
+    <div class="page" id="badine"></div>
+  </div>
+
+  <script>
+    function pageLecture(min, max) {
+      const limite = max - 2;
+      return Math.floor(Math.random() * (limite - min + 1)) + min;
+    }
+
+    document.getElementById("mesForets").textContent =
+      "Lis les pages " + (p = pageLecture(7, 113)) + " à " + (p + 2);
+    document.getElementById("caracteres").textContent =
+      "Lis les pages " + (p = pageLecture(11, 161)) + " à " + (p + 2);
+    document.getElementById("chagrin").textContent =
+      "Lis les pages " + (p = pageLecture(27, 302)) + " à " + (p + 2);
+    document.getElementById("badine").textContent =
+      "Lis les pages " + (p = pageLecture(23, 94)) + " à " + (p + 2);
+  </script>
+
+</body>
+</html>
