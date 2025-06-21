@@ -1,0 +1,758 @@
+// Paramètres généraux
+const test = 0; // Passez à 0 pour le mode statique, 1 pour le mode interactif
+const disciplineIds = ["discipline1", "discipline2", "discipline3", "discipline4", "discipline5"];
+const disciplinesKai = [
+  { nom: "", effet: "" },
+  { nom: "Sixième Sens", effet: "Devine les dangers imminents, détecte intentions et objets suspects." },
+  { nom: "Camouflage", effet: "Se fond dans l’environnement urbain ou naturel." },
+  { nom: "Maîtrise psychique de la matière", effet: "Déplace de petits objets par la pensée." },
+  { nom: "Guérison", effet: "+1 ENDURANCE par paragraphe sans combat." },
+  { nom: "Communication animale", effet: "Permet de comprendre ou influencer certains animaux." },
+  { nom: "Orientation", effet: "Permet de toujours choisir la bonne direction." },
+  { nom: "Chasse", effet: "Plus besoin de repas, sauf en désert." },
+  { nom: "Maîtrise des armes", effet: "+2 HABILETÉ avec arme tirée au sort." },
+  { nom: "Bouclier psychique", effet: "Protège contre les attaques mentales." },
+  { nom: "Puissance psychique", effet: "+2 HABILETÉ si l’ennemi est sensible." }
+];
+
+// Fonction d'affichage et de gestion des disciplines
+function afficherListeDisciplines(liste) {
+  const container = document.getElementById('zone-disciplines');
+  if (!container) {
+    console.error("Conteneur 'zone-disciplines' introuvable");
+    return;
+  }
+  
+  // On vide le conteneur
+  container.innerHTML = '';
+
+  if (test === 1) {
+    // Mode interactif : création des menus déroulants sans les explications
+    for (let i = 0; i < disciplineIds.length; i++) {
+      // Création du menu <select> pour chaque discipline
+      const select = document.createElement('select');
+      select.id = disciplineIds[i];
+
+      // Ajout d'une option vide, qui sert de placeholder
+      const placeholder = document.createElement('option');
+      placeholder.value = "";
+      placeholder.textContent = "-- Choisir une discipline --";
+      placeholder.selected = true;
+      select.appendChild(placeholder);
+
+      // Remplissage du menu avec toutes les disciplines disponibles
+      disciplinesKai.forEach(d => {
+        const option = document.createElement('option');
+        option.value = d.nom;
+        option.textContent = d.nom;
+        select.appendChild(option);
+      });
+
+      // Si des valeurs sauvegardées existent, on les recharge
+      if (liste && liste[i]) {
+        select.value = liste[i];
+      }
+
+      container.appendChild(select);
+
+      // Ajout d'un écouteur pour sauvegarder automatiquement en cas de changement
+      select.addEventListener('change', () => {
+        const allSelections = disciplineIds.map(id => {
+          const el = document.getElementById(id);
+          return el ? el.value : "";
+        });
+        localStorage.setItem("disciplines_choisies", JSON.stringify(allSelections));
+      });
+    }
+  } else {
+    // Mode statique : affichage simple sous une liste
+    const ul = document.createElement('ul');
+    if (liste && liste.length > 0) {
+      liste.forEach(nom => {
+        const li = document.createElement('li');
+        li.textContent = nom; // On affiche uniquement le nom, sans explication
+        ul.appendChild(li);
+      });
+    } else {
+      ul.textContent = "Aucune discipline sélectionnée.";
+    }
+    container.appendChild(ul);
+  }
+}
+
+// Initialisation automatique au chargement de la page
+window.addEventListener('DOMContentLoaded', () => {
+  // Récupération des disciplines sauvgardées (ou tableau vide si rien n'est enregistré)
+  const savedDisciplines = JSON.parse(localStorage.getItem("disciplines_choisies")) || [];
+  
+  // Affichage des disciplines selon le mode (test)
+  afficherListeDisciplines(savedDisciplines);
+}); 
+
+
+const saved = JSON.parse(localStorage.getItem("disciplines_choisies"));
+console.log("Disciplines enregistrées :", saved);
+
+window.addEventListener('DOMContentLoaded', () => {
+  initStats();
+  // 🔥 Lance le test automatiquement au chargement
+  let selections;
+  if (test === 1) {
+    selections = disciplineIds.map(id => document.getElementById(id).value);
+    console.log("✅ Mode test : valeurs récupérées depuis les selects :", selections);
+  } else {
+    const sauvegarde = localStorage.getItem("disciplines_choisies");
+    selections = sauvegarde ? JSON.parse(sauvegarde) : [];
+    console.log("📦 Mode normal : disciplines chargées :", selections);
+  }
+
+  localStorage.setItem("disciplines_choisies", JSON.stringify(selections));
+  afficherListeDisciplines(selections);
+if (test === 0) {
+  disciplineIds.forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (el && selections[i]) {
+      el.value = selections[i];
+      const effet = document.getElementById("effet" + (i + 1));
+      const d = disciplinesKai.find(d => d.nom === selections[i]);
+      if (effet) effet.textContent = d ? d.effet : '';
+    }
+  });
+}
+  const saved = localStorage.getItem('currentParagraph') || 'paraIntro';
+  document.getElementById('intro-screen').style.display = 'none'; // on saute l'écran d’intro
+  showParagraph(saved);
+});
+
+
+
+
+function resetGame() {
+  localStorage.removeItem("init");
+  // Liste blanche des clés à conserver
+  const preservedKeys = ['userPreferences', 'settings']; 
+  
+  // Sauvegarde temporaire des données à conserver
+  const tempStorage = {};
+  preservedKeys.forEach(key => {
+    if (localStorage.getItem(key)) {
+      tempStorage[key] = localStorage.getItem(key);
+    }
+  });
+  
+  // Nettoyage complet
+  localStorage.clear();
+  localStorage.removeItem("disciplines_choisies");
+  // Restauration des données importantes
+  Object.keys(tempStorage).forEach(key => {
+    localStorage.setItem(key, tempStorage[key]);
+  });
+  
+  // Réinitialisation des stats
+  const baseEnd = 20 + Math.floor(Math.random() * 10);
+  localStorage.setItem('stat_end', baseEnd.toString());
+  localStorage.setItem('stat_end_max', baseEnd.toString());
+  
+  // Rechargement forcé
+  window.location.href = window.location.href.split('?')[0] + '?reset=' + Date.now();
+}
+
+// Version alternative plus radicale (tout supprimer) :
+function hardReset() {
+  localStorage.clear();
+  sessionStorage.clear();
+  document.cookie.split(";").forEach(c => {
+    document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+  });
+  window.location.reload(true);
+}
+
+
+// ======================
+// Initialisation et navigation
+// ======================
+window.addEventListener('DOMContentLoaded', () => {
+  // Paragraphes et intro
+  console.log("📦 DOM chargé !");
+
+const endInput = document.getElementById('end');
+if (endInput) {
+  const max = parseInt(localStorage.getItem('stat_end_max')) || 30;
+  
+  endInput.addEventListener('input', function() {
+    let val = parseInt(this.value) || 0;
+    if (val > max) {
+      this.value = max;
+      localStorage.setItem('stat_end', max);
+    } else {
+      localStorage.setItem('stat_end', val);
+    }
+  });
+}
+
+  document.getElementById('reset-button').addEventListener('click', () => {
+  if (confirm("Êtes-vous sûr de vouloir tout réinitialiser ?")) {
+    resetGame();
+  }
+});
+  
+  // Initialisation des disciplines
+  
+  const paragraphs = document.querySelectorAll('.main-content p');
+  const links = document.querySelectorAll('.main-content a');
+  const introScreen = document.getElementById('intro-screen');
+  const startButton = document.getElementById('start-button');
+
+  // Affiche le paragraphe donné
+  function showParagraph(id) {
+    paragraphs.forEach(p => p.style.display = p.id === id ? 'block' : 'none');
+    localStorage.setItem('currentParagraph', id);
+  }
+
+  // Au clic "Commencer"
+  startButton.addEventListener('click', () => {
+    introScreen.style.display = 'none';
+    
+
+
+    const saved = localStorage.getItem('currentParagraph') || 'paraIntro';
+    showParagraph(saved);
+  });
+
+  // Navigation liens
+  links.forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const id = link.getAttribute('href').slice(1);
+      showParagraph(id);
+    });
+  });
+
+  // Toujours démarrer sur intro
+  introScreen.style.display = 'flex';
+  paragraphs.forEach(p => p.style.display = 'none');
+
+  // Toggle feuille
+  const sheetToggle = document.getElementById('sheet-toggle');
+  const sheet = document.getElementById('character-sheet');
+  const closeBtn = document.getElementById('close-sheet');
+  sheetToggle.addEventListener('click', () => sheet.classList.toggle('hidden'));
+  closeBtn.addEventListener('click', () => sheet.classList.add('hidden'));
+});
+
+// ======================
+// Données et utilitaires
+// ======================
+
+const armes = ["Poignard","Lance","Masse d’armes","Sabre","Marteau de guerre","Épée","Hache","Bâton","Glaive"];
+function armeAleatoire() { return armes[Math.floor(Math.random()*armes.length)]; }
+function tirageHasard() { return Math.floor(Math.random()*10); }
+
+// ======================
+// Feuille d’aventure
+// ======================
+(function(){
+  // Sélecteurs dynamiques
+  const selectIds = ["discipline1","discipline2","discipline3","discipline4","discipline5"];
+  let selects = [];
+
+  function getSelected() {
+  // Retourne la valeur de chaque select, même si elle est vide
+  return selects.map(s => s.value);
+}
+  function updateEffet(i) {
+    const nom = selects[i].value;
+    const span = document.getElementById(`effet${i+1}`);
+    const d = disciplinesKai.find(d=>d.nom===nom);
+    if(!d) { span.textContent = ''; return; }
+    let txt = d.effet;
+    if(d.bonus.arme) txt += ` (+2 avec ${armeAleatoire()})`;
+    span.textContent = txt;
+  }
+  function updateAll() {
+    const chosen = getSelected();
+    selects.forEach((sel,i)=>{
+      const cur = sel.value;
+      sel.innerHTML = '<option value="">-- Choisir --</option>';
+      disciplinesKai.forEach(d=>{
+        if(!chosen.includes(d.nom)||d.nom===cur) {
+          const o = document.createElement('option'); o.value=d.nom; o.textContent=d.nom;
+          sel.appendChild(o);
+        }
+      });
+      sel.value=cur; updateEffet(i);
+    }); applyBonuses();
+  }
+  function applyBonuses() {
+    const habEl = document.getElementById('hab'), endEl = document.getElementById('end');
+    const baseH = +habEl.dataset.base, baseE = +endEl.dataset.base;
+    let bH=0, bE=0;
+    getSelected().forEach(n=>{
+      const d = disciplinesKai.find(d=>d.nom===n);
+      if(d.bonus.habilete) bH+=d.bonus.habilete;
+      if(d.bonus.endurance) bE+=d.bonus.endurance;
+    });
+    habEl.value = baseH + bH;
+    endEl.value = baseE + bE;
+  }
+
+  // Textarea autosize + restore
+  function setupTextarea() {
+    const ta = document.getElementById('objetsSpeciaux');
+    function resize(){ ta.style.height='auto'; ta.style.height=ta.scrollHeight+'px'; }
+    const saved = localStorage.getItem('feuille_objetsSpeciaux');
+    if(saved!==null){ ta.value=saved; resize(); }
+    ta.addEventListener('input',()=>{ resize(); localStorage.setItem('feuille_objetsSpeciaux', ta.value); });
+  }
+
+  // Sauvegarde / chargement
+  const allIds = [...selectIds,'hab','end','pieces','armes1','armes2','repas','sacados','objets1','objetsSpeciaux'];
+  function saveAll(){ allIds.forEach(id=>{ const el=document.getElementById(id); if(el) localStorage.setItem(id,el.value); }); }
+  function loadAll(){ allIds.forEach(id=>{ const el=document.getElementById(id); const v=localStorage.getItem(id); if(el&&v!==null) el.value=v; }); }
+
+  // Initialisation unique
+  
+
+  // Lancement
+  window.addEventListener('DOMContentLoaded',()=>{
+    selects = selectIds.map(id => document.getElementById(id));
+loadAll();
+setupTextarea();
+initDefault();
+
+// ⚠️ attendre un petit moment pour que le DOM soit bien prêt
+setTimeout(() => {
+  updateAll();
+  selects.forEach((s, i) => s.addEventListener('change', updateAll));
+}, 0);
+
+    allIds.forEach(id=>{ const el=document.getElementById(id); if(el) el.addEventListener('input',saveAll); });
+  });
+})();
+
+
+
+
+
+
+
+
+// ======================
+// Gestion des disciplines Kaï sans doublon + persistance
+// ======================
+
+const disciplineEffets = {
+  " ": " ",
+  "Sixième Sens": "+1 à vos choix tactiques",
+  "Camouflage": "Évitez les combats en forêt",
+  "Maîtrise des Armes": "+2 HABILETÉ avec votre arme",
+  "Maîtrise Psychique": "Ignorez certains pièges mentaux",
+  "Communication Animale": "Compréhension des animaux",
+  "Guérison": "Régénérez +1 ENDURANCE par passage de paragraphe",
+  "Chasse": "Pas besoin de repas en terrain naturel",
+  "Orientation": "Détectez les meilleurs chemins",
+  "Bouclier Psychique": "Immunité partielle aux attaques mentales",
+  "Maîtrise de la Matière": "Manipulez objets à distance"
+};
+
+function getSelectedDisciplines() {
+  return disciplineIds.map(id => document.getElementById(id).value).filter(v => v);
+}
+
+function updateDisciplineMenus() {
+  const selected = getSelectedDisciplines();
+  disciplineIds.forEach((id, i) => {
+    const select = document.getElementById(id);
+    const current = select.value;
+
+    // Nettoie
+    select.innerHTML = "";
+
+    // Ajoute options valides
+    Object.keys(disciplineEffets).forEach(name => {
+      const alreadyUsed = selected.includes(name) && name !== current;
+      if (!alreadyUsed) {
+        const opt = document.createElement("option");
+        opt.value = name;
+        opt.textContent = name;
+        if (name === current) opt.selected = true;
+        select.appendChild(opt);
+      }
+    });
+
+    // Affiche l’effet correspondant
+    const effetEl = document.getElementById("effet" + (i + 1));
+    if (effetEl) effetEl.textContent = disciplineEffets[current] || "";
+  });
+}
+
+function saveDisciplines() {
+  disciplineIds.forEach(id => {
+    const val = document.getElementById(id).value;
+    localStorage.setItem("kai_" + id, val);
+  });
+}
+
+function loadDisciplines() {
+  disciplineIds.forEach(id => {
+    const el = document.getElementById(id);
+    const val = localStorage.getItem("kai_" + id);
+    if (val && el) el.value = val;
+  });
+  updateDisciplineMenus();
+}
+
+function initDisciplineListeners() {
+  disciplineIds.forEach(id => {
+    const el = document.getElementById(id);
+    el.addEventListener("change", () => {
+      saveDisciplines();
+      updateDisciplineMenus();
+    });
+  });
+}
+
+// Exécution au chargement
+window.addEventListener("DOMContentLoaded", () => {
+  loadDisciplines();
+  initDisciplineListeners();
+  // Ajouter ceci dans DOMContentLoaded
+document.getElementById('reset-button').addEventListener('click', () => {
+  if (confirm("Voulez-vous vraiment recommencer l'aventure ?")) {
+    localStorage.clear();
+    document.getElementById('intro-screen').style.display = 'flex';
+    document.querySelectorAll('.main-content p').forEach(p => p.style.display = 'none');
+    document.getElementById('character-sheet').classList.add('hidden');
+  }
+});
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  
+
+  
+
+  
+});
+
+// 1. Liste externe de tous les champs à gérer
+const fields = ["discipline1","discipline2","discipline3","discipline4","discipline5",
+"objet1","objet2","objet3","objet4","objet5","objet6","objet7","objet8",
+"arme1","arme2",
+"hab","pieces",
+"objetsSpeciaux"];
+
+// 2. Fonction de chargement : restaure la valeur depuis localStorage
+function loadFields() {
+  fields.forEach(id => {
+    const el     = document.getElementById(id);
+    const stored = localStorage.getItem(id);
+    if (!el || stored === null) return;
+
+    switch (el.tagName) {
+      case "INPUT":
+      case "TEXTAREA":
+        el.value = stored;
+        break;
+      case "SELECT":
+            if (id.startsWith("discipline")) {
+    // restorer par valeur (le nom de la discipline)
+    el.value = stored;
+  } else {
+    // pour les autres <select>, tu peux rester sur selectedIndex
+    el.selectedIndex = parseInt(stored, 10);
+  }
+  break;
+
+      case "SPAN":
+      case "DIV":
+        el.textContent = stored;
+        break;
+    }
+  });
+}
+
+// 3. Fonction d’initialisation de la sauvegarde : écoute et enregistre
+function initSaveFields() {
+  fields.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    const event = (el.tagName === "SELECT") ? "change" : "input";
+    el.addEventListener(event, () => {
+      // pour un SELECT on enregistre selectedIndex, sinon value
+      const toStore = (el.tagName === "SELECT" && id.startsWith("discipline"))
+  ? el.value
+  : el.tagName === "SELECT"
+    ? el.selectedIndex.toString()
+    : el.value;
+localStorage.setItem(id, toStore);
+
+    });
+  });
+}
+
+// 4. On branche tout au chargement de la page
+window.addEventListener("DOMContentLoaded", () => {
+  loadFields(); // restaure toutes les valeurs
+  setTimeout(() => {
+    if (typeof updateAll === "function") updateAll();
+    updateOptions(); // ← met à jour les menus déroulants pour empêcher les doublons
+    selects.forEach(select => {
+      select.addEventListener("change", updateOptions); // ← reboucle les événements
+    });
+  }, 0);
+  initSaveFields();
+});
+
+
+
+
+
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  function lancerDe() {
+    return Math.floor(Math.random() * 10)
+    
+  }
+
+  const statsConfig = {
+    hab: { base: 10 },
+    end: { base: 20 },
+    pieces: { base: 0 }
+  };
+
+  function initStats() {
+  if (!localStorage.getItem("init")) {
+    const h = 10 + lancerDe();
+    const e = 20 + lancerDe();
+    const p = 0 + lancerDe();
+
+    localStorage.setItem("stat_hab", h);
+    localStorage.setItem("stat_end", e);
+    localStorage.setItem("stat_end_max", e);
+    localStorage.setItem("stat_pieces", p);
+
+    localStorage.setItem("init", "1"); // 👈 Marque que les stats sont créées
+  }
+
+  // Toujours charger les stats enregistrées dans les inputs
+  const habInput = document.getElementById("hab");
+  const endInput = document.getElementById("end");
+  const piecesInput = document.getElementById("pieces");
+
+  if (habInput)  habInput.value = localStorage.getItem("stat_hab") || "";
+  if (endInput)  endInput.value = localStorage.getItem("stat_end") || "";
+  if (piecesInput) piecesInput.value = localStorage.getItem("stat_pieces") || "";
+}
+
+  for (const id in statsConfig) {
+    const input = document.getElementById(id);
+    const key = "stat_" + id;
+
+    // Vérifie que l'élément est présent
+    if (!input) continue;
+
+    let stored = localStorage.getItem(key);
+
+    // Si la stat n'existe pas encore
+    if (stored === null || isNaN(parseInt(stored, 10))) {
+      localStorage.setItem(key, value);
+
+      if (id === "end") {
+        // On stocke aussi la limite maximale d'endurance
+        localStorage.setItem("stat_end_max", value);
+      }
+
+      stored = value;
+    }
+
+    const finalValue = parseInt(stored, 10);
+    input.value = finalValue;
+
+    // Lors de modification manuelle
+    input.addEventListener("change", () => {
+      let newVal = parseInt(input.value, 10);
+
+      if (id === "end") {
+        const max = parseInt(localStorage.getItem("stat_end_max"), 10);
+        if (newVal > max) newVal = max;
+      }
+
+      localStorage.setItem(key, newVal);
+      input.value = newVal;
+    });
+  }
+});
+
+
+input.addEventListener("change", () => {
+  let newVal = parseInt(input.value, 10);
+
+  if (id === "end") {
+    const max = parseInt(localStorage.getItem("stat_end_max"), 10);
+    if (newVal > max) newVal = max;
+  }
+
+  localStorage.setItem(key, newVal);
+  input.value = newVal;
+});
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  
+ 
+  for (const id in statsConfig) {
+    const input = document.getElementById(id);
+    if (!input) continue;
+
+    const key = "stat_" + id;
+    let stored = localStorage.getItem(key);
+
+    // Génération initiale si absent
+    if (stored === null || isNaN(parseInt(stored, 10))) {
+      localStorage.setItem(key, value);
+      stored = value;
+
+      if (id === "end") {
+        localStorage.setItem("stat_end_max", value);
+      }
+    }
+
+    const finalValue = parseInt(localStorage.getItem(key), 10);
+    input.value = finalValue;
+
+    // Sauvegarde à chaque modification
+    input.addEventListener("input", () => {
+      const val = parseInt(input.value, 10);
+      localStorage.setItem(key, val);
+    });
+
+    // Surveillance continue de end pour forcer la limite
+    if (id === "end") {
+      setInterval(() => {
+        const val = parseInt(input.value, 10);
+        const max = parseInt(localStorage.getItem("stat_end_max"), 10);
+
+        if (val > max) {
+          input.value = max;
+          localStorage.setItem("stat_end", max);
+        }
+      }, 200); // Vérifie toutes les 200ms
+    }
+  }
+});
+
+localStorage.removeItem("stat_end");
+localStorage.removeItem("stat_end_max");
+const val = 20 + Math.floor(Math.random() * 10);
+console.log("Valeur générée :", val);
+localStorage.setItem("stat_end", val.toString());
+localStorage.setItem("stat_end_max", val.toString());
+localStorage.getItem("stat_end");     // exemple → "26"
+localStorage.getItem("stat_end_max"); // exemple → "26"
+parseInt(localStorage.getItem("stat_end_max"), 10)  // doit renvoyer un nombre (ex : 26)
+
+
+
+  const champsÀSauvegarder = [
+    "hab", "end", "pieces",
+    "discipline1", "discipline2", "discipline3", "discipline4", "discipline5",
+    "objet1", "objet2", "sac1", "sac2", "effet1", "effet2", "effet3", "effet4", "effet5"
+  ];
+
+  function sauverTousLesChamps() {
+    champsÀSauvegarder.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+
+      if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") {
+        localStorage.setItem("champ_" + id, el.value);
+      } else if (el.tagName === "SELECT") {
+        localStorage.setItem("champ_" + id, el.selectedIndex);
+      } else if (el.tagName === "SPAN") {
+        localStorage.setItem("champ_" + id, el.textContent);
+      }
+    });
+  }
+
+  function chargerTousLesChamps() {
+    champsÀSauvegarder.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+
+      const value = localStorage.getItem("champ_" + id);
+      if (value === null) return;
+
+      if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") {
+        el.value = value;
+      } else if (el.tagName === "SELECT") {
+        el.selectedIndex = parseInt(value);
+      } else if (el.tagName === "SPAN") {
+        el.textContent = value;
+      }
+    });
+  }
+
+  // Charger à l’ouverture
+  chargerTousLesChamps();
+
+  // Sauvegarder automatiquement quand on quitte la page
+  window.addEventListener("beforeunload", sauverTousLesChamps);
+
+
+
+
+
+
+
+const lock = localStorage.getItem("disciplines_lock");
+if (lock === "1") {
+  const sauvegarde = JSON.parse(localStorage.getItem("disciplines_choisies") || "[]");
+  document.getElementById("zone-disciplines").style.display = "none";
+  afficherListeDisciplines(sauvegarde);
+}
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  const resetBtn = document.getElementById("reset-button");
+
+  if (resetBtn) {
+    // Force le bouton à s’afficher même si masqué
+    resetBtn.style.setProperty("display", "block", "important");
+
+    // Clique = réinitialise tout
+    resetBtn.addEventListener("click", () => {
+      if (confirm("Voulez-vous vraiment tout réinitialiser ?")) {
+        localStorage.clear();
+        location.reload();
+      }
+    });
+  }
+});
+window.addEventListener("DOMContentLoaded", () => {
+  console.log("📦 JS chargé !");
+  console.log("✅ Chargement OK — test =", test);
+  afficherListeDisciplines(savedDisciplines);
+});
+

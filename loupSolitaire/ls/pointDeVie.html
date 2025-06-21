@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Barre de Vie</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px;
+      background: #f0f0f0;
+    }
+
+    .barre-container {
+  position: relative;
+  width: 400px;
+  height: 60px;
+  border-radius: 999px;
+  background: #ddd;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 0 8px rgba(0,0,0,0.2);
+  overflow: hidden; /* Empêche la barre de dépasser */
+}
+
+    .vie-remplissage {
+      position: absolute;
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(to right, #ff4e50, #f9d423);
+      transition: width 0.3s ease;
+      z-index: 1;
+    }
+
+    .contenu-barre {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+  color: #222;
+  padding: 0 15px;
+}
+
+    .coeur {
+      font-size: 24px;
+    }
+
+    .nom {
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .rond-vie {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: white;
+      border: 2px solid #999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    button {
+      padding: 8px 16px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      background: #333;
+      color: white;
+      border-radius: 8px;
+      box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+    }
+
+    button:hover {
+      background: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="barre-container">
+    <div class="vie-remplissage" id="vieBarre"></div>
+    <div class="contenu-barre">
+      <div class="coeur" id="iconeVie">❤️</div>
+      <div class="nom">Léonard</div>
+      <div class="rond-vie" id="vieRestante"></div>
+    </div>
+  </div>
+
+  <button onclick="enleverVie(3)">Enlever 3 points</button>
+
+  <script>
+    let vie =11 ;
+    const vieDebut = vie
+    majBarre();
+
+    function majBarre() {
+      const barre = document.getElementById("vieBarre");
+      const vieText = document.getElementById("vieRestante");
+      const icone = document.getElementById("iconeVie");
+      vie = Math.max(0, vie);
+      barre.style.width = (vie/vieDebut)*100 + "%";
+      vieText.textContent = vie;
+      icone.textContent = vie === 0 ? "💀" : "❤️";
+    }
+
+    function enleverVie(nbVieEnlever) {
+      vie -= nbVieEnlever;
+      majBarre();
+    }
+
+    majBarre();
+  </script>
+
+</body>
+</html>
