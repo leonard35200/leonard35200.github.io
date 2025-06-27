@@ -181,12 +181,7 @@
 
     function drawNumber(num) {
       ctx.fillStyle = 'white';
-      // Si c'est 10, on réduit la taille de la police
-      if (num === 10) {
-        ctx.font = 'bold 65px "Segoe UI", Arial';
-      } else {
-        ctx.font = 'bold 90px "Segoe UI", Arial';
-      }
+      ctx.font = 'bold 90px "Segoe UI", Arial';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText(num, size/2, size/2 + 5);
