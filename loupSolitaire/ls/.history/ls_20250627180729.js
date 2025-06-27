@@ -30,7 +30,7 @@ const CONFIG = {
 // Données des disciplines Kaï
 // ======================
 const disciplinesKai = [
-  { nom: "", effet: "" },
+  
   { nom: "Sixième Sens", effet: "Devine les dangers imminents, détecte intentions et objets suspects." },
   { nom: "Camouflage", effet: "Se fond dans l'environnement urbain ou naturel." },
   { nom: "Maîtrise psychique de la matière", effet: "Déplace de petits objets par la pensée." },
