@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<title>Dé carré stylisé animé</title>
+<style>
+  html, body {
+    margin: 0; padding: 0; height: 100%;
+    background-color: #001F3F; /* Bleu foncé page */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  canvas {
+    cursor: pointer;
+    display: block;
+    border-radius: 60px;               /* 20% de 300px */
+    box-shadow:
+      0 10px 20px rgba(0, 0, 0, 0.25),  /* ombre portée douce */
+      inset 0 2px 5px rgba(255,255,255,0.15); /* léger éclaircissement */
+  }
+</style>
+</head>
+<body>
+
+<canvas id="deCarre" width="300" height="300"></canvas>
+
+<script>
+  const canvas = document.getElementById('deCarre');
+  const ctx = canvas.getContext('2d');
+  const size = canvas.width;
+
+  // Dessine un carré avec dégradé radial + contour
+  function drawSquare() {
+    // dégradé radial pour relief
+    const grad = ctx.createRadialGradient(
+      size/2, size/2, size*0.1,
+      size/2, size/2, size*0.7
+    );
+    grad.addColorStop(0, '#3CA7DF');
+    grad.addColorStop(1, '#2980b9');
+
+    ctx.clearRect(0, 0, size, size);
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, size, size);
+
+    // contour légèrement plus sombre
+    ctx.lineWidth = 8;
+    ctx.strokeStyle = '#1f5f8a';
+    ctx.strokeRect(4, 4, size-8, size-8);
+  }
+
+  // Affiche le chiffre centré
+  function drawNumber(num) {
+    ctx.fillStyle = 'white';
+    ctx.font = 'bold 160px "Segoe UI", Arial';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(num, size/2, size/2 + 5);
+  }
+
+  function random1to10() {
+    return Math.floor(Math.random() * 10) + 1;
+  }
+
+  // Combine dessin du dé et du chiffre
+  function drawDie(num) {
+    drawSquare();
+    drawNumber(num);
+  }
+
+  // Animation "rolling" des chiffres
+  let rafId;
+  function animateRoll(duration = 1800) {
+    const start = performance.now();
+    function frame(now) {
+      if (now - start < duration) {
+        drawDie(random1to10());
+        rafId = requestAnimationFrame(frame);
+      } else {
+        cancelAnimationFrame(rafId);
+        drawDie(random1to10());
+      }
+    }
+    rafId = requestAnimationFrame(frame);
+  }
+
+  // Premier affichage
+  drawDie(random1to10());
+
+  canvas.addEventListener('click', () => {
+    animateRoll();
+  });
+</script>
+
+</body>
+</html>  
