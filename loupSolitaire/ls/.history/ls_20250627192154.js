@@ -329,13 +329,6 @@ class NavigationManager {
     const showParagraph = (id) => {
       paragraphs.forEach(p => p.style.display = p.id === id ? 'block' : 'none');
       localStorage.setItem('currentParagraph', id);
-  let visites = JSON.parse(localStorage.getItem('chapitres_visites') || '[]');
-  if (!visites.includes(id)) {
-    visites.push(id);
-    localStorage.setItem('chapitres_visites', JSON.stringify(visites));
-  }
-
-  
     };
 
     if (startButton) {
@@ -358,22 +351,6 @@ class NavigationManager {
     // Initialisation
     if (introScreen) introScreen.style.display = 'flex';
     paragraphs.forEach(p => p.style.display = 'none');
-
-    const btnRetour = document.getElementById('btn-retour-chapitre');
-if (btnRetour) {
-  btnRetour.addEventListener('click', () => {
-    let visites = JSON.parse(localStorage.getItem('chapitres_visites') || '[]');
-    if (visites.length > 1) {
-      visites.pop(); // On enlève le chapitre courant
-      const precedent = visites[visites.length - 1];
-      localStorage.setItem('chapitres_visites', JSON.stringify(visites));
-      // Affiche le chapitre précédent
-      paragraphs.forEach(p => p.style.display = p.id === precedent ? 'block' : 'none');
-      localStorage.setItem('currentParagraph', precedent);
-      
-    }
-  });
-}
   }
 
   initSheetToggle() {
@@ -402,9 +379,6 @@ if (btnRetour) {
     });
   }
 }
-
-
-
 
 
   initResetButton() {
@@ -490,89 +464,7 @@ manager.init();
 
 
 
-// ======================
-// gestion du dé de dix
-// ======================
-  (function() {
-    const canvas = document.getElementById('deCarre');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    const size = canvas.width;
 
-    function drawSquare() {
-      ctx.clearRect(0, 0, size, size);
-
-      // Dégradé radial centré, couvrant tout le carré
-      const grad = ctx.createRadialGradient(
-        size/2, size/2, size*0.1,
-        size/2, size/2, size*0.7
-      );
-      grad.addColorStop(0, '#3CA7DF');
-      grad.addColorStop(1, '#2980b9');
-
-      // Dessin d'un carré à coins arrondis
-      const radius = 20; // rayon des coins
-      ctx.beginPath();
-      ctx.moveTo(radius, 0);
-      ctx.lineTo(size - radius, 0);
-      ctx.quadraticCurveTo(size, 0, size, radius);
-      ctx.lineTo(size, size - radius);
-      ctx.quadraticCurveTo(size, size, size - radius, size);
-      ctx.lineTo(radius, size);
-      ctx.quadraticCurveTo(0, size, 0, size - radius);
-      ctx.lineTo(0, radius);
-      ctx.quadraticCurveTo(0, 0, radius, 0);
-      ctx.closePath();
-
-      ctx.fillStyle = grad;
-      ctx.fill();
-
-      // Contour
-      ctx.lineWidth = 8;
-      ctx.strokeStyle = '#1f5f8a';
-      ctx.stroke();
-    }
-
-    function drawNumber(num) {
-      ctx.fillStyle = 'white';
-      // Si c'est 10, on réduit la taille de la police
-      if (num === 10) {
-        ctx.font = 'bold 65px "Segoe UI", Arial';
-      } else {
-        ctx.font = 'bold 90px "Segoe UI", Arial';
-      }
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(num, size/2, size/2 + 5);
-    }
-
-    function random1to10() {
-      return Math.floor(Math.random() * 10) + 1;
-    }
-
-    function drawDie(num) {
-      drawSquare();
-      drawNumber(num);
-    }
-
-    let rafId;
-    function animateRoll(duration = 500) {
-      const start = performance.now();
-      function frame(now) {
-        if (now - start < duration) {
-          drawDie(random1to10());
-          rafId = requestAnimationFrame(frame);
-        } else {
-          cancelAnimationFrame(rafId);
-          drawDie(random1to10());
-        }
-      }
-      rafId = requestAnimationFrame(frame);
-    }
-
-    drawDie(random1to10());
-    canvas.addEventListener('click', () => animateRoll());
-  })();
 
 // ======================
 // Initialisation principale

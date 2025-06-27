@@ -76,6 +76,7 @@ class DisciplineManager {
     this.loadDisciplines();
     this.initListeners();
     this.updateAllMenus();
+    this.updateChapitresVisites();
   }
 
   getSelectedDisciplines() {
@@ -334,7 +335,7 @@ class NavigationManager {
     visites.push(id);
     localStorage.setItem('chapitres_visites', JSON.stringify(visites));
   }
-
+  this.updateChapitresVisites();
   
     };
 
@@ -370,7 +371,7 @@ if (btnRetour) {
       // Affiche le chapitre précédent
       paragraphs.forEach(p => p.style.display = p.id === precedent ? 'block' : 'none');
       localStorage.setItem('currentParagraph', precedent);
-      
+      this.updateChapitresVisites();
     }
   });
 }
@@ -405,7 +406,17 @@ if (btnRetour) {
 
 
 
-
+updateChapitresVisites() {
+  const ul = document.getElementById('liste-chapitres');
+  if (!ul) return;
+  let visites = JSON.parse(localStorage.getItem('chapitres_visites') || '[]');
+  ul.innerHTML = '';
+  visites.forEach(id => {
+    const li = document.createElement('li');
+    li.textContent = id;
+    ul.appendChild(li);
+  });
+}
 
   initResetButton() {
     const resetButton = document.getElementById('reset-button');

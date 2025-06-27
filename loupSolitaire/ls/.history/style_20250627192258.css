@@ -400,21 +400,3 @@ html, body {
   box-sizing: border-box;
 }
 
-/* Dé animé */
-  #deCarre {
-    display: block;
-    margin: 2em auto 0 auto;
-    border-radius: 20px; /* coins arrondis mais carré */
-    box-shadow:
-      0 10px 20px rgba(0, 0, 0, 0.25),
-      inset 0 2px 5px rgba(255,255,255,0.15);
-    cursor: pointer;
-    background: transparent;
-    width: 100px;
-    height: 100px;
-    max-width: 90vw;
-    max-height: 90vw;
-  }
-  @media (max-width: 600px) {
-    #deCarre { width: 120px; height: 120px; }
-  }

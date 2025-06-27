@@ -329,13 +329,14 @@ class NavigationManager {
     const showParagraph = (id) => {
       paragraphs.forEach(p => p.style.display = p.id === id ? 'block' : 'none');
       localStorage.setItem('currentParagraph', id);
+      // --- Ajout pour la liste des chapitres visités ---
   let visites = JSON.parse(localStorage.getItem('chapitres_visites') || '[]');
   if (!visites.includes(id)) {
     visites.push(id);
     localStorage.setItem('chapitres_visites', JSON.stringify(visites));
   }
-
-  
+  this.updateChapitresVisites();
+  // --- Fin ajout ---
     };
 
     if (startButton) {
@@ -358,22 +359,6 @@ class NavigationManager {
     // Initialisation
     if (introScreen) introScreen.style.display = 'flex';
     paragraphs.forEach(p => p.style.display = 'none');
-
-    const btnRetour = document.getElementById('btn-retour-chapitre');
-if (btnRetour) {
-  btnRetour.addEventListener('click', () => {
-    let visites = JSON.parse(localStorage.getItem('chapitres_visites') || '[]');
-    if (visites.length > 1) {
-      visites.pop(); // On enlève le chapitre courant
-      const precedent = visites[visites.length - 1];
-      localStorage.setItem('chapitres_visites', JSON.stringify(visites));
-      // Affiche le chapitre précédent
-      paragraphs.forEach(p => p.style.display = p.id === precedent ? 'block' : 'none');
-      localStorage.setItem('currentParagraph', precedent);
-      
-    }
-  });
-}
   }
 
   initSheetToggle() {
@@ -405,7 +390,17 @@ if (btnRetour) {
 
 
 
-
+updateChapitresVisites() {
+  const ul = document.getElementById('liste-chapitres');
+  if (!ul) return;
+  let visites = JSON.parse(localStorage.getItem('chapitres_visites') || '[]');
+  ul.innerHTML = '';
+  visites.forEach(id => {
+    const li = document.createElement('li');
+    li.textContent = id;
+    ul.appendChild(li);
+  });
+}
 
   initResetButton() {
     const resetButton = document.getElementById('reset-button');

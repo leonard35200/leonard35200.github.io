@@ -5,7 +5,24 @@
 </head>
 <body>
 <style>
-  
+  /* Dé animé */
+  #deCarre {
+    display: block;
+    margin: 2em auto 0 auto;
+    border-radius: 20px; /* coins arrondis mais carré */
+    box-shadow:
+      0 10px 20px rgba(0, 0, 0, 0.25),
+      inset 0 2px 5px rgba(255,255,255,0.15);
+    cursor: pointer;
+    background: transparent;
+    width: 100px;
+    height: 100px;
+    max-width: 90vw;
+    max-height: 90vw;
+  }
+  @media (max-width: 600px) {
+    #deCarre { width: 120px; height: 120px; }
+  }
 </style> 
 <header>
   <button id="reset-button" style="position: fixed; top: 10px; right: 10px; z-index: 10000; display: block !important;">Recommencer l'aventure</button>
@@ -81,8 +98,6 @@
         <li><input id="objet7" placeholder="Objet 7"></li>
         <li><input id="objet8" placeholder="Objet 8"></li>
       </ul>
-      <h3>P'tite triche</h3>
-      <button id="btn-retour-chapitre" style="margin-bottom:1em;">⬅️ Revenir au chapitre précédent</button>
     </div>
 
     <div class="sheet-column">
@@ -110,6 +125,7 @@
       font-family: inherit;
       padding: 0.5em;"></textarea>
       
+      <!-- Titre avant le dé -->
       <h3>Lancer un dé de 10</h3>
       <!-- Dé animé -->
       <canvas id="deCarre" width="100" height="100" title="Cliquez pour lancer le dé"></canvas>
