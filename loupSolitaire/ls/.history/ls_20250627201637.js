@@ -339,135 +339,111 @@ class NavigationManager {
     const old = p.querySelector('.combat-popup');
     if (old) old.remove();
 
-    // Valeurs de vie (à adapter selon ton système)
-    let vieHero = parseInt(localStorage.getItem('stat_end'), 10) || 35;
-    const vieHeroMax = parseInt(localStorage.getItem('stat_end_max'), 10) || vieHero;
-    let vieMonstre = 10;
-    const vieMonstreMax = 10;
-
-    // Crée la fenêtre de combat avec deux barres de vie façon "vie.html"
+    // Crée la fenêtre de combat avec deux barres de vie
     const div = document.createElement('div');
     div.className = 'combat-popup';
     div.innerHTML = `
-  <div style="background:#222; color:#fff; border:2px solid #c00; padding:1em; margin-top:1em; text-align:center; border-radius:12px; box-shadow:0 4px 16px #000a;">
-    <div style="font-size:2em; margin-bottom:1em;">COMBAT</div>
-    <div class="barre-container" style="margin-bottom:10px;">
-      <div class="vie-remplissage" id="vieHeroBarre"></div>
-      <div class="contenu-barre">
-        <div class="coeur" id="iconeHeroVie">❤️</div>
-        <div class="nom">Héros</div>
-        <div class="rond-vie" id="vieHeroRestante">${vieHero}</div>
+      <div style="background:#222;color:#fff;border:2px solid #c00;padding:1em;margin-top:1em;text-align:center;font-size:2em;border-radius:12px;box-shadow:0 4px 16px #000a;">
+        COMBAT
+        <div style="margin:1.5em 0 0 0;">
+          <div style="margin-bottom:1em;">
+            <span style="font-size:1.1em;">🧑‍🚀 <b>Héros</b></span>
+            <div class="barre-vie-combat">
+              <div id="vieHero" class="vie-remplissage-combat"></div>
+              <span id="vieHeroText" class="vie-text-combat"></span>
+            </div>
+          </div>
+          <div>
+            <span style="font-size:1.1em;">👹 <b>Monstre</b></span>
+            <div class="barre-vie-combat">
+              <div id="vieMonstre" class="vie-remplissage-combat"></div>
+              <span id="vieMonstreText" class="vie-text-combat"></span>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-    <button id="btnHeroMoins2" style="margin-bottom:10px;">-2 Héros</button>
-    <div class="barre-container" style="margin-bottom:10px;">
-      <div class="vie-remplissage" id="vieMonstreBarre"></div>
-      <div class="contenu-barre">
-        <div class="coeur" id="iconeMonstreVie">👹</div>
-        <div class="nom">Monstre</div>
-        <div class="rond-vie" id="vieMonstreRestante">${vieMonstre}</div>
-      </div>
-    </div>
-    <button id="btnMonstreMoins2">-2 Monstre</button>
-  </div>
-`;
+    `;
 
+    // Ajoute la fenêtre juste après le paragraphe
     p.appendChild(div);
 
-    // Style pour la barre façon vie.html
+    // Valeurs de vie (à adapter selon ton système)
+    const vieHeroMax = parseInt(localStorage.getItem('stat_end_max'), 10) || 20;
+    const vieHero = parseInt(localStorage.getItem('stat_end'), 10) || 20;
+    const vieMonstreMax = 10; // Valeur par défaut, à remplacer par la vraie valeur du monstre si tu la récupères
+    const vieMonstre = 10;
+
+    // Affichage des barres
+    const barreHero = div.querySelector('#vieHero');
+    const barreMonstre = div.querySelector('#vieMonstre');
+    const txtHero = div.querySelector('#vieHeroText');
+    const txtMonstre = div.querySelector('#vieMonstreText');
+
+    if (barreHero && txtHero) {
+      barreHero.style.width = (100 * vieHero / vieHeroMax) + "%";
+      barreHero.style.height = "24px";
+      barreHero.style.background = "linear-gradient(to right, #4e9cff, #b3e6ff)";
+      barreHero.style.borderRadius = "12px";
+      txtHero.textContent = `${vieHero} / ${vieHeroMax}`;
+      txtHero.style.position = "absolute";
+      txtHero.style.left = "50%";
+      txtHero.style.top = "0";
+      txtHero.style.transform = "translateX(-50%)";
+      txtHero.style.color = "#fff";
+      txtHero.style.fontWeight = "bold";
+      txtHero.style.fontSize = "1em";
+      txtHero.style.width = "100%";
+      txtHero.style.textAlign = "center";
+    }
+    if (barreMonstre && txtMonstre) {
+      barreMonstre.style.width = (100 * vieMonstre / vieMonstreMax) + "%";
+      barreMonstre.style.height = "24px";
+      barreMonstre.style.background = "linear-gradient(to right, #ff4e50, #f9d423)";
+      barreMonstre.style.borderRadius = "12px";
+      txtMonstre.textContent = `${vieMonstre} / ${vieMonstreMax}`;
+      txtMonstre.style.position = "absolute";
+      txtMonstre.style.left = "50%";
+      txtMonstre.style.top = "0";
+      txtMonstre.style.transform = "translateX(-50%)";
+      txtMonstre.style.color = "#fff";
+      txtMonstre.style.fontWeight = "bold";
+      txtMonstre.style.fontSize = "1em";
+      txtMonstre.style.width = "100%";
+      txtMonstre.style.textAlign = "center";
+    }
+
+    // Style pour la barre
     const style = document.createElement('style');
     style.textContent = `
-      .barre-container {
+      .barre-vie-combat {
         position: relative;
-        width: 320px;
-        height: 38px;
-        border-radius: 999px;
-        background: #ddd;
-        margin-bottom: 10px;
-        display: flex;
-        align-items: center;
-        box-shadow: 0 0 8px rgba(0,0,0,0.2);
+        width: 220px;
+        height: 24px;
+        background: #444;
+        border-radius: 12px;
+        margin: 0.5em auto 0.5em auto;
+        box-shadow: 0 2px 8px #0006;
         overflow: hidden;
       }
-      .vie-remplissage {
-        position: absolute;
+      .vie-remplissage-combat {
         height: 100%;
-        border-radius: 999px;
-        background: linear-gradient(to right, #4e9cff, #b3e6ff);
         transition: width 0.3s;
-        z-index: 1;
       }
-      .contenu-barre {
-        position: relative;
-        z-index: 2;
-        display: flex;
-        align-items: center;
+      .vie-text-combat {
+        position: absolute;
+        left: 50%;
+        top: 0;
+        transform: translateX(-50%);
+        color: #fff;
+        font-weight: bold;
+        font-size: 1em;
         width: 100%;
-        justify-content: space-between;
-        color: #222;
-        padding: 0 15px;
-      }
-      .coeur {
-        font-size: 22px;
-      }
-      .nom {
-        font-weight: bold;
-        font-size: 16px;
-      }
-      .rond-vie {
-        width: 28px;
-        height: 28px;
-        border-radius: 50%;
-        background: white;
-        border: 2px solid #999;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        font-size: 13px;
-      }
-      #btnHeroMoins2, #btnMonstreMoins2 {
-        padding: 6px 14px;
-        font-size: 14px;
-        cursor: pointer;
-        border: none;
-        background: #333;
-        color: white;
-        border-radius: 8px;
-        box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
-        margin-bottom: 10px;
-        margin-left: 0;
-      }
-      #btnHeroMoins2:hover, #btnMonstreMoins2:hover {
-        background: #555;
+        text-align: center;
+        line-height: 24px;
+        pointer-events: none;
       }
     `;
     document.head.appendChild(style);
-
-    // Fonctions de mise à jour des barres
-    function majBarre(idBarre, idRond, idIcone, vie, vieMax, iconePleine, iconeVide) {
-      const barre = div.querySelector("#" + idBarre);
-      const vieText = div.querySelector("#" + idRond);
-      const icone = div.querySelector("#" + idIcone);
-      if (!barre || !vieText || !icone) return;
-      barre.style.width = (vie / vieMax) * 100 + "%";
-      vieText.textContent = vie;
-      icone.textContent = vie === 0 ? iconeVide : iconePleine;
-    }
-
-    // Initialisation des barres
-    majBarre("vieHeroBarre", "vieHeroRestante", "iconeHeroVie", vieHero, vieHeroMax, "❤️", "💀");
-    majBarre("vieMonstreBarre", "vieMonstreRestante", "iconeMonstreVie", vieMonstre, vieMonstreMax, "👹", "💀");
-
-    // Boutons pour enlever 2 points
-    div.querySelector("#btnHeroMoins2").onclick = function() {
-      vieHero = Math.max(0, vieHero - 2);
-      majBarre("vieHeroBarre", "vieHeroRestante", "iconeHeroVie", vieHero, vieHeroMax, "❤️", "💀");
-    };
-    div.querySelector("#btnMonstreMoins2").onclick = function() {
-      vieMonstre = Math.max(0, vieMonstre - 2);
-      majBarre("vieMonstreBarre", "vieMonstreRestante", "iconeMonstreVie", vieMonstre, vieMonstreMax, "👹", "💀");
-    };
   }
 }
 

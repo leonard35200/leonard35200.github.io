@@ -349,28 +349,25 @@ class NavigationManager {
     const div = document.createElement('div');
     div.className = 'combat-popup';
     div.innerHTML = `
-  <div style="background:#222; color:#fff; border:2px solid #c00; padding:1em; margin-top:1em; text-align:center; border-radius:12px; box-shadow:0 4px 16px #000a;">
-    <div style="font-size:2em; margin-bottom:1em;">COMBAT</div>
-    <div class="barre-container" style="margin-bottom:10px;">
-      <div class="vie-remplissage" id="vieHeroBarre"></div>
-      <div class="contenu-barre">
-        <div class="coeur" id="iconeHeroVie">❤️</div>
-        <div class="nom">Héros</div>
-        <div class="rond-vie" id="vieHeroRestante">${vieHero}</div>
+      <div class="barre-container" style="margin-bottom:10px;">
+        <div class="vie-remplissage" id="vieHeroBarre"></div>
+        <div class="contenu-barre">
+          <div class="coeur" id="iconeHeroVie">❤️</div>
+          <div class="nom">V</div>
+          <div class="rond-vie" id="vieHeroRestante">${vieHero}</div>
+        </div>
       </div>
-    </div>
-    <button id="btnHeroMoins2" style="margin-bottom:10px;">-2 Héros</button>
-    <div class="barre-container" style="margin-bottom:10px;">
-      <div class="vie-remplissage" id="vieMonstreBarre"></div>
-      <div class="contenu-barre">
-        <div class="coeur" id="iconeMonstreVie">👹</div>
-        <div class="nom">Monstre</div>
-        <div class="rond-vie" id="vieMonstreRestante">${vieMonstre}</div>
+      <button id="btnHeroMoins2" style="margin-bottom:10px;">-2 Héros</button>
+      <div class="barre-container" style="margin-bottom:10px;">
+        <div class="vie-remplissage" id="vieMonstreBarre"></div>
+        <div class="contenu-barre">
+          <div class="coeur" id="iconeMonstreVie">👹</div>
+          <div class="nom">Monstre</div>
+          <div class="rond-vie" id="vieMonstreRestante">${vieMonstre}</div>
+        </div>
       </div>
-    </div>
-    <button id="btnMonstreMoins2">-2 Monstre</button>
-  </div>
-`;
+      <button id="btnMonstreMoins2">-2 Monstre</button>
+    `;
 
     p.appendChild(div);
 
