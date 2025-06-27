@@ -339,41 +339,38 @@ class NavigationManager {
     const old = p.querySelector('.combat-popup');
     if (old) old.remove();
 
-    // Endurance réelle du héros
+    // Valeurs de vie (à adapter selon ton système)
     let vieHero = parseInt(localStorage.getItem('stat_end'), 10) || 35;
     const vieHeroMax = parseInt(localStorage.getItem('stat_end_max'), 10) || vieHero;
-
-    // Réinitialise la vie du monstre à chaque combat
-    let vieMonstre = 10; // À adapter si tu veux parser la vraie valeur du monstre
-    const vieMonstreMax = vieMonstre;
-    localStorage.setItem('stat_monstre', vieMonstre);
+    let vieMonstre = 10;
+    const vieMonstreMax = 10;
 
     // Crée la fenêtre de combat avec deux barres de vie façon "vie.html"
     const div = document.createElement('div');
     div.className = 'combat-popup';
     div.innerHTML = `
-      <div style="background:#222; color:#fff; border:2px solid #c00; padding:1em; margin-top:1em; text-align:center; border-radius:12px; box-shadow:0 4px 16px #000a;">
-        <div style="font-size:2em; margin-bottom:1em;">COMBAT</div>
-        <div class="barre-container" style="margin-bottom:10px;">
-          <div class="vie-remplissage" id="vieHeroBarre"></div>
-          <div class="contenu-barre">
-            <div class="coeur" id="iconeHeroVie">❤️</div>
-            <div class="nom">Héros</div>
-            <div class="rond-vie" id="vieHeroRestante">${vieHero}</div>
-          </div>
-        </div>
-        <button id="btnHeroMoins2" style="margin-bottom:10px;">-2 Héros</button>
-        <div class="barre-container" style="margin-bottom:10px;">
-          <div class="vie-remplissage" id="vieMonstreBarre"></div>
-          <div class="contenu-barre">
-            <div class="coeur" id="iconeMonstreVie">👹</div>
-            <div class="nom">Monstre</div>
-            <div class="rond-vie" id="vieMonstreRestante">${vieMonstre}</div>
-          </div>
-        </div>
-        <button id="btnMonstreMoins2">-2 Monstre</button>
+  <div style="background:#222; color:#fff; border:2px solid #c00; padding:1em; margin-top:1em; text-align:center; border-radius:12px; box-shadow:0 4px 16px #000a;">
+    <div style="font-size:2em; margin-bottom:1em;">COMBAT</div>
+    <div class="barre-container" style="margin-bottom:10px;">
+      <div class="vie-remplissage" id="vieHeroBarre"></div>
+      <div class="contenu-barre">
+        <div class="coeur" id="iconeHeroVie">❤️</div>
+        <div class="nom">Héros</div>
+        <div class="rond-vie" id="vieHeroRestante">${vieHero}</div>
       </div>
-    `;
+    </div>
+    <button id="btnHeroMoins2" style="margin-bottom:10px;">-2 Héros</button>
+    <div class="barre-container" style="margin-bottom:10px;">
+      <div class="vie-remplissage" id="vieMonstreBarre"></div>
+      <div class="contenu-barre">
+        <div class="coeur" id="iconeMonstreVie">👹</div>
+        <div class="nom">Monstre</div>
+        <div class="rond-vie" id="vieMonstreRestante">${vieMonstre}</div>
+      </div>
+    </div>
+    <button id="btnMonstreMoins2">-2 Monstre</button>
+  </div>
+`;
 
     p.appendChild(div);
 
@@ -466,16 +463,10 @@ class NavigationManager {
     div.querySelector("#btnHeroMoins2").onclick = function() {
       vieHero = Math.max(0, vieHero - 2);
       majBarre("vieHeroBarre", "vieHeroRestante", "iconeHeroVie", vieHero, vieHeroMax, "❤️", "💀");
-      // Met à jour l'endurance réelle dans le localStorage et sur la fiche
-      localStorage.setItem('stat_end', vieHero);
-      const inputEnd = document.getElementById('end');
-      if (inputEnd) inputEnd.value = vieHero;
     };
     div.querySelector("#btnMonstreMoins2").onclick = function() {
       vieMonstre = Math.max(0, vieMonstre - 2);
       majBarre("vieMonstreBarre", "vieMonstreRestante", "iconeMonstreVie", vieMonstre, vieMonstreMax, "👹", "💀");
-      // Met à jour la vie du monstre dans le localStorage (optionnel, mais réinitialisée à chaque combat)
-      localStorage.setItem('stat_monstre', vieMonstre);
     };
   }
 }

@@ -477,8 +477,6 @@ class NavigationManager {
       // Met à jour la vie du monstre dans le localStorage (optionnel, mais réinitialisée à chaque combat)
       localStorage.setItem('stat_monstre', vieMonstre);
     };
-  }
-}
 
   initParagraphNavigation() {
     const paragraphs = document.querySelectorAll('.main-content p');

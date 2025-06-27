@@ -1,0 +1,20 @@
+ajouter gestion combat 
+    faire fonction qui met console log si monstre présent !
+    voir pts de vie comme sur tel
+
+
+
+kai :
+    ajouter effet 
+    faire
+   
+
+objet début choix aléatoire
+
+ctl alt p pour git
+
+
+mettre une page d'intro qui explique les règles, qui ouvre demande ensuite d'ouvrir la page de feuille d'aventure pour tt enregistrer avant de commencer l'aventure
+
+
+
