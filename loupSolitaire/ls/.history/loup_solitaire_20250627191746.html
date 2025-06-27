@@ -124,11 +124,8 @@
       box-sizing: border-box;
       font-family: inherit;
       padding: 0.5em;"></textarea>
-      
-      <!-- Titre avant le dé -->
-      <h3>Lancer un dé de 10</h3>
-      <!-- Dé animé -->
-      <canvas id="deCarre" width="100" height="100" title="Cliquez pour lancer le dé"></canvas>
+<!-- Dé animé -->
+<canvas id="deCarre" width="100" height="100" title="Cliquez pour lancer le dé"></canvas>
       <!--<h3>Détail des combats</h3>
       <div class="combat-log">
          <p>Loup Solitaire <input type="number" placeholder="QA"> VS Ennemi <input type="number" placeholder="QA"></p> -->
@@ -138,6 +135,35 @@
   </div>
 </div>
 
+<!-- Feuille de notes (modale) -->
+<button id="open-notes" style="margin:1em 0;">Feuille de notes</button>
+<div id="notes-modal" style="display:none; position:fixed; top:15%; left:50%; transform:translateX(-50%); background:#fff; border:1px solid #888; box-shadow:0 2px 10px #0003; padding:1em; z-index:10001; min-width:280px; max-width:90vw; width:350px; border-radius:10px;">
+  <div style="display:flex;justify-content:space-between;align-items:center;">
+    <h3 style="margin:0;">Feuille de notes</h3>
+    <button id="close-notes" title="Fermer" style="font-size:1.2em;line-height:1;">✖</button>
+  </div>
+  <textarea id="notes-textarea" style="width:100%;height:120px;resize:vertical;margin-top:1em;"></textarea>
+</div>
+<script>
+  // Ouvre/ferme la modale
+  document.getElementById('open-notes').onclick = function() {
+    document.getElementById('notes-modal').style.display = 'block';
+    document.getElementById('notes-textarea').focus();
+  };
+  document.getElementById('close-notes').onclick = function() {
+    document.getElementById('notes-modal').style.display = 'none';
+  };
+  // Fermer avec Echap
+  document.addEventListener('keydown', function(e){
+    if(e.key === "Escape") document.getElementById('notes-modal').style.display = 'none';
+  });
+  // LocalStorage : charger et sauvegarder
+  const notesTextarea = document.getElementById('notes-textarea');
+  notesTextarea.value = localStorage.getItem('feuille_notes') || '';
+  notesTextarea.addEventListener('input', function() {
+    localStorage.setItem('feuille_notes', notesTextarea.value);
+  });
+</script>
 <script src="paragraphe.js"></script> 
 <script src="ls.js"></script>
 <script>
