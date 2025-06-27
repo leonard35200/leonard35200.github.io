@@ -359,19 +359,8 @@ class NavigationManager {
     // Gestion bonus psychiques
     let bonusPsy = 0;
     let messagePsy = '';
-    const armesPsy = Object.values(localStorage)
-  .some(val => val && val.includes("Puissance psychique"));
-const bouclierPsy = Object.values(localStorage)
-  .some(val => val && val.includes("Bouclier psychique"));
-    // Gestion bonus Maîtrise des armes
-    let bonusArme = 0;
-    let armeMaitrisee = localStorage.getItem('arme_maitrisee');
-    const disciplineArme = localStorage.getItem('discipline1') === "Maîtrise des armes (+2 hab. si possède " + armeMaitrisee + ")";
-    const armePossedee = [localStorage.getItem('arme1'), localStorage.getItem('arme2')].includes(armeMaitrisee);
-
-    if (disciplineArme && armePossedee) {
-      bonusArme = 2;
-    }
+    const armesPsy = localStorage.getItem('discipline_arme_psy') === '1';
+    const bouclierPsy = localStorage.getItem('discipline_bouclier_psy') === '1';
 
     // Création de la boîte de combat AVANT les barres de vie
     const div = document.createElement('div');
@@ -379,44 +368,38 @@ const bouclierPsy = Object.values(localStorage)
     let confirmationHTML = `
       <div style="background:#222; color:#fff; border:2px solid #c00; padding:1em; margin-top:1em; text-align:center; border-radius:12px; box-shadow:0 4px 16px #000a;">
         <div style="font-size:2em; margin-bottom:1em;">COMBAT</div>
-        
+        <div style="margin-bottom:1em;">
+          <b>Ton habileté :</b> <span id="valHabHero">${habHero}</span><br>
+          <b>HABILETÉ du monstre :</b> <span id="valHabMonstre">${habMonstre}</span>
+        </div>
     `;
 
-   // ...création du HTML...
-if (armesPsy) {
-  confirmationHTML += `<div id="confirmationPsy" style="margin-bottom:1em;">
-    <b>Discipline psychique détectée :</b><br>
-    <button id="btnPsy2" style="margin:0.5em;">Activer bonus +2</button>
-    <button id="btnPsy0" style="margin:0.5em;">Aucun bonus</button>
-  </div>`;
-}
-confirmationHTML += `<div id="zoneBarresCombat" style="display:none"></div></div>`;
-div.innerHTML = confirmationHTML;
-p.appendChild(div);
+    // Si tu as une discipline psy, propose la question dans la boîte
+    if (armesPsy || bouclierPsy) {
+      confirmationHTML += `<div style="margin-bottom:1em;">
+        <b>Discipline(s) psychique(s) détectée(s) :</b><br>`;
+      if (armesPsy && bouclierPsy) {
+        confirmationHTML += `
+          <button id="btnPsy4" style="margin:0.5em;">Arme + Bouclier (+4)</button>
+          <button id="btnPsy2" style="margin:0.5em;">Seulement +2</button>
+          <button id="btnPsy0" style="margin:0.5em;">Aucun bonus</button>
+        `;
+      } else {
+        confirmationHTML += `
+          <button id="btnPsy2" style="margin:0.5em;">Activer bonus +2</button>
+          <button id="btnPsy0" style="margin:0.5em;">Aucun bonus</button>
+        `;
+      }
+      confirmationHTML += `</div>`;
+    }
 
-// === Ici SEULEMENT tu ajoutes les listeners ===
-if (armesPsy) {
-  const btn2 = div.querySelector("#btnPsy2");
-  const btn0 = div.querySelector("#btnPsy0");
-  const confirmationDiv = div.querySelector("#confirmationPsy");
-  if (btn2) btn2.onclick = () => {
-    confirmationDiv.remove();
-    div.querySelector("#zoneBarresCombat").style.display = "";
-    afficherBarres(2, "(Psychique)");
-  };
-  if (btn0) btn0.onclick = () => {
-    confirmationDiv.remove();
-    div.querySelector("#zoneBarresCombat").style.display = "";
-    afficherBarres(0, "");
-  };
-} else {
-  afficherBarres(0, "");
-}
-
+    confirmationHTML += `<div id="zoneBarresCombat" style="display:none"></div></div>`;
+    div.innerHTML = confirmationHTML;
+    p.appendChild(div);
 
     // Fonction pour afficher les barres de vie et le quotient d'attaque
     function afficherBarres(bonusPsy, messagePsy) {
-      const quotient = habHero + bonusArme + bonusPsy - habMonstre;
+      const quotient = habHero + bonusPsy - habMonstre;
       const vieHero = parseInt(localStorage.getItem('stat_end'), 10) || 35;
       const vieHeroMax = parseInt(localStorage.getItem('stat_end_max'), 10) || vieHero;
       let html = `
@@ -439,7 +422,8 @@ if (armesPsy) {
         </div>
         <button id="btnMonstreMoins2">-2 Monstre</button>
         <div style="margin-top:1em;font-size:1.2em;">
-        <b>Quotient d'attaque :</b> ${habHero} ${bonusArme ? `+ ${bonusArme} (Maîtrise des armes)` : ''} ${bonusPsy ? `+ ${bonusPsy} ${messagePsy}` : ''} - ${habMonstre} = <span style="color:#ff0">${quotient}</span>        </div>
+          <b>Quotient d'attaque :</b> ${habHero} ${bonusPsy ? `+ ${bonusPsy} ${messagePsy}` : ''} - ${habMonstre} = <span style="color:#ff0">${quotient}</span>
+        </div>
       `;
       div.querySelector('#zoneBarresCombat').innerHTML = html;
       div.querySelector('#zoneBarresCombat').style.display = '';
@@ -873,47 +857,4 @@ document.addEventListener('DOMContentLoaded', () => {
 // Sauvegarde avant fermeture de la page
 window.addEventListener('beforeunload', () => {
   console.log("💾 Sauvegarde avant fermeture...");
-});
-
-function updateArmesSelects() {
-  const armesPossibles = ["", ...armes]; // Option vide
-  const selects = [document.getElementById('arme1'), document.getElementById('arme2')];
-
-  // Récupère la sélection courante
-  const values = selects.map(sel => sel ? sel.value : "");
-
-  selects.forEach((select, idx) => {
-    if (!select) return;
-    // Sauvegarde la sélection courante
-    const current = select.value;
-    // Vide les options
-    select.innerHTML = '';
-    armesPossibles.forEach(arme => {
-      // N'affiche pas une arme déjà sélectionnée dans l'autre select (sauf si c'est la valeur courante)
-      if (arme === "" || !values.includes(arme) || arme === current) {
-        const opt = document.createElement('option');
-        opt.value = arme;
-        opt.textContent = arme === "" ? " " : arme;
-        if (arme === current) opt.selected = true;
-        select.appendChild(opt);
-      }
-    });
-  });
-}
-
-// Initialisation au chargement
-document.addEventListener('DOMContentLoaded', () => {
-  updateArmesSelects();
-  ['arme1', 'arme2'].forEach(id => {
-    const sel = document.getElementById(id);
-    if (sel) {
-      sel.addEventListener('change', () => {
-        localStorage.setItem(id, sel.value);
-        updateArmesSelects();
-      });
-      // Charge la valeur sauvegardée
-      const stored = localStorage.getItem(id);
-      if (stored) sel.value = stored;
-    }
-  });
 });

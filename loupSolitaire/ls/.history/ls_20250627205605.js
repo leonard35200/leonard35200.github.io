@@ -379,40 +379,23 @@ const bouclierPsy = Object.values(localStorage)
     let confirmationHTML = `
       <div style="background:#222; color:#fff; border:2px solid #c00; padding:1em; margin-top:1em; text-align:center; border-radius:12px; box-shadow:0 4px 16px #000a;">
         <div style="font-size:2em; margin-bottom:1em;">COMBAT</div>
-        
+        <div style="margin-bottom:1em;">
+          <b>Ton habileté :</b> <span id="valHabHero">${habHero}</span><br>
+          <b>HABILETÉ du monstre :</b> <span id="valHabMonstre">${habMonstre}</span>
+        </div>
     `;
 
-   // ...création du HTML...
-if (armesPsy) {
-  confirmationHTML += `<div id="confirmationPsy" style="margin-bottom:1em;">
-    <b>Discipline psychique détectée :</b><br>
+    if (armesPsy) {
+  confirmationHTML += `<div style="margin-bottom:1em;">
+    <b>Discipline pupsychique détectée :</b><br>
     <button id="btnPsy2" style="margin:0.5em;">Activer bonus +2</button>
     <button id="btnPsy0" style="margin:0.5em;">Aucun bonus</button>
   </div>`;
 }
-confirmationHTML += `<div id="zoneBarresCombat" style="display:none"></div></div>`;
-div.innerHTML = confirmationHTML;
-p.appendChild(div);
 
-// === Ici SEULEMENT tu ajoutes les listeners ===
-if (armesPsy) {
-  const btn2 = div.querySelector("#btnPsy2");
-  const btn0 = div.querySelector("#btnPsy0");
-  const confirmationDiv = div.querySelector("#confirmationPsy");
-  if (btn2) btn2.onclick = () => {
-    confirmationDiv.remove();
-    div.querySelector("#zoneBarresCombat").style.display = "";
-    afficherBarres(2, "(Psychique)");
-  };
-  if (btn0) btn0.onclick = () => {
-    confirmationDiv.remove();
-    div.querySelector("#zoneBarresCombat").style.display = "";
-    afficherBarres(0, "");
-  };
-} else {
-  afficherBarres(0, "");
-}
-
+    confirmationHTML += `<div id="zoneBarresCombat" style="display:none"></div></div>`;
+    div.innerHTML = confirmationHTML;
+    p.appendChild(div);
 
     // Fonction pour afficher les barres de vie et le quotient d'attaque
     function afficherBarres(bonusPsy, messagePsy) {

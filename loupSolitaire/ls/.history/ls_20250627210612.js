@@ -400,12 +400,12 @@ if (armesPsy) {
   const btn0 = div.querySelector("#btnPsy0");
   const confirmationDiv = div.querySelector("#confirmationPsy");
   if (btn2) btn2.onclick = () => {
-    confirmationDiv.remove();
+    confirmationDiv.style.display = "none";
     div.querySelector("#zoneBarresCombat").style.display = "";
     afficherBarres(2, "(Psychique)");
   };
   if (btn0) btn0.onclick = () => {
-    confirmationDiv.remove();
+    confirmationDiv.style.display = "none";
     div.querySelector("#zoneBarresCombat").style.display = "";
     afficherBarres(0, "");
   };

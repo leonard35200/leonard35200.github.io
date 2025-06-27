@@ -359,67 +359,44 @@ class NavigationManager {
     // Gestion bonus psychiques
     let bonusPsy = 0;
     let messagePsy = '';
-    const armesPsy = Object.values(localStorage)
-  .some(val => val && val.includes("Puissance psychique"));
-const bouclierPsy = Object.values(localStorage)
-  .some(val => val && val.includes("Bouclier psychique"));
-    // Gestion bonus Maîtrise des armes
-    let bonusArme = 0;
-    let armeMaitrisee = localStorage.getItem('arme_maitrisee');
-    const disciplineArme = localStorage.getItem('discipline1') === "Maîtrise des armes (+2 hab. si possède " + armeMaitrisee + ")";
-    const armePossedee = [localStorage.getItem('arme1'), localStorage.getItem('arme2')].includes(armeMaitrisee);
+    // Vérifie si tu as les compétences (à adapter selon ton système de sauvegarde)
+    const armesPsy = localStorage.getItem('discipline_arme_psy') === '1';
+    const bouclierPsy = localStorage.getItem('discipline_bouclier_psy') === '1';
 
-    if (disciplineArme && armePossedee) {
-      bonusArme = 2;
+    // Demande à l'utilisateur s'il veut activer les bonus
+    if (armesPsy || bouclierPsy) {
+      let question = "L'ennemi est-il sensible aux attaques psychiques ?\n";
+      if (armesPsy && bouclierPsy) {
+        question += "Tu as Arme Psychique ET Bouclier Psychique. Clique sur OK pour +4, Annuler pour +2.";
+        if (confirm(question)) {
+          bonusPsy = 4;
+          messagePsy = "+4 (Arme + Bouclier Psychique)";
+        } else {
+          bonusPsy = 2;
+          messagePsy = "+2 (Arme ou Bouclier Psychique)";
+        }
+      } else {
+        question += "Tu as " + (armesPsy ? "Arme Psychique" : "Bouclier Psychique") + ". Clique sur OK pour +2.";
+        if (confirm(question)) {
+          bonusPsy = 2;
+          messagePsy = "+2 (Psychique)";
+        }
+      }
     }
 
-    // Création de la boîte de combat AVANT les barres de vie
+    // Calcule le quotient d'attaque
+    const quotient = habHero + bonusPsy - habMonstre;
+
+    // Endurance réelle du héros
+    let vieHero = parseInt(localStorage.getItem('stat_end'), 10) || 35;
+    const vieHeroMax = parseInt(localStorage.getItem('stat_end_max'), 10) || vieHero;
+
+    // Crée la fenêtre de combat
     const div = document.createElement('div');
     div.className = 'combat-popup';
-    let confirmationHTML = `
+    div.innerHTML = `
       <div style="background:#222; color:#fff; border:2px solid #c00; padding:1em; margin-top:1em; text-align:center; border-radius:12px; box-shadow:0 4px 16px #000a;">
         <div style="font-size:2em; margin-bottom:1em;">COMBAT</div>
-        
-    `;
-
-   // ...création du HTML...
-if (armesPsy) {
-  confirmationHTML += `<div id="confirmationPsy" style="margin-bottom:1em;">
-    <b>Discipline psychique détectée :</b><br>
-    <button id="btnPsy2" style="margin:0.5em;">Activer bonus +2</button>
-    <button id="btnPsy0" style="margin:0.5em;">Aucun bonus</button>
-  </div>`;
-}
-confirmationHTML += `<div id="zoneBarresCombat" style="display:none"></div></div>`;
-div.innerHTML = confirmationHTML;
-p.appendChild(div);
-
-// === Ici SEULEMENT tu ajoutes les listeners ===
-if (armesPsy) {
-  const btn2 = div.querySelector("#btnPsy2");
-  const btn0 = div.querySelector("#btnPsy0");
-  const confirmationDiv = div.querySelector("#confirmationPsy");
-  if (btn2) btn2.onclick = () => {
-    confirmationDiv.remove();
-    div.querySelector("#zoneBarresCombat").style.display = "";
-    afficherBarres(2, "(Psychique)");
-  };
-  if (btn0) btn0.onclick = () => {
-    confirmationDiv.remove();
-    div.querySelector("#zoneBarresCombat").style.display = "";
-    afficherBarres(0, "");
-  };
-} else {
-  afficherBarres(0, "");
-}
-
-
-    // Fonction pour afficher les barres de vie et le quotient d'attaque
-    function afficherBarres(bonusPsy, messagePsy) {
-      const quotient = habHero + bonusArme + bonusPsy - habMonstre;
-      const vieHero = parseInt(localStorage.getItem('stat_end'), 10) || 35;
-      const vieHeroMax = parseInt(localStorage.getItem('stat_end_max'), 10) || vieHero;
-      let html = `
         <div class="barre-container" style="margin-bottom:10px;">
           <div class="vie-remplissage" id="vieHeroBarre"></div>
           <div class="contenu-barre">
@@ -439,129 +416,113 @@ if (armesPsy) {
         </div>
         <button id="btnMonstreMoins2">-2 Monstre</button>
         <div style="margin-top:1em;font-size:1.2em;">
-        <b>Quotient d'attaque :</b> ${habHero} ${bonusArme ? `+ ${bonusArme} (Maîtrise des armes)` : ''} ${bonusPsy ? `+ ${bonusPsy} ${messagePsy}` : ''} - ${habMonstre} = <span style="color:#ff0">${quotient}</span>        </div>
-      `;
-      div.querySelector('#zoneBarresCombat').innerHTML = html;
-      div.querySelector('#zoneBarresCombat').style.display = '';
+          <b>Quotient d'attaque :</b> ${habHero} ${bonusPsy ? `+ ${bonusPsy} ${messagePsy}` : ''} - ${habMonstre} = <span style="color:#ff0">${quotient}</span>
+        </div>
+      </div>
+    `;
 
-      // Style pour la barre façon vie.html
-      const style = document.createElement('style');
-      style.textContent = `
-        .barre-container {
-          position: relative;
-          width: 320px;
-          height: 38px;
-          border-radius: 999px;
-          background: #ddd;
-          margin-bottom: 10px;
-          display: flex;
-          align-items: center;
-          box-shadow: 0 0 8px rgba(0,0,0,0.2);
-          overflow: hidden;
-        }
-        .vie-remplissage {
-          position: absolute;
-          height: 100%;
-          border-radius: 999px;
-          background: linear-gradient(to right, #4e9cff, #b3e6ff);
-          transition: width 0.3s;
-          z-index: 1;
-        }
-        .contenu-barre {
-          position: relative;
-          z-index: 2;
-          display: flex;
-          align-items: center;
-          width: 100%;
-          justify-content: space-between;
-          color: #222;
-          padding: 0 15px;
-        }
-        .coeur {
-          font-size: 22px;
-        }
-        .nom {
-          font-weight: bold;
-          font-size: 16px;
-        }
-        .rond-vie {
-          width: 28px;
-          height: 28px;
-          border-radius: 50%;
-          background: white;
-          border: 2px solid #999;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-weight: bold;
-          font-size: 13px;
-        }
-        #btnHeroMoins2, #btnMonstreMoins2 {
-          padding: 6px 14px;
-          font-size: 14px;
-          cursor: pointer;
-          border: none;
-          background: #333;
-          color: white;
-          border-radius: 8px;
-          box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
-          margin-bottom: 10px;
-          margin-left: 0;
-        }
-        #btnHeroMoins2:hover, #btnMonstreMoins2:hover {
-          background: #555;
-        }
-      `;
-      document.head.appendChild(style);
+    p.appendChild(div);
 
-      // Fonctions de mise à jour des barres
-      function majBarre(idBarre, idRond, idIcone, vie, vieMax, iconePleine, iconeVide) {
-        const barre = div.querySelector("#" + idBarre);
-        const vieText = div.querySelector("#" + idRond);
-        const icone = div.querySelector("#" + idIcone);
-        if (!barre || !vieText || !icone) return;
-        barre.style.width = (vie / vieMax) * 100 + "%";
-        vieText.textContent = vie;
-        icone.textContent = vie === 0 ? iconeVide : iconePleine;
+    // Style pour la barre façon vie.html
+    const style = document.createElement('style');
+    style.textContent = `
+      .barre-container {
+        position: relative;
+        width: 320px;
+        height: 38px;
+        border-radius: 999px;
+        background: #ddd;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        box-shadow: 0 0 8px rgba(0,0,0,0.2);
+        overflow: hidden;
       }
+      .vie-remplissage {
+        position: absolute;
+        height: 100%;
+        border-radius: 999px;
+        background: linear-gradient(to right, #4e9cff, #b3e6ff);
+        transition: width 0.3s;
+        z-index: 1;
+      }
+      .contenu-barre {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        justify-content: space-between;
+        color: #222;
+        padding: 0 15px;
+      }
+      .coeur {
+        font-size: 22px;
+      }
+      .nom {
+        font-weight: bold;
+        font-size: 16px;
+      }
+      .rond-vie {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: white;
+        border: 2px solid #999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 13px;
+      }
+      #btnHeroMoins2, #btnMonstreMoins2 {
+        padding: 6px 14px;
+        font-size: 14px;
+        cursor: pointer;
+        border: none;
+        background: #333;
+        color: white;
+        border-radius: 8px;
+        box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+        margin-bottom: 10px;
+        margin-left: 0;
+      }
+      #btnHeroMoins2:hover, #btnMonstreMoins2:hover {
+        background: #555;
+      }
+    `;
+    document.head.appendChild(style);
 
-      // Initialisation des barres
-      let vieHeroCourant = vieHero;
-      let vieMonstreCourant = vieMonstre;
-      majBarre("vieHeroBarre", "vieHeroRestante", "iconeHeroVie", vieHeroCourant, vieHeroMax, "❤️", "💀");
-      majBarre("vieMonstreBarre", "vieMonstreRestante", "iconeMonstreVie", vieMonstreCourant, vieMonstreMax, "👹", "💀");
-
-      // Boutons pour enlever 2 points
-      div.querySelector("#btnHeroMoins2").onclick = function() {
-        vieHeroCourant = Math.max(0, vieHeroCourant - 2);
-        majBarre("vieHeroBarre", "vieHeroRestante", "iconeHeroVie", vieHeroCourant, vieHeroMax, "❤️", "💀");
-        // Met à jour l'endurance réelle dans le localStorage et sur la fiche
-        localStorage.setItem('stat_end', vieHeroCourant);
-        const inputEnd = document.getElementById('end');
-        if (inputEnd) inputEnd.value = vieHeroCourant;
-      };
-      div.querySelector("#btnMonstreMoins2").onclick = function() {
-        vieMonstreCourant = Math.max(0, vieMonstreCourant - 2);
-        majBarre("vieMonstreBarre", "vieMonstreRestante", "iconeMonstreVie", vieMonstreCourant, vieMonstreMax, "👹", "💀");
-        // Met à jour la vie du monstre dans le localStorage (optionnel, mais réinitialisée à chaque combat)
-        localStorage.setItem('stat_monstre', vieMonstreCourant);
-      };
+    // Fonctions de mise à jour des barres
+    function majBarre(idBarre, idRond, idIcone, vie, vieMax, iconePleine, iconeVide) {
+      const barre = div.querySelector("#" + idBarre);
+      const vieText = div.querySelector("#" + idRond);
+      const icone = div.querySelector("#" + idIcone);
+      if (!barre || !vieText || !icone) return;
+      barre.style.width = (vie / vieMax) * 100 + "%";
+      vieText.textContent = vie;
+      icone.textContent = vie === 0 ? iconeVide : iconePleine;
     }
 
-    // Gestion des boutons de confirmation psy
-    if (armesPsy || bouclierPsy) {
-      if (armesPsy && bouclierPsy) {
-        div.querySelector("#btnPsy4").onclick = () => afficherBarres(4, "(Arme + Bouclier Psychique)");
-        div.querySelector("#btnPsy2").onclick = () => afficherBarres(2, "(Arme ou Bouclier Psychique)");
-        div.querySelector("#btnPsy0").onclick = () => afficherBarres(0, "");
-      } else {
-        div.querySelector("#btnPsy2").onclick = () => afficherBarres(2, "(Psychique)");
-        div.querySelector("#btnPsy0").onclick = () => afficherBarres(0, "");
-      }
-    } else {
-      // Pas de discipline psy, on affiche directement les barres
-      afficherBarres(0, "");
-    }
+    // Initialisation des barres
+    majBarre("vieHeroBarre", "vieHeroRestante", "iconeHeroVie", vieHero, vieHeroMax, "❤️", "💀");
+    majBarre("vieMonstreBarre", "vieMonstreRestante", "iconeMonstreVie", vieMonstre, vieMonstreMax, "👹", "💀");
+
+    // Boutons pour enlever 2 points
+    div.querySelector("#btnHeroMoins2").onclick = function() {
+      vieHero = Math.max(0, vieHero - 2);
+      majBarre("vieHeroBarre", "vieHeroRestante", "iconeHeroVie", vieHero, vieHeroMax, "❤️", "💀");
+      // Met à jour l'endurance réelle dans le localStorage et sur la fiche
+      localStorage.setItem('stat_end', vieHero);
+      const inputEnd = document.getElementById('end');
+      if (inputEnd) inputEnd.value = vieHero;
+    };
+    div.querySelector("#btnMonstreMoins2").onclick = function() {
+      vieMonstre = Math.max(0, vieMonstre - 2);
+      majBarre("vieMonstreBarre", "vieMonstreRestante", "iconeMonstreVie", vieMonstre, vieMonstreMax, "👹", "💀");
+      // Met à jour la vie du monstre dans le localStorage (optionnel, mais réinitialisée à chaque combat)
+      localStorage.setItem('stat_monstre', vieMonstre);
+    };
   }
 }
 
@@ -873,47 +834,4 @@ document.addEventListener('DOMContentLoaded', () => {
 // Sauvegarde avant fermeture de la page
 window.addEventListener('beforeunload', () => {
   console.log("💾 Sauvegarde avant fermeture...");
-});
-
-function updateArmesSelects() {
-  const armesPossibles = ["", ...armes]; // Option vide
-  const selects = [document.getElementById('arme1'), document.getElementById('arme2')];
-
-  // Récupère la sélection courante
-  const values = selects.map(sel => sel ? sel.value : "");
-
-  selects.forEach((select, idx) => {
-    if (!select) return;
-    // Sauvegarde la sélection courante
-    const current = select.value;
-    // Vide les options
-    select.innerHTML = '';
-    armesPossibles.forEach(arme => {
-      // N'affiche pas une arme déjà sélectionnée dans l'autre select (sauf si c'est la valeur courante)
-      if (arme === "" || !values.includes(arme) || arme === current) {
-        const opt = document.createElement('option');
-        opt.value = arme;
-        opt.textContent = arme === "" ? " " : arme;
-        if (arme === current) opt.selected = true;
-        select.appendChild(opt);
-      }
-    });
-  });
-}
-
-// Initialisation au chargement
-document.addEventListener('DOMContentLoaded', () => {
-  updateArmesSelects();
-  ['arme1', 'arme2'].forEach(id => {
-    const sel = document.getElementById(id);
-    if (sel) {
-      sel.addEventListener('change', () => {
-        localStorage.setItem(id, sel.value);
-        updateArmesSelects();
-      });
-      // Charge la valeur sauvegardée
-      const stored = localStorage.getItem(id);
-      if (stored) sel.value = stored;
-    }
-  });
 });

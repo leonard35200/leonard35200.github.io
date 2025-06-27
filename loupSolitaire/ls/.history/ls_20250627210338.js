@@ -379,7 +379,8 @@ const bouclierPsy = Object.values(localStorage)
     let confirmationHTML = `
       <div style="background:#222; color:#fff; border:2px solid #c00; padding:1em; margin-top:1em; text-align:center; border-radius:12px; box-shadow:0 4px 16px #000a;">
         <div style="font-size:2em; margin-bottom:1em;">COMBAT</div>
-        
+        <div style="margin-bottom:1em;">
+        </div>
     `;
 
    // ...création du HTML...
@@ -398,14 +399,13 @@ p.appendChild(div);
 if (armesPsy) {
   const btn2 = div.querySelector("#btnPsy2");
   const btn0 = div.querySelector("#btnPsy0");
-  const confirmationDiv = div.querySelector("#confirmationPsy");
   if (btn2) btn2.onclick = () => {
-    confirmationDiv.remove();
+    btn2.parentElement.style.display = "none";
     div.querySelector("#zoneBarresCombat").style.display = "";
     afficherBarres(2, "(Psychique)");
   };
   if (btn0) btn0.onclick = () => {
-    confirmationDiv.remove();
+    btn0.parentElement.style.display = "none";
     div.querySelector("#zoneBarresCombat").style.display = "";
     afficherBarres(0, "");
   };
