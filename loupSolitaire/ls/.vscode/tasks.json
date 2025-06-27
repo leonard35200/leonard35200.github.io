@@ -2,26 +2,25 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Auto Git Push",
-      "type": "shell",
-      "command": "powershell",
-      "args": [
-        "-ExecutionPolicy",
-        "Bypass",
-        "-File",
-        "${workspaceFolder}/push-auto.ps1"
-      ],
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      },
-      "presentation": {
-        "echo": true,
-        "reveal": "always",
-        "focus": false,
-        "panel": "shared"
-      },
-      "problemMatcher": []
+  "label": "Git Pull Rebase & Auto Commit Push",
+  "type": "shell",
+  "command": "git pull --rebase --autostash && git add . && git commit -m \"auto commit\" && git push",
+  "problemMatcher": [],
+  "group": {
+    "kind": "build",
+    "isDefault": false
+  },
+  "presentation": {
+    "reveal": "always",
+    "panel": "shared"
+  },
+  "options": {
+    "shell": {
+      "executable": "cmd.exe",
+      "args": ["/c"]
     }
+  }
+}
+
   ]
 }
