@@ -380,22 +380,7 @@ html, body {
   overflow-x: hidden;
   box-sizing: border-box; /* pour que padding soit inclus dans la largeur */
 }
-/* 1) Resserre l’espace sous le titre "Feuille d’Aventure" */
-#character-sheet .sheet-header h2 {
-  margin-bottom: 0.25rem;
-}
 
-/* 2) Resserre l’espace entre header et contenu, et gère l’espacement global */
-#character-sheet .sheet-body {
-  margin-top: 0.25rem;       /* rapproche du header */
-  display: flex;
-  flex-wrap: wrap;           /* responsive */
-  gap: 1rem 2rem;            /* 1rem vertical, 2rem horizontal */
-  box-sizing: border-box;    /* padding inclus dans les calculs */
-}
-
-/* 3) Colonne fixe pour éviter le débordement */
-#character-sheet .sheet-body .sheet-column {
-  flex: 0 1 calc((100% - 2rem) / 2);
-  box-sizing: border-box;
+.sheet-column h3:first-of-type {
+  margin-bottom: 0.25rem;   /* s’applique seulement au premier <h3> */
 }
