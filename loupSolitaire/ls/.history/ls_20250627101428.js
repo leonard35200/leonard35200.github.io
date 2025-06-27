@@ -350,32 +350,18 @@ class NavigationManager {
   }
 
   initSheetToggle() {
-  const sheetToggle = document.getElementById('sheet-toggle');
-  const sheet = document.getElementById('character-sheet');
-  const closeBtn = document.getElementById('close-sheet');
-  const textarea = document.getElementById('objetsSpeciaux');
+    const sheetToggle = document.getElementById('sheet-toggle');
+    const sheet = document.getElementById('character-sheet');
+    const closeBtn = document.getElementById('close-sheet');
 
-  if (sheetToggle && sheet) {
-    sheetToggle.addEventListener('click', () => {
-  sheet.classList.toggle('hidden');
-
-  if (!sheet.classList.contains('hidden') && textarea) {
-    requestAnimationFrame(() => {
-      textarea.style.height = 'auto';
-      textarea.style.height = textarea.scrollHeight + 'px';
-    });
+    if (sheetToggle && sheet) {
+      sheetToggle.addEventListener('click', () => sheet.classList.toggle('hidden'));
+    }
+    
+    if (closeBtn && sheet) {
+      closeBtn.addEventListener('click', () => sheet.classList.add('hidden'));
+    }
   }
-});
-
-  }
-
-  if (closeBtn && sheet) {
-    closeBtn.addEventListener('click', () => {
-      sheet.classList.add('hidden');
-    });
-  }
-}
-
 
   initResetButton() {
     const resetButton = document.getElementById('reset-button');

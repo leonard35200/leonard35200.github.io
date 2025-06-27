@@ -356,11 +356,3 @@ body {
   background: #1a1a2e !important;
 }
 
-#objetsSpeciaux {
-  overflow: hidden;
-  resize: none;
-  min-height: 0;
-  height: auto;
-  line-height: 1.5;
-  font-size: 1rem;
-}

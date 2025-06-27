@@ -1,0 +1,13 @@
+ajouter gestion combat 
+    faire fonction qui met console log si monstre present !
+    voir pts de vie comme sur tel
+
+ajouter un dee de dix
+
+faire liste des paragraphes visiter et btn retour
+
+kai :
+    ajouter effet 
+   
+
+objet debut choix aleatoire

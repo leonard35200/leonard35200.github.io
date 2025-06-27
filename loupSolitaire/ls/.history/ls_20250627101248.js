@@ -350,32 +350,18 @@ class NavigationManager {
   }
 
   initSheetToggle() {
-  const sheetToggle = document.getElementById('sheet-toggle');
-  const sheet = document.getElementById('character-sheet');
-  const closeBtn = document.getElementById('close-sheet');
-  const textarea = document.getElementById('objetsSpeciaux');
+    const sheetToggle = document.getElementById('sheet-toggle');
+    const sheet = document.getElementById('character-sheet');
+    const closeBtn = document.getElementById('close-sheet');
 
-  if (sheetToggle && sheet) {
-    sheetToggle.addEventListener('click', () => {
-  sheet.classList.toggle('hidden');
-
-  if (!sheet.classList.contains('hidden') && textarea) {
-    requestAnimationFrame(() => {
-      textarea.style.height = 'auto';
-      textarea.style.height = textarea.scrollHeight + 'px';
-    });
+    if (sheetToggle && sheet) {
+      sheetToggle.addEventListener('click', () => sheet.classList.toggle('hidden'));
+    }
+    
+    if (closeBtn && sheet) {
+      closeBtn.addEventListener('click', () => sheet.classList.add('hidden'));
+    }
   }
-});
-
-  }
-
-  if (closeBtn && sheet) {
-    closeBtn.addEventListener('click', () => {
-      sheet.classList.add('hidden');
-    });
-  }
-}
-
 
   initResetButton() {
     const resetButton = document.getElementById('reset-button');
@@ -414,49 +400,6 @@ class NavigationManager {
 // ======================
 // Gestion de la zone de texte auto-redimensionnable
 // ======================
-class TextareaManager {
-  init() {
-    const textarea = document.getElementById('objetsSpeciaux');
-    if (!textarea) {
-      console.log('Textarea non trouvée');
-      return;
-    }
-    console.log('Textarea trouvée');
-
-    const resize = () => {
-      textarea.style.height = 'auto';
-      textarea.style.height = textarea.scrollHeight + 'px';
-      console.log('resize appelé, hauteur ajustée à', textarea.style.height, 'scrollHeight:', textarea.scrollHeight);
-    };
-
-    const saved = localStorage.getItem('objetsSpeciaux');
-    if (saved !== null) {
-      textarea.value = saved;
-      console.log('Valeur chargée depuis localStorage:', saved);
-      console.log('Textarea visible?', textarea.offsetHeight > 0, textarea.offsetWidth > 0);
-
-      setTimeout(() => {
-        resize();
-      }, 0);
-    } else {
-      console.log('Aucune valeur dans localStorage');
-    }
-
-    window.addEventListener('load', () => {
-      console.log('Événement load déclenché');
-      resize();
-    });
-
-    textarea.addEventListener('input', () => {
-      console.log('input détecté, nouvelle valeur:', textarea.value);
-      resize();
-      localStorage.setItem('objetsSpeciaux', textarea.value);
-    });
-  }
-}
-
-const manager = new TextareaManager();
-manager.init();
 
 
 

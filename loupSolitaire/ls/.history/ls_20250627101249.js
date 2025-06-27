@@ -350,32 +350,18 @@ class NavigationManager {
   }
 
   initSheetToggle() {
-  const sheetToggle = document.getElementById('sheet-toggle');
-  const sheet = document.getElementById('character-sheet');
-  const closeBtn = document.getElementById('close-sheet');
-  const textarea = document.getElementById('objetsSpeciaux');
+    const sheetToggle = document.getElementById('sheet-toggle');
+    const sheet = document.getElementById('character-sheet');
+    const closeBtn = document.getElementById('close-sheet');
 
-  if (sheetToggle && sheet) {
-    sheetToggle.addEventListener('click', () => {
-  sheet.classList.toggle('hidden');
-
-  if (!sheet.classList.contains('hidden') && textarea) {
-    requestAnimationFrame(() => {
-      textarea.style.height = 'auto';
-      textarea.style.height = textarea.scrollHeight + 'px';
-    });
+    if (sheetToggle && sheet) {
+      sheetToggle.addEventListener('click', () => sheet.classList.toggle('hidden'));
+    }
+    
+    if (closeBtn && sheet) {
+      closeBtn.addEventListener('click', () => sheet.classList.add('hidden'));
+    }
   }
-});
-
-  }
-
-  if (closeBtn && sheet) {
-    closeBtn.addEventListener('click', () => {
-      sheet.classList.add('hidden');
-    });
-  }
-}
-
 
   initResetButton() {
     const resetButton = document.getElementById('reset-button');
@@ -429,24 +415,23 @@ class TextareaManager {
       console.log('resize appelé, hauteur ajustée à', textarea.style.height, 'scrollHeight:', textarea.scrollHeight);
     };
 
+    // Charger la valeur sauvegardée
     const saved = localStorage.getItem('objetsSpeciaux');
     if (saved !== null) {
       textarea.value = saved;
       console.log('Valeur chargée depuis localStorage:', saved);
-      console.log('Textarea visible?', textarea.offsetHeight > 0, textarea.offsetWidth > 0);
-
-      setTimeout(() => {
-        resize();
-      }, 0);
+      resize();  // Important : resize juste après chargement
     } else {
       console.log('Aucune valeur dans localStorage');
     }
 
+    // Redimensionner après affichage complet
     window.addEventListener('load', () => {
       console.log('Événement load déclenché');
       resize();
     });
 
+    // Sauvegarder et redimensionner à chaque modification
     textarea.addEventListener('input', () => {
       console.log('input détecté, nouvelle valeur:', textarea.value);
       resize();
@@ -455,6 +440,7 @@ class TextareaManager {
   }
 }
 
+// Exemple d'initialisation
 const manager = new TextareaManager();
 manager.init();
 

@@ -1,30 +1,15 @@
 // ======================
 // Configuration générale
 // ======================
-// Remplace intégralement votre ancienne déclaration de CONFIG par celle-ci :
 const CONFIG = {
-  // Identifiants des 5 selects
-  disciplineIds: ["discipline1","discipline2","discipline3","discipline4","discipline5"],
-
-  // Tous les champs attendus par FieldManager.loadFields()
+  test: 1, // 0 = mode statique, 1 = mode interactif
+  disciplineIds: ["discipline1", "discipline2", "discipline3", "discipline4", "discipline5"],
   fields: [
-    "discipline1","discipline2","discipline3","discipline4","discipline5",
-    "objet1","objet2","objet3","objet4","objet5","objet6","objet7","objet8",
-    "arme1","arme2","hab","pieces","objetsSpeciaux"
-  ],
-
-  // Getter dynamique : mode interactif (1) si aucune sauvegarde, sinon mode statique (0)
-  get test() {
-    let saved = [];
-    try {
-      saved = JSON.parse(localStorage.getItem("disciplines_choisies") || "[]");
-    } catch {
-      saved = [];
-    }
-    return saved.length === 0 ? 1 : 0;
-  }
+    "discipline1", "discipline2", "discipline3", "discipline4", "discipline5",
+    "objet1", "objet2", "objet3", "objet4", "objet5", "objet6", "objet7", "objet8",
+    "arme1", "arme2", "hab", "pieces", "objetsSpeciaux"
+  ]
 };
-
 
 // ======================
 // Données des disciplines Kaï
@@ -142,47 +127,7 @@ class DisciplineManager {
     });
   }
 
-  displayList(container, list) {
-  if (!container) {
-    console.error("Conteneur 'zone-disciplines' introuvable");
-    return;
-  }
-  container.innerHTML = '';
-
-  if (CONFIG.test === 1) {
-    // Mode interactif : crée uniquement 5 <select>, sans aucun texte d'effet
-    CONFIG.disciplineIds.forEach(id => {
-      const select = document.createElement('select');
-      select.id = id;
-      disciplinesKai.forEach(d => {
-        const opt = document.createElement('option');
-        opt.value = d.nom;
-        opt.textContent = d.nom;
-        select.appendChild(opt);
-      });
-      container.appendChild(select);
-    });
-    // Réattache tes listeners (sauvegarde & update)
-    this.init();
-
-  } else {
-    // Mode statique : affiche juste la liste des noms, sans texte d'effet
-    const ul = document.createElement('ul');
-    if (list && list.length) {
-      list.forEach(item => {
-        const li = document.createElement('li');
-        li.textContent = (item && item.nom) ? item.nom : item;
-        ul.appendChild(li);
-      });
-    } else {
-      ul.textContent = "Aucune discipline sélectionnée.";
-    }
-    container.appendChild(ul);
-  }
-}
-
-
-
+  
 }
 
 // ======================
@@ -350,32 +295,18 @@ class NavigationManager {
   }
 
   initSheetToggle() {
-  const sheetToggle = document.getElementById('sheet-toggle');
-  const sheet = document.getElementById('character-sheet');
-  const closeBtn = document.getElementById('close-sheet');
-  const textarea = document.getElementById('objetsSpeciaux');
+    const sheetToggle = document.getElementById('sheet-toggle');
+    const sheet = document.getElementById('character-sheet');
+    const closeBtn = document.getElementById('close-sheet');
 
-  if (sheetToggle && sheet) {
-    sheetToggle.addEventListener('click', () => {
-  sheet.classList.toggle('hidden');
-
-  if (!sheet.classList.contains('hidden') && textarea) {
-    requestAnimationFrame(() => {
-      textarea.style.height = 'auto';
-      textarea.style.height = textarea.scrollHeight + 'px';
-    });
+    if (sheetToggle && sheet) {
+      sheetToggle.addEventListener('click', () => sheet.classList.toggle('hidden'));
+    }
+    
+    if (closeBtn && sheet) {
+      closeBtn.addEventListener('click', () => sheet.classList.add('hidden'));
+    }
   }
-});
-
-  }
-
-  if (closeBtn && sheet) {
-    closeBtn.addEventListener('click', () => {
-      sheet.classList.add('hidden');
-    });
-  }
-}
-
 
   initResetButton() {
     const resetButton = document.getElementById('reset-button');
@@ -390,7 +321,7 @@ class NavigationManager {
 
   resetGame() {
     // Conserver certaines préférences utilisateur
-    const preservedKeys = ['userPreferences', 'settings','objetsSpeciaux'];
+    const preservedKeys = ['userPreferences', 'settings'];
     const tempStorage = {};
     
     preservedKeys.forEach(key => {
@@ -417,50 +348,27 @@ class NavigationManager {
 class TextareaManager {
   init() {
     const textarea = document.getElementById('objetsSpeciaux');
-    if (!textarea) {
-      console.log('Textarea non trouvée');
-      return;
-    }
-    console.log('Textarea trouvée');
+    if (!textarea) return;
 
     const resize = () => {
       textarea.style.height = 'auto';
       textarea.style.height = textarea.scrollHeight + 'px';
-      console.log('resize appelé, hauteur ajustée à', textarea.style.height, 'scrollHeight:', textarea.scrollHeight);
     };
 
-    const saved = localStorage.getItem('objetsSpeciaux');
+    // Charger la valeur sauvegardée
+    const saved = localStorage.getItem('feuille_objetsSpeciaux');
     if (saved !== null) {
       textarea.value = saved;
-      console.log('Valeur chargée depuis localStorage:', saved);
-      console.log('Textarea visible?', textarea.offsetHeight > 0, textarea.offsetWidth > 0);
-
-      setTimeout(() => {
-        resize();
-      }, 0);
-    } else {
-      console.log('Aucune valeur dans localStorage');
+      resize();
     }
 
-    window.addEventListener('load', () => {
-      console.log('Événement load déclenché');
-      resize();
-    });
-
+    // Sauvegarder et redimensionner à chaque modification
     textarea.addEventListener('input', () => {
-      console.log('input détecté, nouvelle valeur:', textarea.value);
       resize();
-      localStorage.setItem('objetsSpeciaux', textarea.value);
+      localStorage.setItem('feuille_objetsSpeciaux', textarea.value);
     });
   }
 }
-
-const manager = new TextareaManager();
-manager.init();
-
-
-
-
 
 // ======================
 // Initialisation principale

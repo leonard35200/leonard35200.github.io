@@ -357,16 +357,14 @@ class NavigationManager {
 
   if (sheetToggle && sheet) {
     sheetToggle.addEventListener('click', () => {
-  sheet.classList.toggle('hidden');
+      sheet.classList.toggle('hidden');
 
-  if (!sheet.classList.contains('hidden') && textarea) {
-    requestAnimationFrame(() => {
-      textarea.style.height = 'auto';
-      textarea.style.height = textarea.scrollHeight + 'px';
+      // Si visible après toggle, resize le textarea
+      if (!sheet.classList.contains('hidden') && textarea) {
+        textarea.style.height = 'auto';
+        textarea.style.height = textarea.scrollHeight + 'px';
+      }
     });
-  }
-});
-
   }
 
   if (closeBtn && sheet) {
