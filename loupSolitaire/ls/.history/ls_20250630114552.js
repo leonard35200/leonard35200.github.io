@@ -391,41 +391,35 @@ if (armesPsy) {
   </div>`;
 }
 confirmationHTML += `<div id="zoneBarresCombat" style="display:none"></div></div>`;
+div.innerHTML = confirmationHTML;
+p.appendChild(div);
 
-
-
+const confirmationDiv = div.querySelector("#confirmationPsy");
+console.log("confirmationDiv trouvé ?", confirmationDiv);
+console.log("🧪 armesPsy =", armesPsy);
 
 // === Ici SEULEMENT tu ajoutes les listeners ===
 if (armesPsy) {
- div.innerHTML = confirmationHTML;
-p.appendChild(div);
+  const btn2 = div.querySelector("#btnPsy2");
+  const btn0 = div.querySelector("#btnPsy0");
+  console.log("🧩 btn2 =", btn2);
+console.log("🧩 btn0 =", btn0);
 
-// Récupération des boutons après insertion dans le DOM
-const btn2 = document.getElementById("btnPsy2");
-const btn0 = document.getElementById("btnPsy0");
+  const confirmationDiv = div.querySelector("#confirmationPsy");
+if (btn2) {
+  btn2.onclick = () => {
+    alert("Bouton +2 cliqué !");  // on passe par un alert pour éviter soucis console
+  };
+}
 
-// Ajout des handlers avec léger délai (optionnel)
-setTimeout(() => {
-  if (btn2) {
-    btn2.onclick = () => {
-      const confirmationDiv = document.getElementById("confirmationPsy");
-      if (confirmationDiv) confirmationDiv.remove();
-      div.querySelector("#zoneBarresCombat").style.display = "";
-      afficherBarres(2, "(Psychique)");
-    };
-  }
 
-  if (btn0) {
-    btn0.onclick = () => {
-      
-      const confirmationDiv = document.getElementById("confirmationPsy");
-      if (confirmationDiv) confirmationDiv.remove();
-      div.querySelector("#zoneBarresCombat").style.display = "";
-      afficherBarres(0, "");
-    };
-  }
-}, 50);
 
+if (btn0) btn0.onclick = () => {
+  console.log("➡️ bouton aucun bonus cliqué");
+  confirmationDiv.remove();
+  div.querySelector("#zoneBarresCombat").style.display = "";
+  afficherBarres(0, "");
+};
 
 } else {
   afficherBarres(0, "");

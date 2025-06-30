@@ -427,3 +427,74 @@ html, body {
   to   { opacity: 1; transform: translateY(0) scale(1);}
 }
 
+/* Popup de combat */
+.combat-popup {
+  position: relative;
+  background: rgba(30, 40, 50, 0.95);
+  border: 2px solid #4e54c8;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  max-width: 300px;
+  margin: 1rem auto;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+  color: #f0f0f0;
+  font-family: inherit;
+}
+
+/* En‑tête du popup */
+.combat-popup .popup-header {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  text-align: center;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+}
+
+/* Barres de vie */
+.combat-popup .barre {
+  position: relative;
+  background: #222;
+  border: 1px solid #555;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  height: 1.2rem;
+  margin-bottom: 0.75rem;
+}
+
+.combat-popup .barre .remplissage {
+  background: linear-gradient(to right, #4e54c8, #8f94fb);
+  height: 100%;
+  width: 0;            /* Mis à jour dynamiquement via JS */
+  transition: width 0.3s ease;
+}
+
+/* Texte sur la barre */
+.combat-popup .barre span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.7);
+  pointer-events: none;
+}
+
+/* Boutons d’actions */
+.combat-popup button {
+  display: inline-block;
+  background: #4e54c8;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  margin: 0.25rem 0.25rem 0 0;
+  font-size: 0.9rem;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.combat-popup button:hover {
+  background: #6b6fe2;
+}

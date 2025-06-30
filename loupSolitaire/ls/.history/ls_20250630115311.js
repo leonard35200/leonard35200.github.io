@@ -408,6 +408,7 @@ const btn0 = document.getElementById("btnPsy0");
 setTimeout(() => {
   if (btn2) {
     btn2.onclick = () => {
+    
       const confirmationDiv = document.getElementById("confirmationPsy");
       if (confirmationDiv) confirmationDiv.remove();
       div.querySelector("#zoneBarresCombat").style.display = "";

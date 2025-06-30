@@ -427,3 +427,87 @@ html, body {
   to   { opacity: 1; transform: translateY(0) scale(1);}
 }
 
+/* Popup de combat */
+.combat-popup {
+  position: relative;
+  background: rgba(30, 40, 50, 0.95);
+  border: 2px solid #4e54c8;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  max-width: 320px;
+  margin: 1.5rem auto;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  color: #f0f0f0;
+  font-family: 'Segoe UI', sans-serif;
+  animation: popup-combat 0.4s ease-out;
+}
+
+/* Animation d’apparition */
+@keyframes popup-combat {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* En‑tête */
+.combat-popup .popup-header {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 0.8rem;
+  text-align: center;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.7);
+}
+
+/* Barres de vie */
+.combat-popup .barre {
+  position: relative;
+  background: #1a1a2e;
+  border: 1px solid #555;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  height: 1.4rem;
+  margin-bottom: 0.8rem;
+}
+
+.combat-popup .barre .remplissage {
+  background: linear-gradient(to right, #4e54c8, #8f94fb);
+  height: 100%;
+  width: 0;
+  transition: width 0.35s ease;
+}
+
+/* Valeurs numériques centrées */
+.combat-popup .barre span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.85rem;
+  font-weight: 500;
+  pointer-events: none;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+}
+
+/* Boutons */
+.combat-popup button {
+  background: #4e54c8;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  margin: 0.4rem 0.2rem 0 0.2rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.combat-popup button:hover {
+  background: #6b6fe2;
+}

@@ -397,35 +397,37 @@ confirmationHTML += `<div id="zoneBarresCombat" style="display:none"></div></div
 
 // === Ici SEULEMENT tu ajoutes les listeners ===
 if (armesPsy) {
- div.innerHTML = confirmationHTML;
+ 
+  const btn0 = div.querySelector("#btnPsy0");
+  console.log("🧩 btn2 =", btn2);
+console.log("🧩 btn0 =", btn0);
+
+div.innerHTML = confirmationHTML;
 p.appendChild(div);
 
-// Récupération des boutons après insertion dans le DOM
-const btn2 = document.getElementById("btnPsy2");
-const btn0 = document.getElementById("btnPsy0");
-
-// Ajout des handlers avec léger délai (optionnel)
+// Décaler l'ajout des événements
 setTimeout(() => {
+  const btn2 = document.getElementById("btnPsy2");
   if (btn2) {
     btn2.onclick = () => {
+      alert("Bouton +2 cliqué !");
       const confirmationDiv = document.getElementById("confirmationPsy");
       if (confirmationDiv) confirmationDiv.remove();
       div.querySelector("#zoneBarresCombat").style.display = "";
       afficherBarres(2, "(Psychique)");
     };
   }
+}, 50);  // 50 ms d’attente, assez pour que tout soit prêt
 
-  if (btn0) {
-    btn0.onclick = () => {
-      
-      const confirmationDiv = document.getElementById("confirmationPsy");
-      if (confirmationDiv) confirmationDiv.remove();
-      div.querySelector("#zoneBarresCombat").style.display = "";
-      afficherBarres(0, "");
-    };
-  }
-}, 50);
 
+
+
+if (btn0) btn0.onclick = () => {
+  console.log("➡️ bouton aucun bonus cliqué");
+  confirmationDiv.remove();
+  div.querySelector("#zoneBarresCombat").style.display = "";
+  afficherBarres(0, "");
+};
 
 } else {
   afficherBarres(0, "");

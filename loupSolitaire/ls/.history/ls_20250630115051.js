@@ -408,6 +408,7 @@ const btn0 = document.getElementById("btnPsy0");
 setTimeout(() => {
   if (btn2) {
     btn2.onclick = () => {
+      alert("Bouton +2 cliqué !");
       const confirmationDiv = document.getElementById("confirmationPsy");
       if (confirmationDiv) confirmationDiv.remove();
       div.querySelector("#zoneBarresCombat").style.display = "";
@@ -417,7 +418,7 @@ setTimeout(() => {
 
   if (btn0) {
     btn0.onclick = () => {
-      
+      console.log("➡️ bouton aucun bonus cliqué");
       const confirmationDiv = document.getElementById("confirmationPsy");
       if (confirmationDiv) confirmationDiv.remove();
       div.querySelector("#zoneBarresCombat").style.display = "";

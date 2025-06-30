@@ -427,3 +427,52 @@ html, body {
   to   { opacity: 1; transform: translateY(0) scale(1);}
 }
 
+if (!document.getElementById('style-barres-combat')) {
+  const style = document.createElement('style');
+  style.id = 'style-barres-combat';
+  style.textContent = `
+    .barre-container {
+      width: 100%;
+      background: #555;
+      border-radius: 8px;
+      overflow: hidden;
+      height: 24px;
+      margin-bottom: 6px;
+      position: relative;
+    }
+    .vie-remplissage {
+      height: 100%;
+      background: #c00;
+      width: 100%;
+      transition: width 0.3s ease;
+    }
+    .contenu-barre {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      color: white;
+      font-weight: bold;
+      pointer-events: none;
+    }
+    .rond-vie {
+      background: rgba(0,0,0,0.5);
+      border-radius: 50%;
+      width: 30px; height: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.2em;
+    }
+    .coeur {
+      font-size: 1.5em;
+    }
+    .nom {
+      flex-grow: 1;
+      text-align: center;
+    }
+  `;
+  document.head.appendChild(style);
+  console.log("[Combat] Style de barres ajouté au <head>");
+}
