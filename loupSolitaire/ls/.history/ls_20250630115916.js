@@ -331,13 +331,9 @@ class NavigationManager {
     this.initResetButton();
   }
 
-  detecterCombatDansParagraphe(id) {
-  // Valeur max de vie du héros, fixe ou récupérée
-const vieHeroMax = localStorage.getItem('stat_end');
-
+  function detecterCombatDansParagraphe(id) {
   const p = document.getElementById(id);
   if (!p) return;
-
   if (p.innerHTML.includes('<br><br><strong>')) {
     // Supprime une éventuelle ancienne fenêtre de combat
     const old = p.querySelector('.combat-popup');
@@ -359,20 +355,23 @@ const vieHeroMax = localStorage.getItem('stat_end');
       const inputHab = document.getElementById('hab');
       habHero = inputHab ? parseInt(inputHab.value, 10) : 15;
     }
+
+    // On mémorise l'hab max au début du combat (fixe)
     const habHeroMax = habHero;
 
     // Gestion bonus psychiques
     let bonusPsy = 0;
     let messagePsy = '';
-    const armesPsy = Object.values(localStorage).some(val => val && val.includes("Puissance psychique"));
-    const bouclierPsy = Object.values(localStorage).some(val => val && val.includes("Bouclier psychique"));
+    const armesPsy = Object.values(localStorage)
+      .some(val => val && val.includes("Puissance psychique"));
+    const bouclierPsy = Object.values(localStorage)
+      .some(val => val && val.includes("Bouclier psychique"));
 
     // Gestion bonus Maîtrise des armes
     let bonusArme = 0;
     let armeMaitrisee = localStorage.getItem('arme_maitrisee');
-    const disciplineArme = localStorage.getItem('discipline1') === ("Maîtrise des armes (+2 hab. si possède " + armeMaitrisee + ")");
+    const disciplineArme = localStorage.getItem('discipline1') === "Maîtrise des armes (+2 hab. si possède " + armeMaitrisee + ")";
     const armePossedee = [localStorage.getItem('arme1'), localStorage.getItem('arme2')].includes(armeMaitrisee);
-
     if (disciplineArme && armePossedee) {
       bonusArme = 2;
     }
@@ -380,7 +379,6 @@ const vieHeroMax = localStorage.getItem('stat_end');
     // Création de la boîte de combat AVANT les barres de vie
     const div = document.createElement('div');
     div.className = 'combat-popup';
-
     let confirmationHTML = `
       <div style="background:#222; color:#fff; border:2px solid #c00; padding:1em; margin-top:1em; text-align:center; border-radius:12px; box-shadow:0 4px 16px #000a;">
         <div style="font-size:2em; margin-bottom:1em;">COMBAT</div>
@@ -393,16 +391,47 @@ const vieHeroMax = localStorage.getItem('stat_end');
         <button id="btnPsy0" style="margin:0.5em;">Aucun bonus</button>
       </div>`;
     }
-
     confirmationHTML += `<div id="zoneBarresCombat" style="display:none"></div></div>`;
     div.innerHTML = confirmationHTML;
     p.appendChild(div);
 
-    // Fonction pour afficher les barres de vie et le quotient d'attaque
-    const afficherBarres = (bonusPsy, messagePsy, habHeroMax, vieHeroMax) => {
-      const quotient = habHeroMax + bonusPsy - habMonstre;
-      const vieHero = parseInt(localStorage.getItem('stat_end'), 10) || vieHeroMax;
+    // === Ici SEULEMENT tu ajoutes les listeners ===
+    if (armesPsy) {
+      // Récupération des boutons après insertion dans le DOM
+      const btn2 = document.getElementById("btnPsy2");
+      const btn0 = document.getElementById("btnPsy0");
 
+      // Ajout des handlers avec léger délai (optionnel)
+      setTimeout(() => {
+        if (btn2) {
+          btn2.onclick = () => {
+            // alert supprimé
+            const confirmationDiv = document.getElementById("confirmationPsy");
+            if (confirmationDiv) confirmationDiv.remove();
+            div.querySelector("#zoneBarresCombat").style.display = "";
+            afficherBarres(2, "(Psychique)", habHero, habHeroMax);
+          };
+        }
+        if (btn0) {
+          btn0.onclick = () => {
+            const confirmationDiv = document.getElementById("confirmationPsy");
+            if (confirmationDiv) confirmationDiv.remove();
+            div.querySelector("#zoneBarresCombat").style.display = "";
+            afficherBarres(0, "", habHero, habHeroMax);
+          };
+        }
+      }, 50);
+    } else {
+      afficherBarres(0, "", habHero, habHeroMax);
+    }
+
+    // Fonction pour afficher les barres de vie et le quotient d'attaque
+    // habHero = hab actuel (valeur avec bonus)
+    // habHeroMax = hab initial au début du combat (max fixe)
+    function afficherBarres(bonusPsy, messagePsy, habHero, habHeroMax) {
+      const quotient = habHero + bonusArme + bonusPsy - habMonstre;
+      const vieHero = parseInt(localStorage.getItem('stat_end'), 10) || 35;
+      const vieHeroMax = parseInt(localStorage.getItem('stat_end_max'), 10) || vieHero;
       let html = `
         <div class="barre-container" style="margin-bottom:10px;">
           <div class="vie-remplissage" id="vieHeroBarre"></div>
@@ -422,11 +451,12 @@ const vieHeroMax = localStorage.getItem('stat_end');
           </div>
         </div>
         <button id="btnMonstreMoins2">-2 Monstre</button>
-        <div style="margin-top:1em;font-size:1.2em;">Quotient d'attaque : ${quotient} ${messagePsy}</div>
+        <div style="margin-top:1em;font-size:1.2em;">
       `;
       div.querySelector('#zoneBarresCombat').innerHTML = html;
       div.querySelector('#zoneBarresCombat').style.display = '';
 
+      // Style pour la barre façon vie.html
       const style = document.createElement('style');
       style.textContent = `
         .barre-container {
@@ -496,6 +526,7 @@ const vieHeroMax = localStorage.getItem('stat_end');
       `;
       document.head.appendChild(style);
 
+      // Fonction de mise à jour de la barre
       function majBarre(idBarre, idRond, idIcone, vie, vieMax, iconePleine, iconeVide) {
         const barre = div.querySelector("#" + idBarre);
         const vieText = div.querySelector("#" + idRond);
@@ -506,51 +537,27 @@ const vieHeroMax = localStorage.getItem('stat_end');
         icone.textContent = vie === 0 ? iconeVide : iconePleine;
       }
 
+      // Pour la barre de l'habileté héros, on utilise habHero (valeur actuelle) et habHeroMax (max fixe)
+      majBarre("vieHeroBarre", "vieHeroRestante", "iconeHeroVie", habHero + bonusArme + bonusPsy, habHeroMax, "❤️", "💀");
+
+      // Barres de vie pour héros et monstre (toujours pareil)
       let vieHeroCourant = vieHero;
       let vieMonstreCourant = vieMonstre;
-
-      majBarre("vieHeroBarre", "vieHeroRestante", "iconeHeroVie", vieHeroCourant, vieHeroMax, "❤️", "💀");
       majBarre("vieMonstreBarre", "vieMonstreRestante", "iconeMonstreVie", vieMonstreCourant, vieMonstreMax, "👹", "💀");
 
-      div.querySelector("#btnHeroMoins2").onclick = () => {
+      // Boutons pour enlever 2 points d'endurance héros et monstre
+      div.querySelector("#btnHeroMoins2").onclick = function() {
         vieHeroCourant = Math.max(0, vieHeroCourant - 2);
         majBarre("vieHeroBarre", "vieHeroRestante", "iconeHeroVie", vieHeroCourant, vieHeroMax, "❤️", "💀");
         localStorage.setItem('stat_end', vieHeroCourant);
         const inputEnd = document.getElementById('end');
         if (inputEnd) inputEnd.value = vieHeroCourant;
       };
-
-      div.querySelector("#btnMonstreMoins2").onclick = () => {
+      div.querySelector("#btnMonstreMoins2").onclick = function() {
         vieMonstreCourant = Math.max(0, vieMonstreCourant - 2);
         majBarre("vieMonstreBarre", "vieMonstreRestante", "iconeMonstreVie", vieMonstreCourant, vieMonstreMax, "👹", "💀");
         localStorage.setItem('stat_monstre', vieMonstreCourant);
       };
-    };
-
-    // === Ajout des listeners pour boutons psy ===
-    if (armesPsy) {
-      const btn2 = div.querySelector("#btnPsy2");
-      const btn0 = div.querySelector("#btnPsy0");
-
-      if (btn2) {
-        btn2.onclick = () => {
-          const confirmationDiv = div.querySelector("#confirmationPsy");
-          if (confirmationDiv) confirmationDiv.remove();
-          div.querySelector("#zoneBarresCombat").style.display = "";
-          afficherBarres(2, "(Psychique)", habHeroMax, vieHeroMax);
-        };
-      }
-      if (btn0) {
-        btn0.onclick = () => {
-          const confirmationDiv = div.querySelector("#confirmationPsy");
-          if (confirmationDiv) confirmationDiv.remove();
-          div.querySelector("#zoneBarresCombat").style.display = "";
-          afficherBarres(0, "", habHeroMax, vieHeroMax);
-        };
-      }
-    } else {
-      // Pas de discipline psy, on affiche directement les barres
-      afficherBarres(0, "", habHeroMax, vieHeroMax);
     }
   }
 }

@@ -333,7 +333,7 @@ class NavigationManager {
 
   detecterCombatDansParagraphe(id) {
   // Valeur max de vie du héros, fixe ou récupérée
-const vieHeroMax = localStorage.getItem('stat_end');
+  const vieHeroMax = parseInt(localStorage.getItem('stat_end_max'), 10) || 35;
 
   const p = document.getElementById(id);
   if (!p) return;
