@@ -633,7 +633,7 @@ if (btnRetour) {
       // Affiche le chapitre précédent
       paragraphs.forEach(p => p.style.display = p.id === precedent ? 'block' : 'none');
       localStorage.setItem('currentParagraph', precedent);
-      document.getElementById('character-sheet').classList.add('hidden');
+      
     }
   });
 }
@@ -703,79 +703,53 @@ if (btnRetour) {
     window.location.reload();
   }
 
-    guerisonPassive() {
+    function guerisonPassive() {
   console.log("🩹 guérisonPassive appelée");
 
-  // Affiche toutes les clés et valeurs dans localStorage (limitées à 10 pour lisibilité)
-  const keys = Object.keys(localStorage).slice(0, 10);
-  console.log("Clés localStorage (max 10):", keys);
-  keys.forEach(key => {
-    console.log(` - ${key} : ${localStorage.getItem(key)}`);
-  });
-
-  // Vérifie la présence de la valeur "Guérison"
-  // Récupérer et parser la liste des disciplines choisies
-const disciplinesRaw = localStorage.getItem("disciplines_choisies");
-let hasGuerison = false;
-try {
-  const disciplines = JSON.parse(disciplinesRaw);
-  hasGuerison = Array.isArray(disciplines) && disciplines.includes("Guérison");
-} catch(e) {
-  console.warn("Erreur lors du parsing de disciplines_choisies:", e);
-}
-
-console.log("Présence de 'Guérison' dans disciplines_choisies ? ", hasGuerison);
-
-if (!hasGuerison) {
-  console.warn("🛑 Guérison absente, fin prématurée de la fonction.");
-  return;
-}
-
-  // Récupération des stats endurance
-  const endRaw = localStorage.getItem("stat_end");
-  const endMaxRaw = localStorage.getItem("stat_end_max");
-  console.log("Valeurs brutes stat_end:", endRaw, "stat_end_max:", endMaxRaw);
-
-  const end = parseInt(endRaw, 10);
-  const endMax = parseInt(endMaxRaw, 10);
-
-  if (isNaN(end) || isNaN(endMax)) {
-    console.warn("🛑 stat_end ou stat_end_max est NaN, fin prématurée.");
+  // Vérifie si le joueur possède Guérison dans localStorage
+  const hasGuerison = Object.values(localStorage).some(val => val === "Guérison");
+  if (!hasGuerison) {
+    console.log("Pas de Guérison, pas de régénération");
     return;
   }
 
-  console.log("Endurance actuelle:", end, "Endurance max:", endMax);
+  // Récupère endurance actuelle et max
+  let end = parseInt(localStorage.getItem("stat_end"), 10);
+  let endMax = parseInt(localStorage.getItem("stat_end_max"), 10);
+  
+  if (isNaN(end) || isNaN(endMax)) {
+    console.warn("Endurance ou endurance max invalide");
+    return;
+  }
 
   if (end < endMax) {
     const newEnd = Math.min(end + 1, endMax);
-    console.log(`Augmentation endurance : ${end} -> ${newEnd}`);
 
+    // Mise à jour localStorage
     localStorage.setItem("stat_end", newEnd);
 
-    const input = document.getElementById("end");
-    if (input) {
-      input.value = newEnd;
-      console.log("Champ #end mis à jour avec la nouvelle valeur :", newEnd);
-    } else {
-      console.warn("⚠️ Élément #end introuvable dans le DOM.");
+    // Mise à jour de l'input endurance
+    const endInput = document.getElementById("end");
+    if (endInput) {
+      endInput.value = newEnd;
     }
 
-    // Affichage temporaire du message de guérison
-    const zone = document.querySelector('.main-content');
-    if (zone) {
-      const msg = document.createElement('div');
-      msg.textContent = "+1 ENDURANCE (Guérison)";
-      msg.style = "background:#0a0; color:white; padding:6px 12px; border-radius:6px; position:fixed; top:20px; left:50%; transform:translateX(-50%); z-index:9999; font-weight:bold;";
-      document.body.appendChild(msg);
-      setTimeout(() => msg.remove(), 2500);
-      console.log("Message de guérison affiché temporairement.");
-    } else {
-      console.warn("⚠️ Élément .main-content introuvable pour afficher le message.");
+    // Mise à jour éventuelle de variable globale JS, si tu en as une
+    if (typeof window.endurance !== "undefined") {
+      window.endurance = newEnd;
     }
 
-    console.log("💚 Guérison appliquée avec succès.");
+    console.log(`💚 Guérison passive: endurance passée de ${end} à ${newEnd}`);
+
+    // Affiche un message temporaire
+    const msg = document.createElement("div");
+    msg.textContent = "+1 ENDURANCE (Guérison passive)";
+    msg.style = "position:fixed; top:10px; left:50%; transform:translateX(-50%); background:#0a0; color:#fff; padding:10px; border-radius:5px; z-index:10000; font-weight:bold;";
+    document.body.appendChild(msg);
+    setTimeout(() => msg.remove(), 2500);
+
   } else {
-    console.log("Endurance au maximum, aucune guérison appliquée.");
+    console.log("Endurance déjà au max");
   }
 }
 

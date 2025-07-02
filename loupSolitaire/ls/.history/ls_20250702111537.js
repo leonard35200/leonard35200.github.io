@@ -633,6 +633,7 @@ if (btnRetour) {
       // Affiche le chapitre précédent
       paragraphs.forEach(p => p.style.display = p.id === precedent ? 'block' : 'none');
       localStorage.setItem('currentParagraph', precedent);
+      // AJOUTE CETTE LIGNE :
       document.getElementById('character-sheet').classList.add('hidden');
     }
   });

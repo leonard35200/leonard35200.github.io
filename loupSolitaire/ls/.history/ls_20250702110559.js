@@ -633,7 +633,7 @@ if (btnRetour) {
       // Affiche le chapitre précédent
       paragraphs.forEach(p => p.style.display = p.id === precedent ? 'block' : 'none');
       localStorage.setItem('currentParagraph', precedent);
-      document.getElementById('character-sheet').classList.add('hidden');
+      
     }
   });
 }
@@ -714,22 +714,12 @@ if (btnRetour) {
   });
 
   // Vérifie la présence de la valeur "Guérison"
-  // Récupérer et parser la liste des disciplines choisies
-const disciplinesRaw = localStorage.getItem("disciplines_choisies");
-let hasGuerison = false;
-try {
-  const disciplines = JSON.parse(disciplinesRaw);
-  hasGuerison = Array.isArray(disciplines) && disciplines.includes("Guérison");
-} catch(e) {
-  console.warn("Erreur lors du parsing de disciplines_choisies:", e);
-}
-
-console.log("Présence de 'Guérison' dans disciplines_choisies ? ", hasGuerison);
-
-if (!hasGuerison) {
-  console.warn("🛑 Guérison absente, fin prématurée de la fonction.");
-  return;
-}
+  const hasGuerison = Object.values(localStorage).some(val => val === "Guérison");
+  console.log("Présence de 'Guérison' dans localStorage ? ", hasGuerison);
+  if (!hasGuerison) {
+    console.warn("🛑 Guérison absente, fin prématurée de la fonction.");
+    return;
+  }
 
   // Récupération des stats endurance
   const endRaw = localStorage.getItem("stat_end");

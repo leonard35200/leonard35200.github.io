@@ -359,12 +359,14 @@ const vieHeroMax = localStorage.getItem('stat_end');
       const inputHab = document.getElementById('hab');
       habHero = inputHab ? parseInt(inputHab.value, 10) : 15;
     }
-    let habHeroMax = habHero;
+    const habHeroMax = habHero;
     const arme1 = localStorage.getItem('arme1');
 const arme2 = localStorage.getItem('arme2');
 const possedeAucuneArme = (!arme1 || arme1.trim() === "") && (!arme2 || arme2.trim() === "");
 
-
+if (possedeAucuneArme) {
+  habHeroMax -= 2; // Pénalité temporaire car combat à mains nues
+}
 
 let messageMainNue = "";
 if (possedeAucuneArme) {
@@ -434,10 +436,6 @@ if (possedeAucuneArme) {
           </div>
         </div>
         <button id="btnMonstreMoins2">-2 Monstre</button>
-<div style="margin-top:1em;font-size:1.2em;">
-  Quotient d'attaque : ${quotient} ${messagePsy}<br>
-  ${messageMainNue}
-</div>
       `;
       div.querySelector('#zoneBarresCombat').innerHTML = html;
       div.querySelector('#zoneBarresCombat').style.display = '';
@@ -572,7 +570,6 @@ if (possedeAucuneArme) {
 
 
   initParagraphNavigation() {
-      const self = this;
     const paragraphs = document.querySelectorAll('.main-content p');
     const links = document.querySelectorAll('.main-content a');
     const introScreen = document.getElementById('intro-screen');
@@ -581,22 +578,12 @@ if (possedeAucuneArme) {
     const showParagraph = (id) => {
       paragraphs.forEach(p => p.style.display = p.id === id ? 'block' : 'none');
       localStorage.setItem('currentParagraph', id);
-      window.scrollTo(0, 0);
   let visites = JSON.parse(localStorage.getItem('chapitres_visites') || '[]');
   if (!visites.includes(id)) {
   visites.push(id);
   localStorage.setItem('chapitres_visites', JSON.stringify(visites));
 }
-const paragraphe = document.getElementById(id);
-const contientCombat = paragraphe && paragraphe.innerHTML.includes('<br><br><strong>');
-
-if (contientCombat) {
-  self.detecterCombatDansParagraphe(id);
-} else {
-  console.log("✅ Aucun combat, tentative de guérison...");
-  self.guerisonPassive();
-}
-
+this.detecterCombatDansParagraphe(id);
 
   
     };
@@ -633,7 +620,7 @@ if (btnRetour) {
       // Affiche le chapitre précédent
       paragraphs.forEach(p => p.style.display = p.id === precedent ? 'block' : 'none');
       localStorage.setItem('currentParagraph', precedent);
-      document.getElementById('character-sheet').classList.add('hidden');
+      
     }
   });
 }
@@ -702,85 +689,6 @@ if (btnRetour) {
     // Recharger la page
     window.location.reload();
   }
-
-    guerisonPassive() {
-  console.log("🩹 guérisonPassive appelée");
-
-  // Affiche toutes les clés et valeurs dans localStorage (limitées à 10 pour lisibilité)
-  const keys = Object.keys(localStorage).slice(0, 10);
-  console.log("Clés localStorage (max 10):", keys);
-  keys.forEach(key => {
-    console.log(` - ${key} : ${localStorage.getItem(key)}`);
-  });
-
-  // Vérifie la présence de la valeur "Guérison"
-  // Récupérer et parser la liste des disciplines choisies
-const disciplinesRaw = localStorage.getItem("disciplines_choisies");
-let hasGuerison = false;
-try {
-  const disciplines = JSON.parse(disciplinesRaw);
-  hasGuerison = Array.isArray(disciplines) && disciplines.includes("Guérison");
-} catch(e) {
-  console.warn("Erreur lors du parsing de disciplines_choisies:", e);
-}
-
-console.log("Présence de 'Guérison' dans disciplines_choisies ? ", hasGuerison);
-
-if (!hasGuerison) {
-  console.warn("🛑 Guérison absente, fin prématurée de la fonction.");
-  return;
-}
-
-  // Récupération des stats endurance
-  const endRaw = localStorage.getItem("stat_end");
-  const endMaxRaw = localStorage.getItem("stat_end_max");
-  console.log("Valeurs brutes stat_end:", endRaw, "stat_end_max:", endMaxRaw);
-
-  const end = parseInt(endRaw, 10);
-  const endMax = parseInt(endMaxRaw, 10);
-
-  if (isNaN(end) || isNaN(endMax)) {
-    console.warn("🛑 stat_end ou stat_end_max est NaN, fin prématurée.");
-    return;
-  }
-
-  console.log("Endurance actuelle:", end, "Endurance max:", endMax);
-
-  if (end < endMax) {
-    const newEnd = Math.min(end + 1, endMax);
-    console.log(`Augmentation endurance : ${end} -> ${newEnd}`);
-
-    localStorage.setItem("stat_end", newEnd);
-
-    const input = document.getElementById("end");
-    if (input) {
-      input.value = newEnd;
-      console.log("Champ #end mis à jour avec la nouvelle valeur :", newEnd);
-    } else {
-      console.warn("⚠️ Élément #end introuvable dans le DOM.");
-    }
-
-    // Affichage temporaire du message de guérison
-    const zone = document.querySelector('.main-content');
-    if (zone) {
-      const msg = document.createElement('div');
-      msg.textContent = "+1 ENDURANCE (Guérison)";
-      msg.style = "background:#0a0; color:white; padding:6px 12px; border-radius:6px; position:fixed; top:20px; left:50%; transform:translateX(-50%); z-index:9999; font-weight:bold;";
-      document.body.appendChild(msg);
-      setTimeout(() => msg.remove(), 2500);
-      console.log("Message de guérison affiché temporairement.");
-    } else {
-      console.warn("⚠️ Élément .main-content introuvable pour afficher le message.");
-    }
-
-    console.log("💚 Guérison appliquée avec succès.");
-  } else {
-    console.log("Endurance au maximum, aucune guérison appliquée.");
-  }
-}
-
-
-
 }
 
 // ======================
