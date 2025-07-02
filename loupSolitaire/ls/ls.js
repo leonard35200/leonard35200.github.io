@@ -889,7 +889,7 @@ manager.init();
     }
 
     function random1to10() {
-      return Math.floor(Math.random() * 10) + 1;
+      return Math.floor(Math.random() * 10);
     }
 
     function drawDie(num) {
