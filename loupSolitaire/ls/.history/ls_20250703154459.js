@@ -622,17 +622,15 @@ if (contientCombat) {
   
     };
 
+// Tutoriel multi-pages
 const tutoScreen = document.getElementById('tuto-screen');
 const tutoPages = Array.from(document.querySelectorAll('.tuto-page'));
 const btnNext = document.getElementById('btn-tuto-next');
 const btnPrev = document.getElementById('btn-tuto-prev');
-if (localStorage.getItem('tuto_vue') === "1") {
-  document.getElementById('tuto-screen')?.classList.add('hidden');
-  document.getElementById('intro-screen')?.classList.remove('hidden');
-}
-const tutoVu = localStorage.getItem('tuto_vue');
-document.getElementById('tuto-screen')?.classList.add('hidden');
-if (tutoVu !== "1"  && tutoScreen && btnNext && btnPrev && tutoPages.length > 0) {
+// const tutoVu = localStorage.getItem('tuto_vue');
+
+
+if (!tutoVu && tutoScreen && btnNext && btnPrev && tutoPages.length > 0) {
   introScreen.style.display = 'none';
   tutoScreen.classList.remove('hidden');
   window._currentTutoPage = 0;
@@ -683,13 +681,10 @@ if (tutoVu !== "1"  && tutoScreen && btnNext && btnPrev && tutoPages.length > 0)
   }
 
   // On est déjà sur la dernière page
-  localStorage.setItem('tuto_vue', "1");
-  location.reload();
   console.log("Bouton 'Commencer' cliqué, mais aucune action effectuée.");
 
   // Ne rien faire d'autre ici : pas de lancement de l'aventure ni changement d'écran
 });
-
 
 
 

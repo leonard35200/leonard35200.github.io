@@ -622,17 +622,14 @@ if (contientCombat) {
   
     };
 
+// Tutoriel multi-pages
 const tutoScreen = document.getElementById('tuto-screen');
 const tutoPages = Array.from(document.querySelectorAll('.tuto-page'));
 const btnNext = document.getElementById('btn-tuto-next');
 const btnPrev = document.getElementById('btn-tuto-prev');
-if (localStorage.getItem('tuto_vue') === "1") {
-  document.getElementById('tuto-screen')?.classList.add('hidden');
-  document.getElementById('intro-screen')?.classList.remove('hidden');
-}
 const tutoVu = localStorage.getItem('tuto_vue');
-document.getElementById('tuto-screen')?.classList.add('hidden');
-if (tutoVu !== "1"  && tutoScreen && btnNext && btnPrev && tutoPages.length > 0) {
+
+if (!tutoVu && tutoScreen && btnNext && btnPrev && tutoPages.length > 0) {
   introScreen.style.display = 'none';
   tutoScreen.classList.remove('hidden');
   window._currentTutoPage = 0;
@@ -674,23 +671,27 @@ if (tutoVu !== "1"  && tutoScreen && btnNext && btnPrev && tutoPages.length > 0)
 
 
   btnNext.addEventListener('click', () => {
+  // Nombre total de pages
   const totalPages = tutoPages.length;
 
+  // S’il reste des pages à afficher
   if (window._currentTutoPage < totalPages - 1) {
     window._currentTutoPage++;
     updateTuto();
     return;
   }
 
-  // On est déjà sur la dernière page
-  localStorage.setItem('tuto_vue', "1");
-  location.reload();
-  console.log("Bouton 'Commencer' cliqué, mais aucune action effectuée.");
+  // ➕ BONUS sécurité : ne jamais dépasser la dernière page
+  window._currentTutoPage = totalPages - 1;
 
-  // Ne rien faire d'autre ici : pas de lancement de l'aventure ni changement d'écran
+  // 👉 Ici, c’est la dernière page → on lance l’aventure
+  localStorage.setItem('tuto_vue', '1');
+  tutoScreen.classList.add('hidden');
+  introScreen.style.display = 'none';
+
+  const saved = localStorage.getItem('currentParagraph') || 'paraIntro';
+  showParagraph(saved);
 });
-
-
 
 
   btnPrev.addEventListener('click', () => {

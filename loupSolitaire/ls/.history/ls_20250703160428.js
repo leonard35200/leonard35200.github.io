@@ -619,7 +619,7 @@ if (contientCombat) {
 }
 
 
-  
+  Bouton 'Commencer' cliqué, mais aucune action effectuée.
     };
 
 const tutoScreen = document.getElementById('tuto-screen');
@@ -683,8 +683,6 @@ if (tutoVu !== "1"  && tutoScreen && btnNext && btnPrev && tutoPages.length > 0)
   }
 
   // On est déjà sur la dernière page
-  localStorage.setItem('tuto_vue', "1");
-  location.reload();
   console.log("Bouton 'Commencer' cliqué, mais aucune action effectuée.");
 
   // Ne rien faire d'autre ici : pas de lancement de l'aventure ni changement d'écran
