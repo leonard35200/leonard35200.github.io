@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><title>Loup Solitaire</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<style>
+  
+</style> 
+<header>
+  <button id="reset-button" style="position: fixed; top: 10px; right: 10px; z-index: 10000; display: block !important;">Recommencer l'aventure</button>
+</header>
+
+<div id="intro-screen" class="intro">
+  <div class="intro-content">
+    <h1>Loup Solitaire 1</h1>
+    <p>Les Maîtres des Ténèbres</p>
+    <button id="start-button">Commencer l’aventure</button>
+  </div>
+</div>
+
+<div id="tuto-screen" class="intro hidden">
+  <div class="intro-content">
+    <div class="tuto-page" data-page="0">
+      <h2>I. Le déroulement de l’aventure</h2>
+      <p>L’histoire est divisée en paragraphes numérotés. À la fin de chaque paragraphe, plusieurs choix sont proposés, menant à d’autres paragraphes selon la décision prise. </p>
+        <p>Certains choix dépendent de la possession d’objets, des statistiques ou des disciplines Kaï, ce qui influence la progression et les options disponibles. </p>
+    </div>
+
+    <div class="tuto-page hidden" data-page="1">
+      <h2>II. Statistiques</h2>
+        <h3>Habileté</h3>
+          <p>Cette statistique mesure l’efficacité au combat du héros. Une habileté élevée augmente les chances de toucher et d’infliger des dégâts à l’ennemi. Elle varie selon les armes utilisées et certains événements durant l’aventure. </p>
+        <h3>Endurance</h3>
+          <p>C’est le nombre de points de vie du héros. Elle diminue lorsqu’il subit des blessures en combat. Si l’endurance tombe à zéro, l’aventure se termine par la mort du personnage. Elle peut être restaurée grâce à la nourriture, certains objets, … </p>
+        <h3>Pièces d’or (couronnes) </h3>
+ <p>La monnaie en cours dans le royaume est la Couronne qui se présente sous la forme d'une petite pièce d'or. Au cours de votre aventure, vous pourrez utiliser ces Couronnes pour vos frais de transport ou de nourriture, mais également, si besoin est, pour corrompre certains personnages peu scrupuleux. Nombre de créatures que vous serez amené à rencontrer possèdent des Couronnes d'or. Chaque fois que vous tuerez l'une de ces créatures, vous aurez le droit de vous emparer de ses pièces d'or et de les conserver dans votre bourse. Attention, votre bourse ne peut en contenir que 50 au maximum ! </p>
+    </div>
+
+    <div class="tuto-page hidden" data-page="2">
+      <h2>III. Inventaire</h2>
+      <p>Note tes armes, objets, pièces d’or et ton endurance. Tout est sauvegardé automatiquement.</p>
+    </div>
+    <div class="tuto-page hidden" data-page="3">
+      <h2>Combats</h2>
+      <p>Si un combat commence, tu verras apparaître les barres de vie. Tu peux cliquer pour diminuer les PV.</p>
+    </div>
+    <div class="tuto-page hidden" data-page="4">
+      <h2>C’est parti !</h2>
+      <p>Bonne chance dans ton aventure, jeune Kaï !</p>
+    </div>
+
+    <div style="margin-top: 2rem;">
+      <button id="btn-tuto-prev" disabled>◀️ Précédent</button>
+      <button id="btn-tuto-next">Suivant ▶️</button>
+    </div>
+  </div>
+</div>
+
+
+<div class="main-content">
+<div id="contenu-paragraphes"></div> 
+
+</div>
+
+<!-- Bouton d'accès -->
+<div id="sheet-toggle" title="Feuille d'Aventure">📜</div>
+
+
+
+
+
+<!-- Panneau de feuille d'aventure -->
+<div id="character-sheet" class="sheet hidden">
+  <div class="sheet-header">
+    <h2>Feuille d'Aventure</h2>
+    
+  </div>
+
+  <div class="sheet-body">
+    <div class="sheet-column">
+      <h3>Disciplines Kaï</h3>
+
+<!-- <div id="zone-disciplines">
+  <select id="discipline1"></select>
+  <span id="effet1"></span>
+  <select id="discipline2"></select>
+  <span id="effet2"></span>
+  <select id="discipline3"></select>
+  <span id="effet3"></span>
+  <select id="discipline4"></select>
+  <span id="effet4"></span>
+  <select id="discipline5"></select>
+  <span id="effet5"></span>
+</div>
+
+<div id="liste-disciplines" class="hidden"></div> -->
+ <div id="zone-disciplines"></div> <!-- Ajout de ce conteneur -->
+<div id="liste-disciplines" class="hidden"></div>
+<!-- <div id="kai-zone">
+  <div><select id="discipline1"></select> <span class="effet" id="effet1"></span></div>
+  <div><select id="discipline2"></select> <span class="effet" id="effet2"></span></div>
+  <div><select id="discipline3"></select> <span class="effet" id="effet3"></span></div>
+  <div><select id="discipline4"></select> <span class="effet" id="effet4"></span></div>
+  <div><select id="discipline5"></select> <span class="effet" id="effet5"></span></div>
+</div> -->
+
+
+
+      
+
+      <h3>Sac à dos dont repas</h3>
+      <ul>
+        <li><input id="objet1" placeholder="Objet 1"></li>
+        <li><input id="objet2" placeholder="Objet 2"></li>
+        <li><input id="objet3" placeholder="Objet 3"></li>
+        <li><input id="objet4" placeholder="Objet 4"></li>
+        <li><input id="objet5" placeholder="Objet 5"></li>
+        <li><input id="objet6" placeholder="Objet 6"></li>
+        <li><input id="objet7" placeholder="Objet 7"></li>
+        <li><input id="objet8" placeholder="Objet 8"></li>
+      </ul>
+      <h3>P'tite triche</h3>
+      <button id="btn-retour-chapitre" style="margin-bottom:1em;">⬅️ Revenir au chapitre précédent</button>
+    </div>
+
+    <div class="sheet-column">
+      <h3>Armes</h3>
+      <ul>
+  <li>
+    <select id="arme1"></select>
+  </li>
+  <li>
+    <select id="arme2"></select>
+  </li>
+</ul>
+      <h3>Statistiques</h3>
+<label for="hab">Habileté :</label>
+<input type="number" id="hab"/><br>
+
+<label for="end">Endurance :</label>
+<input type="number" id="end" /><br>
+
+<label for="pieces">Pièces d'Or :</label>
+<input type="number" id="pieces" /><br>
+
+      <h3>Objet spéciaux</h3>
+      <textarea id="objetsSpeciaux" placeholder="Objets spéciaux :" style=" width: 100%;
+      min-height: 3em;
+      resize: none;
+      overflow: hidden;
+      box-sizing: border-box;
+      font-family: inherit;
+      padding: 0.5em;"></textarea>
+      
+      <h3>Lancer un dé de 10</h3>
+      <!-- Dé animé -->
+      <canvas id="deCarre" width="100" height="100" title="Cliquez pour lancer le dé"></canvas>
+      <!--<h3>Détail des combats</h3>
+      <div class="combat-log">
+         <p>Loup Solitaire <input type="number" placeholder="QA"> VS Ennemi <input type="number" placeholder="QA"></p> -->
+        <!-- D'autres lignes peuvent être ajoutées dynamiquement -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="paragraphe.js"></script> 
+<script src="ls.js"></script>
+<script>
+  
+</script>
+
+</body></html>
+
+<!-- a faire
+ajouter un btn pour redémarrer l'aventure 
+gestion combat
+ne pas depasser max end
+-->

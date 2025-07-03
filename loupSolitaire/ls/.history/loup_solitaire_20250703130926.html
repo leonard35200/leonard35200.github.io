@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><title>Loup Solitaire</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<style>
+  
+</style> 
+<header>
+  <button id="reset-button" style="position: fixed; top: 10px; right: 10px; z-index: 10000; display: block !important;">Recommencer l'aventure</button>
+</header>
+
+<div id="intro-screen" class="intro">
+  <div class="intro-content">
+    <h1>Loup Solitaire 1</h1>
+    <p>Les Maîtres des Ténèbres</p>
+    <button id="start-button">Commencer l’aventure</button>
+  </div>
+</div>
+
+<div id="tuto-screen" class="intro hidden">
+  <div class="intro-content">
+    <div class="tuto-page" data-page="0">
+      <h2>I. Le déroulement de l’aventure</h2>
+      <p>L’histoire est divisée en paragraphes numérotés. À la fin de chaque paragraphe, plusieurs choix sont proposés, menant à d’autres paragraphes selon la décision prise. </p>
+        <p>Certains choix dépendent de la possession d’objets, des statistiques ou des disciplines Kaï, ce qui influence la progression et les options disponibles. </p>
+    </div>
+
+    <div class="tuto-page hidden" data-page="1">
+      <h2>II. Statistiques</h2>
+        <h3>Habileté</h3>
+          <p>Cette statistique mesure l’efficacité au combat du héros. Une habileté élevée augmente les chances de toucher et d’infliger des dégâts à l’ennemi. Elle varie selon les armes utilisées et certains événements durant l’aventure. </p>
+        <h3>Endurance</h3>
+          <p>C’est le nombre de points de vie du héros. Elle diminue lorsqu’il subit des blessures en combat. Si l’endurance tombe à zéro, l’aventure se termine par la mort du personnage. Elle peut être restaurée grâce à la nourriture, certains objets, … </p>
+        <h3>Pièces d’or (couronnes) </h3>
+ <p>La monnaie en cours dans le royaume est la Couronne qui se présente sous la forme d'une petite pièce d'or. Au cours de votre aventure, vous pourrez utiliser ces Couronnes pour vos frais de transport ou de nourriture, mais également, si besoin est, pour corrompre certains personnages peu scrupuleux. Nombre de créatures que vous serez amené à rencontrer possèdent des Couronnes d'or. Chaque fois que vous tuerez l'une de ces créatures, vous aurez le droit de vous emparer de ses pièces d'or et de les conserver dans votre bourse. Attention, votre bourse ne peut en contenir que 50 au maximum ! </p>
+    </div>
+
+    <div class="tuto-page hidden" data-page="2">
+      <h2>III. Inventaire</h2>
+        <h3>Armes</h3>
+          <p>Les armes vous aident à combattre vos ennemis. Si vous avez choisi la discipline de la Maîtrise des Armes et que vous disposez de l'arme qui vous a été attribuée par la Table de Hasard, vous aurez le droit d'ajouter 2 points à votre total d'HABILETÉ. Si vous êtes obligé de combattre sans arme, vous devrez déduire 4 points de votre total d'HABILETÉ et vous battre à mains nues. Si vous découvrez une arme au cours de votre aventure, vous pouvez la garder et l'utiliser, mais rappelez-vous que vous n'avez pas le droit de posséder plus de deux armes à la fois.</p>
+        <h3>Objets spéciaux</h3>
+          <p>Ce sont des objets uniques liés à l’histoire. Ils permettent souvent de débloquer des options supplémentaires dans certains paragraphes ou influencent le déroulement de l’aventure en donnant des capacités spéciales. Les objets spéciaux ne sont pas rangés dans votre Sac à Dos. Lorsque vous aurez la possibilité d'acquérir l'un de ces objets spéciaux, il vous sera indiqué de quelle manière il convient de le transporter.</p>
+        <h3>Objets du sac à dos</h3>
+          <p>Au cours de votre quête, vous découvrirez divers objets qui pourraient se révéler utiles et que vous souhaiterez peut-être conserver (rappelez-vous que vous ne pouvez transporter que huit objets dans votre Sac à Dos). Vous avez le droit à tout moment d'échanger l'un de ces objets ou tout simplement de vous en débarrasser, mais il vous est interdit de le faire lorsque vous êtes engagé dans un combat. </p>
+        <h3>Nourriture </h3>
+          <p>Tout au long de votre quête, vous aurez besoin de vous nourrir à intervalles réguliers. S'il ne vous reste plus de vivres lorsque vous serez dans l'obligation de prendre un repas, vous perdrez 3 points d'ENDURANCE.Attention, les repas, chaque repas compte pour un objet. </p>
+    </div>
+
+    <div class="tuto-page hidden" data-page="3">
+      <h2>IV. Équipement initial</h2>
+        <p style="text-align: left;">Dans les ruines fumantes du monastère détruit, vous avez découvert une Carte Géographique qui vous permet de vous orienter (inscrivez-la dans la case Objets Spéciaux de votre Feuille d'Aventure). Cette carte est soigneusement rangée dans une poche intérieure de votre tunique. Vous avez également découvert l'un des objets suivants :</p>
+        <ol style="color">
+          <li>UNE ÉPÉE (Armes)</li>
+          <li>UN CASQUE (Objets Spéciaux), il ajoute 2 points d'ENDURANCE à votre total</li>
+          <li>DEUX REPAS (Repas) </li>
+          <li> UNE COTTE DE MAILLES (Objets Spéciaux), elle ajoute 4 points d'ENDURANCE à votre total </li>
+          <li>UNE MASSE D'ARMES (Armes) </li>
+          <li>UNE POTION DE GUÉRISON (Sac à Dos), elle vous rend 4 points d'ENDURANCE lorsque vous la buvez à l'issue d'un combat, mais vous ne disposez que d'une seule dose </li>
+          <li>UN BATON (Armes) </li>
+          <li>UNE LANCE (Armes)</li>
+          <li>DOUZE COURONNES (Pièces d'Or)</li>
+        </ol>
+        <p style="text-align: left;"> Pour savoir quel est l'objet que vous avez découvert dans la liste ci-dessus, utilisez la Table de Hasard. Le chiffre qu'elle vous donnera vous renverra à l'objet en question. Notez-le ensuite sur votre Feuille d'Aventure, dans la case indiquée entre parenthèses, et modifiez s'il y a lieu votre total d'ENDURANCE.</p>
+    </div>
+    <div class="tuto-page hidden" data-page="4">
+      <h2>C’est parti !</h2>
+      <p>Bonne chance dans ton aventure, jeune Kaï !</p>
+    </div>
+
+    <div style="margin-top: 2rem;">
+      <button id="btn-tuto-prev" disabled>◀️ Précédent</button>
+      <button id="btn-tuto-next">Suivant ▶️</button>
+    </div>
+  </div>
+</div>
+
+
+<div class="main-content">
+<div id="contenu-paragraphes"></div> 
+
+</div>
+
+<!-- Bouton d'accès -->
+<div id="sheet-toggle" title="Feuille d'Aventure">📜</div>
+
+
+
+
+
+<!-- Panneau de feuille d'aventure -->
+<div id="character-sheet" class="sheet hidden">
+  <div class="sheet-header">
+    <h2>Feuille d'Aventure</h2>
+    
+  </div>
+
+  <div class="sheet-body">
+    <div class="sheet-column">
+      <h3>Disciplines Kaï</h3>
+
+<!-- <div id="zone-disciplines">
+  <select id="discipline1"></select>
+  <span id="effet1"></span>
+  <select id="discipline2"></select>
+  <span id="effet2"></span>
+  <select id="discipline3"></select>
+  <span id="effet3"></span>
+  <select id="discipline4"></select>
+  <span id="effet4"></span>
+  <select id="discipline5"></select>
+  <span id="effet5"></span>
+</div>
+
+<div id="liste-disciplines" class="hidden"></div> -->
+ <div id="zone-disciplines"></div> <!-- Ajout de ce conteneur -->
+<div id="liste-disciplines" class="hidden"></div>
+<!-- <div id="kai-zone">
+  <div><select id="discipline1"></select> <span class="effet" id="effet1"></span></div>
+  <div><select id="discipline2"></select> <span class="effet" id="effet2"></span></div>
+  <div><select id="discipline3"></select> <span class="effet" id="effet3"></span></div>
+  <div><select id="discipline4"></select> <span class="effet" id="effet4"></span></div>
+  <div><select id="discipline5"></select> <span class="effet" id="effet5"></span></div>
+</div> -->
+
+
+
+      
+
+      <h3>Sac à dos dont repas</h3>
+      <ul>
+        <li><input id="objet1" placeholder="Objet 1"></li>
+        <li><input id="objet2" placeholder="Objet 2"></li>
+        <li><input id="objet3" placeholder="Objet 3"></li>
+        <li><input id="objet4" placeholder="Objet 4"></li>
+        <li><input id="objet5" placeholder="Objet 5"></li>
+        <li><input id="objet6" placeholder="Objet 6"></li>
+        <li><input id="objet7" placeholder="Objet 7"></li>
+        <li><input id="objet8" placeholder="Objet 8"></li>
+      </ul>
+      <h3>P'tite triche</h3>
+      <button id="btn-retour-chapitre" style="margin-bottom:1em;">⬅️ Revenir au chapitre précédent</button>
+    </div>
+
+    <div class="sheet-column">
+      <h3>Armes</h3>
+      <ul>
+  <li>
+    <select id="arme1"></select>
+  </li>
+  <li>
+    <select id="arme2"></select>
+  </li>
+</ul>
+      <h3>Statistiques</h3>
+<label for="hab">Habileté :</label>
+<input type="number" id="hab"/><br>
+
+<label for="end">Endurance :</label>
+<input type="number" id="end" /><br>
+
+<label for="pieces">Pièces d'Or :</label>
+<input type="number" id="pieces" /><br>
+
+      <h3>Objet spéciaux</h3>
+      <textarea id="objetsSpeciaux" placeholder="Objets spéciaux :" style=" width: 100%;
+      min-height: 3em;
+      resize: none;
+      overflow: hidden;
+      box-sizing: border-box;
+      font-family: inherit;
+      padding: 0.5em;"></textarea>
+      
+      <h3>Lancer un dé de 10</h3>
+      <!-- Dé animé -->
+      <canvas id="deCarre" width="100" height="100" title="Cliquez pour lancer le dé"></canvas>
+      <!--<h3>Détail des combats</h3>
+      <div class="combat-log">
+         <p>Loup Solitaire <input type="number" placeholder="QA"> VS Ennemi <input type="number" placeholder="QA"></p> -->
+        <!-- D'autres lignes peuvent être ajoutées dynamiquement -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="paragraphe.js"></script> 
+<script src="ls.js"></script>
+<script>
+  
+</script>
+
+</body></html>
+
+<!-- a faire
+ajouter un btn pour redémarrer l'aventure 
+gestion combat
+ne pas depasser max end
+-->

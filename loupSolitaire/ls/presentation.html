@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Loup Solitaire - Présentation</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .presentation-step { display: none; }
+    .presentation-step.active { display: block; }
+    .presentation-nav { margin-top: 2em; }
+    .presentation-nav button { margin: 0 1em; }
+    .presentation-container {
+      max-width: 700px;
+      margin: 2em auto;
+      background: rgba(30,30,40,0.95);
+      color: #fff;
+      border-radius: 1em;
+      padding: 2em 2em 1em 2em;
+      box-shadow: 0 8px 32px #000a;
+    }
+    .presentation-container h2 { margin-top: 0; }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <div class="presentation-container">
+    <div id="step-0" class="presentation-step active">
+      <h2>Bienvenue dans Loup Solitaire</h2>
+      <p>
+        Ce livre-jeu vous plonge dans l’univers des Seigneurs Kaï.<br>
+        Avant de commencer, prenez le temps de lire les règles et de préparer votre feuille d’aventure.
+      </p>
+      <div class="presentation-nav">
+        <button id="next-0">Suivant</button>
+      </div>
+    </div>
+    <div id="step-1" class="presentation-step">
+      <h2>Règles du jeu</h2>
+      <ul>
+        <li>Vous incarnez le dernier des Seigneurs Kaï, Loup Solitaire.</li>
+        <li>Votre aventure se déroule en plusieurs paragraphes numérotés.</li>
+        <li>À chaque choix, cliquez sur le lien correspondant pour avancer.</li>
+        <li>Vos statistiques (Habileté, Endurance, Or, etc.) et vos disciplines Kaï influencent vos chances de survie.</li>
+      </ul>
+      <div class="presentation-nav">
+        <button id="prev-1">Précédent</button>
+        <button id="next-1">Suivant</button>
+      </div>
+    </div>
+    <div id="step-2" class="presentation-step">
+      <h2>Disciplines Kaï</h2>
+      <ul>
+        <li><b>Sixième Sens</b> : Devine les dangers imminents.</li>
+        <li><b>Camouflage</b> : Se fond dans l’environnement.</li>
+        <li><b>Maîtrise psychique de la matière</b> : Déplace de petits objets par la pensée.</li>
+        <li><b>Guérison</b> : +1 ENDURANCE par paragraphe sans combat.</li>
+        <li><b>Communication animale</b> : Comprend/influence certains animaux.</li>
+        <li><b>Orientation</b> : Toujours choisir la bonne direction.</li>
+        <li><b>Chasse</b> : Plus besoin de repas (hors désert).</li>
+        <li><b>Maîtrise des armes</b> : +2 HABILETÉ avec une arme spécifique.</li>
+        <li><b>Bouclier psychique</b> : Protège contre les attaques mentales.</li>
+        <li><b>Puissance psychique</b> : +2 HABILETÉ contre certains ennemis.</li>
+      </ul>
+      <div class="presentation-nav">
+        <button id="prev-2">Précédent</button>
+        <button id="next-2">Suivant</button>
+      </div>
+    </div>
+    <div id="step-3" class="presentation-step">
+      <h2>Les combats</h2>
+      <ul>
+        <li>Comparez votre Habileté (et bonus) à celle de l’ennemi pour obtenir le quotient d’attaque.</li>
+        <li>Lancez le dé pour déterminer les dégâts infligés à chaque assaut.</li>
+        <li>Votre Endurance diminue en cas de blessure. Si elle tombe à 0, l’aventure s’arrête.</li>
+        <li>Utilisez vos disciplines et objets pour survivre !</li>
+      </ul>
+      <div class="presentation-nav">
+        <button id="prev-3">Précédent</button>
+        <button id="next-3">Suivant</button>
+      </div>
+    </div>
+    <div id="step-4" class="presentation-step">
+      <h2>Préparez votre feuille d’aventure</h2>
+      <p>
+        Avant de commencer, ouvrez la feuille d’aventure pour choisir vos disciplines, armes, objets, et tirer vos statistiques.<br>
+        <b>Vous devez remplir tous les champs obligatoires pour commencer l’aventure.</b>
+      </p>
+      <div class="presentation-nav">
+        <button id="prev-4">Précédent</button>
+        <button id="open-sheet">Ouvrir la feuille d’aventure</button>
+      </div>
+    </div>
+    <div id="step-5" class="presentation-step">
+      <h2>Feuille d’aventure</h2>
+      <iframe id="sheet-frame" src="loup_solitaire.html" style="width:100%;height:70vh;border:2px solid #333;border-radius:1em;background:#fff;"></iframe>
+      <div class="presentation-nav">
+        <button id="back-to-explain">Retour aux explications</button>
+        <button id="check-ready">Commencer l’aventure</button>
+      </div>
+      <div id="ready-warning" style="color:#ffb300; margin-top:1em; display:none;">
+        Merci de compléter toutes les disciplines et statistiques avant de commencer !
+      </div>
+    </div>
+  </div>
+  <script>
+    // Navigation entre étapes
+    let currentStep = 0;
+    function showStep(n) {
+      document.querySelectorAll('.presentation-step').forEach((el, i) => {
+        el.classList.toggle('active', i === n);
+      });
+      currentStep = n;
+    }
+    document.getElementById('next-0').onclick = () => showStep(1);
+    document.getElementById('prev-1').onclick = () => showStep(0);
+    document.getElementById('next-1').onclick = () => showStep(2);
+    document.getElementById('prev-2').onclick = () => showStep(1);
+    document.getElementById('next-2').onclick = () => showStep(3);
+    document.getElementById('prev-3').onclick = () => showStep(2);
+    document.getElementById('next-3').onclick = () => showStep(4);
+    document.getElementById('prev-4').onclick = () => showStep(3);
+
+    // Ouvre la feuille d'aventure dans un iframe
+    document.getElementById('open-sheet').onclick = () => showStep(5);
+    document.getElementById('back-to-explain').onclick = () => showStep(4);
+
+    // Vérifie si tout est prêt pour commencer l'aventure
+    document.getElementById('check-ready').onclick = function() {
+      // On va lire le localStorage du parent (même domaine)
+      let disciplines = [];
+      try {
+        disciplines = JSON.parse(localStorage.getItem("disciplines_choisies") || "[]");
+      } catch { disciplines = []; }
+      const hab = parseInt(localStorage.getItem("stat_hab"), 10);
+      const end = parseInt(localStorage.getItem("stat_end"), 10);
+      const armes = [localStorage.getItem("arme1"), localStorage.getItem("arme2")];
+
+      // Vérifie que 5 disciplines sont choisies, hab et end sont valides, au moins une arme
+      const ready = (
+        Array.isArray(disciplines) && disciplines.filter(x => x && x !== "").length === 5 &&
+        !isNaN(hab) && hab > 0 &&
+        !isNaN(end) && end > 0 &&
+        (armes[0] || armes[1])
+      );
+      if (ready) {
+        // Marque la présentation comme vue
+        localStorage.setItem("presentation_vue", "1");
+        // Redirige vers paraIntro
+        window.location.href = "loup_solitaire.html";
+      } else {
+        document.getElementById('ready-warning').style.display = "block";
+      }
+    };
+
+    // Si la présentation a déjà été vue, on redirige direct vers le jeu
+    if (localStorage.getItem("presentation_vue") === "1") {
+      window.location.href = "loup_solitaire.html";
+    }
+  </script>
+</body>
+</html>
