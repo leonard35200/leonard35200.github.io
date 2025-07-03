@@ -1,6 +1,7 @@
+
 /* Corps général */
 body {
-  background: linear-gradient(to bottom, #1a1a2e, #16213e);
+  background: linear-gradient(to bottom, #1a1a1a, #333);
   background-attachment: fixed;
   min-height: 100vh;
 }
@@ -435,22 +436,15 @@ html, body {
 }
 
 #tuto-screen {
-  height: 100vh;           /* au lieu de min-height */
   overflow-y: auto;
+  max-height: 100vh;
   padding-bottom: 3rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
+
 }
 
 #tuto-screen .intro-content {
-  /* SUPPRIME ou commente la ligne suivante : */
-  /* max-height: 90vh; */
-  overflow-y: visible;
-  margin-bottom: 2.5rem;
-  padding-bottom: 1.5rem;
-  box-sizing: border-box;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 .intro-content ol {
@@ -464,16 +458,12 @@ html, body {
   cursor: not-allowed;
 }
 
+#tuto-screen .intro-content {
+  margin-bottom: 3rem !important;
+}
 
 #tuto-screen::after {
   content: '';
   display: block;
   height: 3rem;
-}
-
-#tuto-screen .intro-content h2 {
-  margin-top: 0.7rem !important;
-}
-#tuto-screen .intro-content {
-  padding-top: 1.2rem !important;
 }

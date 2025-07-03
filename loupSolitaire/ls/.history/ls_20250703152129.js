@@ -637,7 +637,7 @@ if (!tutoVu && tutoScreen && btnNext && btnPrev && tutoPages.length > 0) {
 
   const updateTuto = () => {
   const box = document.getElementById('tuto-screen');
-  if (box) box.scrollTo({ top: 0});
+  if (box) box.scrollTo({ top: 0, behavior: 'smooth' });
 
   tutoPages.forEach((page, i) => {
     page.classList.toggle('hidden', i !== window._currentTutoPage);

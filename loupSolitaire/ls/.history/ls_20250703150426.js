@@ -15,18 +15,14 @@ const CONFIG = {
 
   // Getter dynamique : mode interactif (1) si aucune sauvegarde, sinon mode statique (0)
   get test() {
-  const forceInteractif = localStorage.getItem("tuto_vue") !== "1";
-  if (forceInteractif) return 1;
-
-  let saved = [];
-  try {
-    saved = JSON.parse(localStorage.getItem("disciplines_choisies") || "[]");
-  } catch {
-    saved = [];
+    let saved = [];
+    try {
+      saved = JSON.parse(localStorage.getItem("disciplines_choisies") || "[]");
+    } catch {
+      saved = [];
+    }
+    return saved.length === 0 ? 1 : 0;
   }
-  return saved.length === 0 ? 1 : 0;
-}
-
 };
 
 
@@ -169,31 +165,15 @@ class DisciplineManager {
     CONFIG.disciplineIds.forEach(id => {
       const select = document.createElement('select');
       select.id = id;
-
-      // ✅ Ajoute un listener au moment de créer le <select>
-      select.addEventListener('change', () => {
-        this.saveDisciplines();
-        this.updateAllMenus();
-        if (typeof updateTuto === 'function') updateTuto(); // 🔁 débloque le bouton si 5 disciplines
-      });
-
-      // Crée les options
-      const placeholder = document.createElement('option');
-      placeholder.value = "";
-      placeholder.textContent = "-- Choisir une discipline --";
-      select.appendChild(placeholder);
-
       disciplinesKai.forEach(d => {
         const opt = document.createElement('option');
         opt.value = d.nom;
         opt.textContent = d.nom;
         select.appendChild(opt);
       });
-
       container.appendChild(select);
     });
-
-    // Appelle init() après création des <select>
+    // Réattache tes listeners (sauvegarde & update)
     this.init();
 
   } else {
@@ -211,7 +191,6 @@ class DisciplineManager {
     container.appendChild(ul);
   }
 }
-
 
 
 
@@ -621,90 +600,6 @@ if (contientCombat) {
 
   
     };
-
-// Tutoriel multi-pages
-const tutoScreen = document.getElementById('tuto-screen');
-const tutoPages = Array.from(document.querySelectorAll('.tuto-page'));
-const btnNext = document.getElementById('btn-tuto-next');
-const btnPrev = document.getElementById('btn-tuto-prev');
-const tutoVu = localStorage.getItem('tuto_vue');
-
-if (!tutoVu && tutoScreen && btnNext && btnPrev && tutoPages.length > 0) {
-  introScreen.style.display = 'none';
-  tutoScreen.classList.remove('hidden');
-  window._currentTutoPage = 0;
-
-
-  const updateTuto = () => {
-  const box = document.getElementById('tuto-screen');
-  if (box) box.scrollTo({ top: 0});
-
-  tutoPages.forEach((page, i) => {
-    page.classList.toggle('hidden', i !== window._currentTutoPage);
-  });
-
-  btnPrev.disabled = window._currentTutoPage === 0;
-  btnNext.textContent = window._currentTutoPage === tutoPages.length - 1 ? "Commencer l’aventure ▶️" : "Suivant ▶️";
-
-  if (window._currentTutoPage === 4) {
-    const ids = ["discipline1", "discipline2", "discipline3", "discipline4", "discipline5"];
-    const values = ids.map(id => {
-      const el = document.getElementById(id);
-      return el ? el.value.trim() : "";
-    });
-    const uniques = [...new Set(values.filter(v => v !== ""))];
-    if (uniques.length === 5) {
-      btnNext.disabled = false;
-      btnNext.style.opacity = "1";
-      btnNext.style.pointerEvents = "auto";
-    } else {
-      btnNext.disabled = true;
-      btnNext.style.opacity = "0.5";
-      btnNext.style.pointerEvents = "none";
-    }
-  } else {
-    btnNext.disabled = false;
-    btnNext.style.opacity = "1";
-    btnNext.style.pointerEvents = "auto";
-  }
-};
-
-
-  btnNext.addEventListener('click', () => {
-    if (window._currentTutoPage < tutoPages.length - 1) {
-      window._currentTutoPage++
-      updateTuto();
-    } else {
-      localStorage.setItem('tuto_vue', '1');
-      tutoScreen.classList.add('hidden');
-      introScreen.style.display = 'flex';
-    }
-  });
-
-  btnPrev.addEventListener('click', () => {
-    if (window._currentTutoPage > 0) {
-      window._currentTutoPage--;
-      updateTuto();
-    }
-  });
-["discipline1","discipline2","discipline3","discipline4","discipline5"].forEach(id => {
-  const el = document.getElementById(id);
-  if (el) {
-    el.addEventListener("change", () => {
-      updateTuto(); // on appelle toujours updateTuto, sans condition
-    });
-  }
-});
-
-
-
-
-
-  updateTuto();
-} else {
-  introScreen.style.display = 'flex';
-}
-
 
     if (startButton) {
       startButton.addEventListener('click', () => {
@@ -1118,46 +1013,3 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
-
-if (typeof updateTuto === 'function') {
-  CONFIG.disciplineIds.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.addEventListener("change", updateTuto);
-    }
-  });
-}
-
-// Ajoute ce listener juste après la déclaration de updateTuto
-window.addEventListener('storage', function(e) {
-  if (window._currentTutoPage === 4 && typeof updateTuto === 'function') {
-    updateTuto();
-  }
-});
-
-// À placer dans ton script principal, après la déclaration de updateTuto
-
-function surveilleDisciplinesTuto() {
-  let intervalId = setInterval(() => {
-    if (window._currentTutoPage === 4) {
-      let disciplines = [];
-      try {
-        disciplines = JSON.parse(localStorage.getItem("disciplines_choisies") || "[]");
-      } catch { disciplines = []; }
-      const uniques = [...new Set(disciplines.filter(x => x && x !== ""))];
-      if (uniques.length === 5) {
-  console.log("✅ 5 disciplines Kaï différentes sélectionnées !");
-  const btnNext = document.getElementById('btn-tuto-next');
-  if (btnNext) {
-    btnNext.disabled = false;
-    btnNext.style.opacity = "1";
-    btnNext.style.pointerEvents = "auto";
-  }
-  clearInterval(intervalId); // ⛔ Arrête la surveillance
-}
-    }
-  }, 500);
-}
-
-
-surveilleDisciplinesTuto();

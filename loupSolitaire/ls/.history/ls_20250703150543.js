@@ -636,39 +636,39 @@ if (!tutoVu && tutoScreen && btnNext && btnPrev && tutoPages.length > 0) {
 
 
   const updateTuto = () => {
-  const box = document.getElementById('tuto-screen');
-  if (box) box.scrollTo({ top: 0});
-
-  tutoPages.forEach((page, i) => {
-    page.classList.toggle('hidden', i !== window._currentTutoPage);
+const box = document.querySelector('#tuto-screen .intro-content');
+if (box) box.scrollTop = 0;
+    tutoPages.forEach((page, i) => {
+      page.classList.toggle('hidden', i !== window._currentTutoPage);
+    });
+    btnPrev.disabled = window._currentTutoPage === 0;
+    btnNext.textContent = window._currentTutoPage === tutoPages.length - 1 ? "Commencer l’aventure ▶️" : "Suivant ▶️";
+if (window._currentTutoPage === 4) {
+  const ids = ["discipline1", "discipline2", "discipline3", "discipline4", "discipline5"];
+  const values = ids.map(id => {
+    const el = document.getElementById(id);
+    return el ? el.value.trim() : "";
   });
 
-  btnPrev.disabled = window._currentTutoPage === 0;
-  btnNext.textContent = window._currentTutoPage === tutoPages.length - 1 ? "Commencer l’aventure ▶️" : "Suivant ▶️";
+  const uniques = [...new Set(values.filter(v => v !== ""))];
 
-  if (window._currentTutoPage === 4) {
-    const ids = ["discipline1", "discipline2", "discipline3", "discipline4", "discipline5"];
-    const values = ids.map(id => {
-      const el = document.getElementById(id);
-      return el ? el.value.trim() : "";
-    });
-    const uniques = [...new Set(values.filter(v => v !== ""))];
-    if (uniques.length === 5) {
-      btnNext.disabled = false;
-      btnNext.style.opacity = "1";
-      btnNext.style.pointerEvents = "auto";
-    } else {
-      btnNext.disabled = true;
-      btnNext.style.opacity = "0.5";
-      btnNext.style.pointerEvents = "none";
-    }
-  } else {
+  if (uniques.length === 5) {
     btnNext.disabled = false;
     btnNext.style.opacity = "1";
     btnNext.style.pointerEvents = "auto";
+  } else {
+    btnNext.disabled = true;
+    btnNext.style.opacity = "0.5";
+    btnNext.style.pointerEvents = "none";
   }
-};
+} else {
+  btnNext.disabled = false;
+  btnNext.style.opacity = "1";
+  btnNext.style.pointerEvents = "auto";
+}
 
+
+  };
 
   btnNext.addEventListener('click', () => {
     if (window._currentTutoPage < tutoPages.length - 1) {
@@ -1137,27 +1137,4 @@ window.addEventListener('storage', function(e) {
 
 // À placer dans ton script principal, après la déclaration de updateTuto
 
-function surveilleDisciplinesTuto() {
-  let intervalId = setInterval(() => {
-    if (window._currentTutoPage === 4) {
-      let disciplines = [];
-      try {
-        disciplines = JSON.parse(localStorage.getItem("disciplines_choisies") || "[]");
-      } catch { disciplines = []; }
-      const uniques = [...new Set(disciplines.filter(x => x && x !== ""))];
-      if (uniques.length === 5) {
-  console.log("✅ 5 disciplines Kaï différentes sélectionnées !");
-  const btnNext = document.getElementById('btn-tuto-next');
-  if (btnNext) {
-    btnNext.disabled = false;
-    btnNext.style.opacity = "1";
-    btnNext.style.pointerEvents = "auto";
-  }
-  clearInterval(intervalId); // ⛔ Arrête la surveillance
-}
-    }
-  }, 500);
-}
 
-
-surveilleDisciplinesTuto();
