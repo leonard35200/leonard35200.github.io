@@ -352,43 +352,25 @@ class NavigationManager {
     this.initResetButton();
   }
 
- detecterCombatDansParagraphe(id) {
-  const vieHeroMax = localStorage.getItem('stat_end');
+  detecterCombatDansParagraphe(id) {
+  // Valeur max de vie du héros, fixe ou récupérée
+const vieHeroMax = localStorage.getItem('stat_end');
+
   const p = document.getElementById(id);
   if (!p) return;
 
-  // Détecte tous les combats dans le paragraphe (multi-monstres)
-  const regex = /<strong>([^<]*?)HABILET[ÉE]\s*[:|：]?\s*(\d+)\s*ENDURANCE\s*[:|：]?\s*(\d+)[^<]*<\/strong>/gi;
-  const combats = [];
-  let match;
-  while ((match = regex.exec(p.innerHTML)) !== null) {
-    combats.push({
-      nom: match[1].replace(/<br>/g, '').replace(/[:\-–—]/g, '').trim() || "Monstre",
-      hab: parseInt(match[2], 10),
-      end: parseInt(match[3], 10)
-    });
-  }
-  if (combats.length === 0) return;
-
-  // Fonction pour lancer chaque combat à la suite
-  const lancerCombat = (index) => {
-    // Nettoie l'ancien popup
+  if (p.innerHTML.includes('<br><br><strong>')) {
+    // Supprime une éventuelle ancienne fenêtre de combat
     const old = p.querySelector('.combat-popup');
     if (old) old.remove();
 
-    if (index >= combats.length) {
-      // Tous les combats sont faits
-      const msg = document.createElement('div');
-      msg.textContent = "Tous les ennemis sont vaincus !";
-      msg.style = "background:#0a0; color:white; padding:8px 16px; border-radius:8px; margin:1em 0; font-weight:bold;";
-      p.appendChild(msg);
-      return;
-    }
-
-    // Variables du combat courant
-    const ennemi = combats[index];
-    let vieMonstre = ennemi.end;
-    let habMonstre = ennemi.hab;
+    // Récupère l'habileté et l'endurance du monstre dans le paragraphe
+    let vieMonstre = 10;
+    let habMonstre = 10;
+    const matchEnd = p.innerHTML.match(/ENDURANCE\s*[:|：]?\s*(\d+)/i);
+    if (matchEnd) vieMonstre = parseInt(matchEnd[1], 10);
+    const matchHab = p.innerHTML.match(/HABILET[ÉE]\s*[:|：]?\s*(\d+)/i);
+    if (matchHab) habMonstre = parseInt(matchHab[1], 10);
     const vieMonstreMax = vieMonstre;
     localStorage.setItem('stat_monstre', vieMonstre);
 
@@ -400,14 +382,17 @@ class NavigationManager {
     }
     let habHeroMax = habHero;
     const arme1 = localStorage.getItem('arme1');
-    const arme2 = localStorage.getItem('arme2');
-    const possedeAucuneArme = (!arme1 || arme1.trim() === "") && (!arme2 || arme2.trim() === "");
+const arme2 = localStorage.getItem('arme2');
+const possedeAucuneArme = (!arme1 || arme1.trim() === "") && (!arme2 || arme2.trim() === "");
 
-    let messageMainNue = "";
-    if (possedeAucuneArme) {
-      habHeroMax -= 2;
-      messageMainNue = "⚠️ Combat à mains nues : -2 HABILETÉ";
-    }
+
+
+let messageMainNue = "";
+if (possedeAucuneArme) {
+  habHeroMax -= 2;
+  messageMainNue = "⚠️ Combat à mains nues : -2 HABILETÉ";
+}
+
 
     // Gestion bonus psychiques
     let bonusPsy = 0;
@@ -431,7 +416,7 @@ class NavigationManager {
 
     let confirmationHTML = `
       <div style="background:#222; color:#fff; border:2px solid #c00; padding:1em; margin-top:1em; text-align:center; border-radius:12px; box-shadow:0 4px 16px #000a;">
-        <div style="font-size:2em; margin-bottom:1em;">COMBAT contre <b>${ennemi.nom}</b></div>
+        <div style="font-size:2em; margin-bottom:1em;">COMBAT</div>
     `;
 
     if (armesPsy) {
@@ -465,11 +450,11 @@ class NavigationManager {
           <div class="vie-remplissage" id="vieMonstreBarre"></div>
           <div class="contenu-barre">
             <div class="coeur" id="iconeMonstreVie">👹</div>
-            <div class="nom">${ennemi.nom}</div>
+            <div class="nom">Monstre</div>
             <div class="rond-vie" id="vieMonstreRestante">${vieMonstre}</div>
           </div>
         </div>
-        <button id="btnMonstreMoins2">-2 ${ennemi.nom}</button>
+        <button id="btnMonstreMoins2">-2 Monstre</button>
 <div style="margin-top:1em;font-size:1.2em;">
   Quotient d'attaque : ${quotient} ${messagePsy}<br>
   ${messageMainNue}
@@ -478,7 +463,6 @@ class NavigationManager {
       div.querySelector('#zoneBarresCombat').innerHTML = html;
       div.querySelector('#zoneBarresCombat').style.display = '';
 
-      // Styles (comme avant)
       const style = document.createElement('style');
       style.textContent = `
         .barre-container {
@@ -576,13 +560,6 @@ class NavigationManager {
         vieMonstreCourant = Math.max(0, vieMonstreCourant - 2);
         majBarre("vieMonstreBarre", "vieMonstreRestante", "iconeMonstreVie", vieMonstreCourant, vieMonstreMax, "👹", "💀");
         localStorage.setItem('stat_monstre', vieMonstreCourant);
-        // Si le monstre est mort, on passe au suivant
-        if (vieMonstreCourant <= 0) {
-          setTimeout(() => {
-            div.remove();
-            lancerCombat(index + 1);
-          }, 600);
-        }
       };
     };
 
@@ -611,10 +588,7 @@ class NavigationManager {
       // Pas de discipline psy, on affiche directement les barres
       afficherBarres(0, "", habHeroMax, vieHeroMax);
     }
-  };
-
-  // Lance le premier combat
-  lancerCombat(0);
+  }
 }
 
 

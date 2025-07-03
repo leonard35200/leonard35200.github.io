@@ -352,86 +352,71 @@ class NavigationManager {
     this.initResetButton();
   }
 
- detecterCombatDansParagraphe(id) {
-  const vieHeroMax = localStorage.getItem('stat_end');
+  detecterCombatDansParagraphe(id) {
   const p = document.getElementById(id);
   if (!p) return;
 
-  // Détecte tous les combats dans le paragraphe (multi-monstres)
+  // 1. Détecte tous les combats dans le paragraphe
   const regex = /<strong>([^<]*?)HABILET[ÉE]\s*[:|：]?\s*(\d+)\s*ENDURANCE\s*[:|：]?\s*(\d+)[^<]*<\/strong>/gi;
   const combats = [];
   let match;
   while ((match = regex.exec(p.innerHTML)) !== null) {
     combats.push({
-      nom: match[1].replace(/<br>/g, '').replace(/[:\-–—]/g, '').trim() || "Monstre",
+      nom: match[1].replace(/<br>/g, '').trim() || "Monstre",
       hab: parseInt(match[2], 10),
       end: parseInt(match[3], 10)
     });
   }
   if (combats.length === 0) return;
 
-  // Fonction pour lancer chaque combat à la suite
+  // 2. Fonction pour lancer chaque combat à la suite
   const lancerCombat = (index) => {
-    // Nettoie l'ancien popup
-    const old = p.querySelector('.combat-popup');
-    if (old) old.remove();
-
     if (index >= combats.length) {
-      // Tous les combats sont faits
-      const msg = document.createElement('div');
-      msg.textContent = "Tous les ennemis sont vaincus !";
-      msg.style = "background:#0a0; color:white; padding:8px 16px; border-radius:8px; margin:1em 0; font-weight:bold;";
-      p.appendChild(msg);
+      // Tous les combats sont faits, afficher la suite du paragraphe
+      alert("Tous les ennemis sont vaincus !");
+      // Ici tu peux débloquer la navigation ou afficher la suite
       return;
     }
-
-    // Variables du combat courant
     const ennemi = combats[index];
-    let vieMonstre = ennemi.end;
-    let habMonstre = ennemi.hab;
-    const vieMonstreMax = vieMonstre;
-    localStorage.setItem('stat_monstre', vieMonstre);
+    // Appelle ta logique de combat existante, mais avec les stats de l'ennemi courant
+    this.lancerCombatUnique(ennemi, () => {
+      // Quand ce monstre est mort, passe au suivant
+      lancerCombat(index + 1);
+    });
+  };
 
-    // Récupère ton habileté
-    let habHero = parseInt(localStorage.getItem('stat_hab'), 10);
-    if (isNaN(habHero)) {
-      const inputHab = document.getElementById('hab');
-      habHero = inputHab ? parseInt(inputHab.value, 10) : 15;
-    }
-    let habHeroMax = habHero;
-    const arme1 = localStorage.getItem('arme1');
-    const arme2 = localStorage.getItem('arme2');
-    const possedeAucuneArme = (!arme1 || arme1.trim() === "") && (!arme2 || arme2.trim() === "");
+  // 3. Lance le premier combat
+  lancerCombat(0);
+},
 
-    let messageMainNue = "";
-    if (possedeAucuneArme) {
-      habHeroMax -= 2;
-      messageMainNue = "⚠️ Combat à mains nues : -2 HABILETÉ";
-    }
+  // Ajoute une méthode pour gérer un combat unique (tu peux adapter ta logique existante)
+lancerCombatUnique(ennemi, onWin) {
+  // Ici tu mets ta logique de combat actuelle, mais avec les stats de "ennemi"
+  // Quand le joueur gagne, appelle onWin()
+  // Exemple simplifié :
+  alert(`Combat contre ${ennemi.nom} (Habileté: ${ennemi.hab}, Endurance: ${ennemi.end})`);
+  // ... logique de combat ...
+  // Quand le combat est gagné :
+  onWin();
+}
 
-    // Gestion bonus psychiques
-    let bonusPsy = 0;
-    let messagePsy = '';
-    const armesPsy = Object.values(localStorage).some(val => val && val.includes("Puissance psychique"));
-    const bouclierPsy = Object.values(localStorage).some(val => val && val.includes("Bouclier psychique"));
+  initParagraphNavigation() {
+      const self = this;
+    const paragraphs = document.querySelectorAll('.main-content p');
+    const links = document.querySelectorAll('.main-content a');
+    const introScreen = document.getElementById('intro-screen');
+    const startButton = document.getElementById('start-button');
 
-    // Gestion bonus Maîtrise des armes
-    let bonusArme = 0;
-    let armeMaitrisee = localStorage.getItem('arme_maitrisee');
-    const disciplineArme = localStorage.getItem('discipline1') === ("Maîtrise des armes (+2 hab. si possède " + armeMaitrisee + ")");
-    const armePossedee = [localStorage.getItem('arme1'), localStorage.getItem('arme2')].includes(armeMaitrisee);
-
-    if (disciplineArme && armePossedee) {
-      bonusArme = 2;
-    }
-
-    // Création de la boîte de combat AVANT les barres de vie
-    const div = document.createElement('div');
-    div.className = 'combat-popup';
-
+    const showParagraph = (id) => {
+      paragraphs.forEach(p => p.style.display = p.id === id ? 'block' : 'none');
+      localStorage.setItem('currentParagraph', id);
+      window.scrollTo(0, 0);
+  let visites = JSON.parse(localStorage.getItem('chapitres_visites') || '[]');
+  if (!visites.includes(id)) {
+  visites.push(id);
     let confirmationHTML = `
       <div style="background:#222; color:#fff; border:2px solid #c00; padding:1em; margin-top:1em; text-align:center; border-radius:12px; box-shadow:0 4px 16px #000a;">
-        <div style="font-size:2em; margin-bottom:1em;">COMBAT contre <b>${ennemi.nom}</b></div>
+        <div style="font-size:2em; margin-bottom:1em;">COMBAT</div>
     `;
 
     if (armesPsy) {
@@ -465,11 +450,11 @@ class NavigationManager {
           <div class="vie-remplissage" id="vieMonstreBarre"></div>
           <div class="contenu-barre">
             <div class="coeur" id="iconeMonstreVie">👹</div>
-            <div class="nom">${ennemi.nom}</div>
+            <div class="nom">Monstre</div>
             <div class="rond-vie" id="vieMonstreRestante">${vieMonstre}</div>
           </div>
         </div>
-        <button id="btnMonstreMoins2">-2 ${ennemi.nom}</button>
+        <button id="btnMonstreMoins2">-2 Monstre</button>
 <div style="margin-top:1em;font-size:1.2em;">
   Quotient d'attaque : ${quotient} ${messagePsy}<br>
   ${messageMainNue}
@@ -478,7 +463,6 @@ class NavigationManager {
       div.querySelector('#zoneBarresCombat').innerHTML = html;
       div.querySelector('#zoneBarresCombat').style.display = '';
 
-      // Styles (comme avant)
       const style = document.createElement('style');
       style.textContent = `
         .barre-container {
@@ -576,13 +560,6 @@ class NavigationManager {
         vieMonstreCourant = Math.max(0, vieMonstreCourant - 2);
         majBarre("vieMonstreBarre", "vieMonstreRestante", "iconeMonstreVie", vieMonstreCourant, vieMonstreMax, "👹", "💀");
         localStorage.setItem('stat_monstre', vieMonstreCourant);
-        // Si le monstre est mort, on passe au suivant
-        if (vieMonstreCourant <= 0) {
-          setTimeout(() => {
-            div.remove();
-            lancerCombat(index + 1);
-          }, 600);
-        }
       };
     };
 
@@ -611,10 +588,7 @@ class NavigationManager {
       // Pas de discipline psy, on affiche directement les barres
       afficherBarres(0, "", habHeroMax, vieHeroMax);
     }
-  };
-
-  // Lance le premier combat
-  lancerCombat(0);
+  }
 }
 
 

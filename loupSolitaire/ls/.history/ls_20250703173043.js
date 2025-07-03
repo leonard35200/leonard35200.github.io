@@ -352,12 +352,16 @@ class NavigationManager {
     this.initResetButton();
   }
 
- detecterCombatDansParagraphe(id) {
+  detecterCombatDansParagraphe(id) {
   const vieHeroMax = localStorage.getItem('stat_end');
   const p = document.getElementById(id);
   if (!p) return;
 
-  // Détecte tous les combats dans le paragraphe (multi-monstres)
+  // Supprime une éventuelle ancienne fenêtre de combat
+  const old = p.querySelector('.combat-popup');
+  if (old) old.remove();
+
+  // Détecte tous les combats dans le paragraphe (chaque <strong>...HABILETÉ...ENDURANCE...</strong>)
   const regex = /<strong>([^<]*?)HABILET[ÉE]\s*[:|：]?\s*(\d+)\s*ENDURANCE\s*[:|：]?\s*(\d+)[^<]*<\/strong>/gi;
   const combats = [];
   let match;
@@ -372,20 +376,15 @@ class NavigationManager {
 
   // Fonction pour lancer chaque combat à la suite
   const lancerCombat = (index) => {
-    // Nettoie l'ancien popup
-    const old = p.querySelector('.combat-popup');
-    if (old) old.remove();
-
     if (index >= combats.length) {
-      // Tous les combats sont faits
+      // Tous les combats sont faits, afficher la suite du paragraphe
       const msg = document.createElement('div');
       msg.textContent = "Tous les ennemis sont vaincus !";
       msg.style = "background:#0a0; color:white; padding:8px 16px; border-radius:8px; margin:1em 0; font-weight:bold;";
       p.appendChild(msg);
       return;
     }
-
-    // Variables du combat courant
+    // On prépare les variables du combat courant
     const ennemi = combats[index];
     let vieMonstre = ennemi.end;
     let habMonstre = ennemi.hab;
@@ -425,7 +424,7 @@ class NavigationManager {
       bonusArme = 2;
     }
 
-    // Création de la boîte de combat AVANT les barres de vie
+    // Création de la boîte de combat
     const div = document.createElement('div');
     div.className = 'combat-popup';
 
@@ -477,76 +476,6 @@ class NavigationManager {
       `;
       div.querySelector('#zoneBarresCombat').innerHTML = html;
       div.querySelector('#zoneBarresCombat').style.display = '';
-
-      // Styles (comme avant)
-      const style = document.createElement('style');
-      style.textContent = `
-        .barre-container {
-          position: relative;
-          width: 320px;
-          height: 38px;
-          border-radius: 999px;
-          background: #ddd;
-          margin-bottom: 10px;
-          display: flex;
-          align-items: center;
-          box-shadow: 0 0 8px rgba(0,0,0,0.2);
-          overflow: hidden;
-        }
-        .vie-remplissage {
-          position: absolute;
-          height: 100%;
-          border-radius: 999px;
-          background: linear-gradient(to right, #4e9cff, #b3e6ff);
-          transition: width 0.3s;
-          z-index: 1;
-        }
-        .contenu-barre {
-          position: relative;
-          z-index: 2;
-          display: flex;
-          align-items: center;
-          width: 100%;
-          justify-content: space-between;
-          color: #222;
-          padding: 0 15px;
-        }
-        .coeur {
-          font-size: 22px;
-        }
-        .nom {
-          font-weight: bold;
-          font-size: 16px;
-        }
-        .rond-vie {
-          width: 28px;
-          height: 28px;
-          border-radius: 50%;
-          background: white;
-          border: 2px solid #999;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-weight: bold;
-          font-size: 13px;
-        }
-        #btnHeroMoins2, #btnMonstreMoins2 {
-          padding: 6px 14px;
-          font-size: 14px;
-          cursor: pointer;
-          border: none;
-          background: #333;
-          color: white;
-          border-radius: 8px;
-          box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
-          margin-bottom: 10px;
-          margin-left: 0;
-        }
-        #btnHeroMoins2:hover, #btnMonstreMoins2:hover {
-          background: #555;
-        }
-      `;
-      document.head.appendChild(style);
 
       function majBarre(idBarre, idRond, idIcone, vie, vieMax, iconePleine, iconeVide) {
         const barre = div.querySelector("#" + idBarre);
