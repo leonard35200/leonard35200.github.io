@@ -1127,29 +1127,3 @@ if (typeof updateTuto === 'function') {
     }
   });
 }
-
-// Ajoute ce listener juste après la déclaration de updateTuto
-window.addEventListener('storage', function(e) {
-  if (window._currentTutoPage === 4 && typeof updateTuto === 'function') {
-    updateTuto();
-  }
-});
-
-// À placer dans ton script principal, après la déclaration de updateTuto
-
-function surveilleDisciplinesTuto() {
-  setInterval(() => {
-    if (window._currentTutoPage === 4) {
-      let disciplines = [];
-      try {
-        disciplines = JSON.parse(localStorage.getItem("disciplines_choisies") || "[]");
-      } catch { disciplines = []; }
-      const uniques = [...new Set(disciplines.filter(x => x && x !== ""))];
-      if (uniques.length === 5) {
-        console.log("✅ 5 disciplines Kaï différentes sélectionnées !");
-      }
-    }
-  }, 500); // vérifie toutes les 500ms
-}
-
-surveilleDisciplinesTuto();
