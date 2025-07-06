@@ -480,3 +480,6 @@ html, body {
 .hidden {
   display: none !important;
 }
+.intro {
+  overflow-y: auto !important;
+}
