@@ -481,6 +481,6 @@ html, body {
   display: none !important;
 }
 .tuto-page {
-  max-height: 100vh;
+  max-height: 90vh;
   overflow-y: auto;
 }
