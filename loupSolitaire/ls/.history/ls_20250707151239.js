@@ -1232,27 +1232,27 @@ function surveilleDisciplinesTuto() {
 surveilleDisciplinesTuto();
 
 
-
-
 function ajusterMarginSections() {
   const header = document.querySelector('header');
   const hauteurHeader = header ? header.offsetHeight : 0;
 
+  // Taille de police racine (par défaut souvent 16px)
+  const fontSizeRoot = parseFloat(getComputedStyle(document.documentElement).fontSize); // en px
+
+  // Convertir hauteur du header en rem
+  const hauteurHeaderRem = hauteurHeader / fontSizeRoot;
+  const espaceSupplementaireRem = 3; // espace supplémentaire en rem
+
   ['.main-content', '#intro-screen', '#tuto-screen'].forEach(selector => {
     const el = document.querySelector(selector);
     if (el) {
-      el.style.marginTop = '0'; // supprime tout margin externe
-      el.style.paddingTop = `calc(${hauteurHeader}px + 1rem)`; // espace interne
+      el.style.marginTop = (hauteurHeaderRem + espaceSupplementaireRem) + 'rem';
+      el.style.paddingTop = '0.5rem';
     }
   });
 }
 
 
-
 window.addEventListener('load', ajusterMarginSections);
 window.addEventListener('resize', ajusterMarginSections);
-window.addEventListener('DOMContentLoaded', () => {
-  document.body.classList.add('noscroll');
-});
-
 

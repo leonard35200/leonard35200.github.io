@@ -1232,8 +1232,6 @@ function surveilleDisciplinesTuto() {
 surveilleDisciplinesTuto();
 
 
-
-
 function ajusterMarginSections() {
   const header = document.querySelector('header');
   const hauteurHeader = header ? header.offsetHeight : 0;
@@ -1251,8 +1249,4 @@ function ajusterMarginSections() {
 
 window.addEventListener('load', ajusterMarginSections);
 window.addEventListener('resize', ajusterMarginSections);
-window.addEventListener('DOMContentLoaded', () => {
-  document.body.classList.add('noscroll');
-});
-
 

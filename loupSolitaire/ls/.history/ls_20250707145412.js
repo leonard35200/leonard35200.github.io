@@ -1231,28 +1231,3 @@ function surveilleDisciplinesTuto() {
 
 surveilleDisciplinesTuto();
 
-
-
-
-function ajusterMarginSections() {
-  const header = document.querySelector('header');
-  const hauteurHeader = header ? header.offsetHeight : 0;
-
-  ['.main-content', '#intro-screen', '#tuto-screen'].forEach(selector => {
-    const el = document.querySelector(selector);
-    if (el) {
-      el.style.marginTop = '0'; // supprime tout margin externe
-      el.style.paddingTop = `calc(${hauteurHeader}px + 1rem)`; // espace interne
-    }
-  });
-}
-
-
-
-window.addEventListener('load', ajusterMarginSections);
-window.addEventListener('resize', ajusterMarginSections);
-window.addEventListener('DOMContentLoaded', () => {
-  document.body.classList.add('noscroll');
-});
-
-

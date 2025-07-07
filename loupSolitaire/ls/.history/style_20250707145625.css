@@ -80,7 +80,7 @@ header h1 {
 body::after {
   content: '';
   display: block;
-  min-height: 4rem; /* espace sous la dernière boîte */
+  height: 4rem; /* espace sous la dernière boîte */
 }
 
 /* Footer */
@@ -112,7 +112,7 @@ footer {
   top: 0;
   left: 0;
   width: 100vw;
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -161,39 +161,35 @@ footer {
 }
 
 #sheet-toggle {
-  position: fixed !important;
+  position: fixed;
   top: 10px;
   left: 10px;
-  z-index: 20 !important;   /* plus haut que header (10), sheet (5), intro/tuto (3) */
   background: #eee;
   color: #111;
   padding: 0.5em 0.7em;
   font-size: 1.2em;
   border-radius: 0.5em;
   cursor: pointer;
+ 
   box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
   user-select: none;
 }
-
 
 .sheet {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;           /* ou 100vw mais attention au scroll horizontal */
-  height: 100vh;         /* plein écran hauteur */
-  overflow-y: auto;      /* permet de scroller si contenu plus grand */
-  overflow-x: hidden;    /* évite un scroll horizontal */
-  padding: 2rem;
-  padding-bottom: 4rem;  /* pour espace sous contenu */
-  box-sizing: border-box;/* padding inclus dans taille */
+  width: 100%;
+  height: 100%;
   background: #f6f3ec url('data:image/jpeg;base64,') repeat;
   background-blend-mode: multiply;
   color: #222;
+ 
+  padding: 2rem;
+  overflow-y: auto;
   font-family: 'Garamond', serif;
   display: flex;
   flex-direction: column;
-  z-index: 15;
 }
 
 .hidden {
@@ -257,7 +253,7 @@ footer {
   position: fixed;
   top: 0; left: 0;
   width: 100vw;
-  min-height: 100vh;
+  height: 100vh;
   background: linear-gradient(to bottom, #111, #333);
   display: flex;              /* ← C’est ce qui manque */
   justify-content: center;
@@ -265,11 +261,11 @@ footer {
  
   color: white;
 }
-#intro-screen{
+#intro-screen, .sheet {
   top: 0;
   left: 0;
   width: 100vw;
-  min-height: 100vh;
+  height: 100vh;
 }
 
 
@@ -357,7 +353,7 @@ body {
   overflow: hidden;
   resize: none;
   min-height: 0;
-  min-height: auto;
+  height: auto;
   line-height: 1.5;
   font-size: 1rem;
 }
@@ -369,8 +365,12 @@ html, body {
 }
 
 /* Evite que .sheet en 100vw + padding provoque un scroll infini */
-
-
+.sheet {
+  width: 100%;    /* remplace width:100vw */
+  height: 100%;   /* remplace height:100vh */
+  overflow-x: hidden;
+  box-sizing: border-box; /* pour que padding soit inclus dans la largeur */
+}
 /* 1) Resserre l’espace sous le titre "Feuille d’Aventure" */
 #character-sheet .sheet-header h2 {
   margin-bottom: 0.25rem;
@@ -402,12 +402,12 @@ html, body {
     cursor: pointer;
     background: transparent;
     width: 100px;
-    min-height: 100px;
+    height: 100px;
     max-width: 90vw;
     max-height: 90vw;
   }
   @media (max-width: 600px) {
-    #deCarre { width: 120px; min-height: 120px; }
+    #deCarre { width: 120px; height: 120px; }
   }
   /* Ajoute à la fin de style.css */
 .combat-popup {
@@ -427,8 +427,7 @@ html, body {
 }
 
 #tuto-screen {
- min-height: 100dvh; /* garde ça si tu veux, mais évite height fixe */
-  box-sizing: border-box;
+  min-height: 100dvh;         /* nouveau : corrige la hauteur mobile */
   overflow-y: auto;
   padding-bottom: 6rem;       /* espace sous les boutons */
   scroll-padding-bottom: 6rem; /* pour que scrollTo tienne compte du bas */
@@ -484,7 +483,14 @@ html, body {
 }
 
 /* 1. Feuille d’aventure */
-
+.sheet {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  
+}
 
 /* 2. Boutons fixes toujours visibles et cliquables */
 #reset-button {
@@ -518,13 +524,22 @@ html, body {
 }
 
 /* 2. Feuille d’aventure */
+.sheet {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+}
 
 
 
 
 
 /* 4. Boutons fixes */
-#reset-button {
+#reset-button,
+#sheet-toggle {
   position: fixed;
   top: 10px;
   z-index: 6;  /* au-dessus de tout */
@@ -543,12 +558,4 @@ header {
   border-bottom: 4px solid #4e54c8;
   border-radius: 0 0 1rem 1rem;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-}
-
-
-*, *::before, *::after {
-  box-sizing: border-box;
-}
-.intro {
-  min-height: calc(100vh - 4rem); /* 2rem haut + bas */
 }

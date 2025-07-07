@@ -1251,8 +1251,3 @@ function ajusterMarginSections() {
 
 window.addEventListener('load', ajusterMarginSections);
 window.addEventListener('resize', ajusterMarginSections);
-window.addEventListener('DOMContentLoaded', () => {
-  document.body.classList.add('noscroll');
-});
-
-

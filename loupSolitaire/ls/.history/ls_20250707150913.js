@@ -1232,8 +1232,6 @@ function surveilleDisciplinesTuto() {
 surveilleDisciplinesTuto();
 
 
-
-
 function ajusterMarginSections() {
   const header = document.querySelector('header');
   const hauteurHeader = header ? header.offsetHeight : 0;
@@ -1241,18 +1239,14 @@ function ajusterMarginSections() {
   ['.main-content', '#intro-screen', '#tuto-screen'].forEach(selector => {
     const el = document.querySelector(selector);
     if (el) {
-      el.style.marginTop = '0'; // supprime tout margin externe
-      el.style.paddingTop = `calc(${hauteurHeader}px + 1rem)`; // espace interne
+      // On met margin-top à la hauteur du header + espace supplémentaire
+      el.style.marginTop = (hauteurHeader + 10) + 'px';
+      // On peut retirer padding-top ici si tu veux, sinon à 0
+      el.style.paddingTop = 'px';
     }
   });
 }
 
-
-
 window.addEventListener('load', ajusterMarginSections);
 window.addEventListener('resize', ajusterMarginSections);
-window.addEventListener('DOMContentLoaded', () => {
-  document.body.classList.add('noscroll');
-});
-
 

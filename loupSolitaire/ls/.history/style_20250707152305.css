@@ -180,20 +180,17 @@ footer {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;           /* ou 100vw mais attention au scroll horizontal */
-  height: 100vh;         /* plein écran hauteur */
-  overflow-y: auto;      /* permet de scroller si contenu plus grand */
-  overflow-x: hidden;    /* évite un scroll horizontal */
-  padding: 2rem;
-  padding-bottom: 4rem;  /* pour espace sous contenu */
-  box-sizing: border-box;/* padding inclus dans taille */
+  width: 100%;
+  min-height: 100%;
   background: #f6f3ec url('data:image/jpeg;base64,') repeat;
   background-blend-mode: multiply;
   color: #222;
+ 
+  padding: 2rem;
+  overflow-y: auto;
   font-family: 'Garamond', serif;
   display: flex;
   flex-direction: column;
-  z-index: 15;
 }
 
 .hidden {
@@ -265,7 +262,7 @@ footer {
  
   color: white;
 }
-#intro-screen{
+#intro-screen, .sheet {
   top: 0;
   left: 0;
   width: 100vw;
@@ -369,8 +366,12 @@ html, body {
 }
 
 /* Evite que .sheet en 100vw + padding provoque un scroll infini */
-
-
+.sheet {
+  width: 100%;    /* remplace width:100vw */
+  min-height: 100%;   /* remplace height:100vh */
+  overflow-x: hidden;
+  box-sizing: border-box; /* pour que padding soit inclus dans la largeur */
+}
 /* 1) Resserre l’espace sous le titre "Feuille d’Aventure" */
 #character-sheet .sheet-header h2 {
   margin-bottom: 0.25rem;
@@ -402,12 +403,12 @@ html, body {
     cursor: pointer;
     background: transparent;
     width: 100px;
-    min-height: 100px;
+    height: 100px;
     max-width: 90vw;
     max-height: 90vw;
   }
   @media (max-width: 600px) {
-    #deCarre { width: 120px; min-height: 120px; }
+    #deCarre { width: 120px; height: 120px; }
   }
   /* Ajoute à la fin de style.css */
 .combat-popup {
@@ -484,7 +485,14 @@ html, body {
 }
 
 /* 1. Feuille d’aventure */
-
+.sheet {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  
+}
 
 /* 2. Boutons fixes toujours visibles et cliquables */
 #reset-button {
@@ -518,6 +526,14 @@ html, body {
 }
 
 /* 2. Feuille d’aventure */
+.sheet {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 15;
+}
 
 
 
@@ -545,10 +561,9 @@ header {
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
-
+body.noscroll {
+  overflow: hidden;
+}
 *, *::before, *::after {
   box-sizing: border-box;
-}
-.intro {
-  min-height: calc(100vh - 4rem); /* 2rem haut + bas */
 }

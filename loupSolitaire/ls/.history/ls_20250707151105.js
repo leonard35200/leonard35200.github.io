@@ -1232,27 +1232,28 @@ function surveilleDisciplinesTuto() {
 surveilleDisciplinesTuto();
 
 
-
-
-function ajusterMarginSections() {
+function ajusterPaddingSections() {
   const header = document.querySelector('header');
   const hauteurHeader = header ? header.offsetHeight : 0;
+
+  // On ajoute par exemple 0.5rem d'espace supplémentaire après la hauteur du header
+  const espaceSupplementaire = 0.5; // en rem
 
   ['.main-content', '#intro-screen', '#tuto-screen'].forEach(selector => {
     const el = document.querySelector(selector);
     if (el) {
-      el.style.marginTop = '0'; // supprime tout margin externe
-      el.style.paddingTop = `calc(${hauteurHeader}px + 1rem)`; // espace interne
+      // paddingTop = hauteurHeader en px + espace en rem converti en px
+      // Pour convertir rem en px, on récupère la taille de la racine
+      const fontSizeRoot = parseFloat(getComputedStyle(document.documentElement).fontSize); // en px
+      const paddingTopPx = hauteurHeader + espaceSupplementaire * fontSizeRoot;
+
+      el.style.paddingTop = paddingTopPx + 'px';
+      console.log(`Padding-top de ${selector} réglé à ${paddingTopPx}px`);
     }
   });
 }
 
-
-
-window.addEventListener('load', ajusterMarginSections);
-window.addEventListener('resize', ajusterMarginSections);
-window.addEventListener('DOMContentLoaded', () => {
-  document.body.classList.add('noscroll');
-});
+window.addEventListener('load', ajusterPaddingSections);
+window.addEventListener('resize', ajusterPaddingSections);
 
 

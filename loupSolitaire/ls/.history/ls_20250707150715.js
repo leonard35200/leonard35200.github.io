@@ -1232,27 +1232,19 @@ function surveilleDisciplinesTuto() {
 surveilleDisciplinesTuto();
 
 
-
-
-function ajusterMarginSections() {
+function ajusterPaddingSections() {
   const header = document.querySelector('header');
-  const hauteurHeader = header ? header.offsetHeight : 0;
+  const hauteurHeader = header ? header.offsetHeight + 'px' : '0px';
 
   ['.main-content', '#intro-screen', '#tuto-screen'].forEach(selector => {
     const el = document.querySelector(selector);
     if (el) {
-      el.style.marginTop = '0'; // supprime tout margin externe
-      el.style.paddingTop = `calc(${hauteurHeader}px + 1rem)`; // espace interne
+      el.style.paddingTop = hauteurHeader;
+      el.style.marginTop = '40px'; // espace de 10px après le header
     }
   });
 }
 
 
-
-window.addEventListener('load', ajusterMarginSections);
-window.addEventListener('resize', ajusterMarginSections);
-window.addEventListener('DOMContentLoaded', () => {
-  document.body.classList.add('noscroll');
-});
-
-
+window.addEventListener('load', ajusterPaddingSections);
+window.addEventListener('resize', ajusterPaddingSections);
