@@ -495,6 +495,3 @@ html, body {
   box-sizing: border-box;
 }
 
-#reset-button {
-  z-index: 1200; /* encore au-dessus du tuto */
-}

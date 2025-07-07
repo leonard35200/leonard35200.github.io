@@ -489,12 +489,3 @@ html, body {
   display: none !important;
 }
 
-#intro-screen,
-#tuto-screen {
-  padding-top: 6rem; /* ou 5rem selon la hauteur de ton header */
-  box-sizing: border-box;
-}
-
-#reset-button {
-  z-index: 1200; /* encore au-dessus du tuto */
-}
