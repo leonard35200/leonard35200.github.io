@@ -558,7 +558,7 @@ header {
 @media (max-width: 768px) {
   /* Corps global */
   body {
-    font-size: 1.5rem;    /* +15% */
+    font-size: 1.15rem;    /* +15% */
     line-height: 1.6;
   }
 
@@ -628,7 +628,7 @@ header {
 /* ======== Smartphones (≤480px) ======== */
 @media (max-width: 480px) {
   body {
-    font-size: 1,2rem;   /* +20% */
+    font-size: 1.2rem;   /* +20% */
     line-height: 1.7;
   }
 
@@ -683,7 +683,7 @@ header {
 /* ======== Très petits écrans (≤360px) ======== */
 @media (max-width: 360px) {
   body {
-    font-size: 1.25rem;  /* +25% */
+    font-size: 1.4rem;  /* +25% */
     line-height: 1.8;
   }
 
@@ -724,28 +724,4 @@ header {
     font-size: 1.05rem;
     padding: 0.5rem;
   }
-}
-
-
-/* ⚙️ Forcer l’héritage de la taille de police partout */
-.main-content,
-.intro-content,
-#contenu-paragraphes {
-  font-size: inherit;  /* hérite de body */
-}
-
-/* Assure-toi que chaque paragraphe utilise 1em (soit la taille héritée) */
-.main-content p,
-#contenu-paragraphes p,
-.intro-content p,
-.tuto-page p {
-  font-size: 1em;
-  line-height: 1.5em;
-  margin-top: 0;       /* évite tout margin collapse */
-}
-
-#reset-button, #sheet-toggle {
-  font-size: 16px !important;  /* taille fixe, ne changera pas */
-  padding: 0.5em 1em !important; /* ou fixe si besoin */
-  width: auto !important;       /* ne force pas la largeur */
 }

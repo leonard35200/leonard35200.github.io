@@ -744,7 +744,7 @@ header {
   margin-top: 0;       /* évite tout margin collapse */
 }
 
-#reset-button, #sheet-toggle {
+#reset-button, {
   font-size: 16px !important;  /* taille fixe, ne changera pas */
   padding: 0.5em 1em !important; /* ou fixe si besoin */
   width: auto !important;       /* ne force pas la largeur */

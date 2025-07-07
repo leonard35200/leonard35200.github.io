@@ -558,52 +558,42 @@ header {
 @media (max-width: 768px) {
   /* Corps global */
   body {
-    font-size: 1.5rem;    /* +15% */
+    font-size: 1.15rem;
     line-height: 1.6;
   }
 
-  /* Intro & contenu principal : même ratio */
-  .intro-content,
-  .main-content,
-  #contenu-paragraphes {
-    font-size: 1.15rem;
-  }
-
-  /* Header titre */
+  /* Header */
   header h1 {
     font-size: 1.8rem;
   }
 
-  /* Conteneur principal */
+  /* Contenu principal */
   .main-content {
     max-width: 90vw;
     margin-top: 5.5rem;
-    padding: 1.5rem;
+    padding: 1.5rem 1.5rem;
   }
-
-  /* Paragraphes */
-  .main-content p,
-  #contenu-paragraphes p {
+  .main-content p {
     padding: 0 0.5rem;
-    margin-bottom: 1.8em;
   }
 
-  /* Boutons (sauf reset) */
+  /* Boutons de l’interface : full width et police adaptée */
   button:not(#reset-button),
   #start-button {
     font-size: 1.25rem;
     padding: 1rem 1.5rem;
     width: 100%;
+    border-radius: 0.8rem;
   }
 
-  /* Reset button naturel */
+  /* Rétablir naturel pour le bouton rouge */
   #reset-button {
     width: auto;
     font-size: 1rem;
     padding: 0.5em 1em;
   }
 
-  /* Feuille d’aventure : 1 colonne */
+  /* Feuille d’aventure : une colonne */
   .sheet-body {
     flex-direction: column;
   }
@@ -612,42 +602,43 @@ header {
     min-width: auto;
   }
 
-  /* Inputs, selects, textarea */
+  /* Champs et textarea */
   input, select, textarea {
     font-size: 1rem;
     padding: 0.6rem;
+    min-height: 2.8rem;
+    border-radius: 0.5rem;
   }
 
-  /* Intro/Tuto */
+  /* Intro / Tuto screens */
   .intro-content {
     margin: 1rem;
     padding: 1rem;
+    font-size: 0.95rem;
   }
 }
 
 /* ======== Smartphones (≤480px) ======== */
 @media (max-width: 480px) {
+  /* Corps global */
   body {
-    font-size: 1,2rem;   /* +20% */
+    font-size: 1.2rem;
     line-height: 1.7;
   }
 
-  .intro-content,
-  .main-content,
-  #contenu-paragraphes {
-    font-size: 1.2rem;
-  }
-
+  /* Header */
   header h1 {
     font-size: 1.5rem;
   }
 
+  /* Contenu principal */
   .main-content {
     max-width: 95vw;
     margin-top: 5rem;
     padding: 1rem;
   }
 
+  /* Boutons de l’interface : full width et police adaptée */
   button:not(#reset-button),
   #start-button {
     font-size: 1.3rem;
@@ -655,53 +646,54 @@ header {
     width: 100%;
   }
 
+  /* Naturel pour le bouton rouge */
   #reset-button {
     width: auto;
     font-size: 1rem;
     padding: 0.5em 1em;
   }
 
-  .main-content p,
-  #contenu-paragraphes p {
+  /* Paragraphes */
+  .main-content p {
     padding: 0 1rem;
-    margin-bottom: 1.8em;
   }
 
+  /* Dé carré */
   #deCarre {
     width: 120px;
     height: 120px;
   }
 
+  /* Intro / Tuto screens */
   #intro-screen, #tuto-screen {
-    padding-top: 4rem;
+    padding-top: 4rem;  /* décalage pour header */
   }
   .intro-content {
-    font-size: 1.1rem;
+    font-size: 0.9rem;
+    padding: 1rem;
   }
 }
 
 /* ======== Très petits écrans (≤360px) ======== */
 @media (max-width: 360px) {
+  /* Corps global */
   body {
-    font-size: 1.25rem;  /* +25% */
+    font-size: 1.25rem;
     line-height: 1.8;
   }
 
-  .intro-content,
-  .main-content,
-  #contenu-paragraphes {
-    font-size: 1.25rem;
-  }
-
+  /* Header */
   header h1 {
     font-size: 1.3rem;
   }
 
+  /* Contenu principal */
   .main-content {
     margin-top: 4.5rem;
     padding: 0.8rem;
   }
 
+  /* Boutons de l’interface : full width et police adaptée */
   button:not(#reset-button),
   #start-button {
     font-size: 1.4rem;
@@ -709,43 +701,16 @@ header {
     width: 100%;
   }
 
+  /* Naturel pour le bouton rouge */
   #reset-button {
     width: auto;
     font-size: 1rem;
     padding: 0.5em 1em;
   }
 
-  .main-content p,
-  #contenu-paragraphes p {
-    margin-bottom: 1.8em;
-  }
-
+  /* Champs et textarea */
   input, select, textarea {
     font-size: 1.05rem;
     padding: 0.5rem;
   }
-}
-
-
-/* ⚙️ Forcer l’héritage de la taille de police partout */
-.main-content,
-.intro-content,
-#contenu-paragraphes {
-  font-size: inherit;  /* hérite de body */
-}
-
-/* Assure-toi que chaque paragraphe utilise 1em (soit la taille héritée) */
-.main-content p,
-#contenu-paragraphes p,
-.intro-content p,
-.tuto-page p {
-  font-size: 1em;
-  line-height: 1.5em;
-  margin-top: 0;       /* évite tout margin collapse */
-}
-
-#reset-button, #sheet-toggle {
-  font-size: 16px !important;  /* taille fixe, ne changera pas */
-  padding: 0.5em 1em !important; /* ou fixe si besoin */
-  width: auto !important;       /* ne force pas la largeur */
 }
