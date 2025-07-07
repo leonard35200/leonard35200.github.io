@@ -556,52 +556,136 @@ header {
 
 /* ======== Tablettes et petits écrans (≤768px) ======== */
 @media (max-width: 768px) {
-  /* ... */
+  /* Corps global */
+  body {
+    font-size: 1.1rem;
+    line-height: 1.6;
+  }
 
-  /* Appliquer width:100% seulement aux boutons de l’interface */
-  /* exclure explicitement #reset-button */
-  button:not(#reset-button),
-  #start-button {
+  /* Header */
+  header h1 {
+    font-size: 1.8rem;
+  }
+
+  /* Contenu principal */
+  .main-content {
+    max-width: 90vw;
+    margin-top: 5.5rem;    /* compense le header fixé */
+    padding: 1.5rem 1.5rem;
+  }
+  .main-content p {
+    padding: 0 0.5rem;
+  }
+
+  /* Boutons */
+  button, #start-button, #reset-button {
     font-size: 1.2rem;
     padding: 1rem 1.5rem;
     width: 100%;
     border-radius: 0.8rem;
   }
 
-  /* Rétablir width automatique pour le bouton rouge */
-  #reset-button {
-    width: auto;
+  /* Feuille d’aventure : une colonne */
+  .sheet-body {
+    flex-direction: column;
+  }
+  .sheet-column {
+    flex: 1 1 100%;
+    min-width: auto;
+  }
+
+  /* Champs et textarea */
+  input, select, textarea {
+    font-size: 1rem;
+    padding: 0.6rem;
+    min-height: 2.8rem;
+    border-radius: 0.5rem;
+  }
+
+  /* Intro / Tuto screens */
+  .intro-content {
+    margin: 1rem;
+    padding: 1rem;
+    font-size: 0.95rem;
   }
 }
 
 /* ======== Smartphones (≤480px) ======== */
 @media (max-width: 480px) {
-  /* ... */
+  /* Corps global */
+  body {
+    font-size: 1.15rem;
+    line-height: 1.7;
+  }
 
-  button:not(#reset-button),
-  #start-button {
+  /* Header */
+  header h1 {
+    font-size: 1.5rem;
+  }
+
+  /* Contenu principal */
+  .main-content {
+    max-width: 95vw;
+    margin-top: 5rem;
+    padding: 1rem;
+  }
+
+  /* Boutons */
+  button, #start-button, #reset-button {
     font-size: 1.3rem;
     padding: 1.2rem;
     width: 100%;
   }
 
-  #reset-button {
-    width: auto;
+  /* Paragraphes */
+  .main-content p {
+    padding: 0 1rem;
+  }
+
+  /* Dé carré */
+  #deCarre {
+    width: 120px;
+    height: 120px;
+  }
+
+  /* Intro / Tuto screens */
+  #intro-screen, #tuto-screen {
+    padding-top: 4rem;  /* décalage pour header */
+  }
+  .intro-content {
+    font-size: 0.9rem;
+    padding: 1rem;
   }
 }
 
 /* ======== Très petits écrans (≤360px) ======== */
 @media (max-width: 360px) {
-  /* ... */
-
-  button:not(#reset-button),
-  #start-button {
-    font-size: 1.4rem;
-    padding: 1.3rem 1rem;
-    width: 100%;
+  /* Corps global */
+  body {
+    font-size: 1.2rem;
+    line-height: 1.8;
   }
 
-  #reset-button {
-    width: auto;
+  /* Header */
+  header h1 {
+    font-size: 1.3rem;
+  }
+
+  /* Contenu principal */
+  .main-content {
+    margin-top: 4.5rem;
+    padding: 0.8rem;
+  }
+
+  /* Boutons */
+  button, #start-button, #reset-button {
+    font-size: 1.4rem;
+    padding: 1.3rem 1rem;
+  }
+
+  /* Inputs et textarea */
+  input, select, textarea {
+    font-size: 1.05rem;
+    padding: 0.5rem;
   }
 }

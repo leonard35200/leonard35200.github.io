@@ -554,54 +554,99 @@ header {
 }
 
 
-/* ======== Tablettes et petits écrans (≤768px) ======== */
+/* ======== Tablettes et petits écrans (max 768px) ======== */
 @media (max-width: 768px) {
-  /* ... */
+  body {
+    font-size: 1.1rem;         /* Police un peu plus grande */
+    line-height: 1.6;
+  }
 
-  /* Appliquer width:100% seulement aux boutons de l’interface */
-  /* exclure explicitement #reset-button */
-  button:not(#reset-button),
-  #start-button {
-    font-size: 1.2rem;
+  header h1 {
+    font-size: 1.8rem;         /* Titre plus petit */
+  }
+
+  .main-content {
+    max-width: 90vw;           /* Largeur quasi pleine */
     padding: 1rem 1.5rem;
+  }
+
+  /* Boutons plus larges, plus faciles à toucher */
+  button, #start-button, #reset-button {
+    font-size: 1.2rem;
+    padding: 1rem 2rem;
     width: 100%;
     border-radius: 0.8rem;
   }
 
-  /* Rétablir width automatique pour le bouton rouge */
-  #reset-button {
-    width: auto;
+  /* Passage en colonne unique pour les colonnes */
+  .sheet-body {
+    flex-direction: column;
+  }
+
+  .sheet-column {
+    flex: 1 1 100%;
+    min-width: auto;
+  }
+
+  /* Inputs plus grands */
+  input, select, textarea {
+    font-size: 1rem;
+    padding: 0.6rem;
+    min-height: 2.8rem;
+    border-radius: 0.5rem;
+  }
+
+  /* Paragraphes avec padding réduit */
+  .main-content p {
+    padding: 0 0.5rem;
   }
 }
 
-/* ======== Smartphones (≤480px) ======== */
+/* ======== Smartphones (max 480px) ======== */
 @media (max-width: 480px) {
-  /* ... */
+  body {
+    font-size: 1.15rem;        /* Lisibilité encore meilleure */
+    line-height: 1.7;
+  }
 
-  button:not(#reset-button),
-  #start-button {
+  header h1 {
+    font-size: 1.5rem;
+  }
+
+  .main-content {
+    max-width: 95vw;
+    padding: 1rem 1rem;
+  }
+
+  button, #start-button, #reset-button {
     font-size: 1.3rem;
     padding: 1.2rem;
     width: 100%;
   }
 
-  #reset-button {
-    width: auto;
+  /* Garde des marges internes confortables */
+  .main-content p {
+    padding: 0 1rem;
   }
 }
 
-/* ======== Très petits écrans (≤360px) ======== */
+/* ======== Très petits écrans (max 360px) ======== */
 @media (max-width: 360px) {
-  /* ... */
-
-  button:not(#reset-button),
-  #start-button {
-    font-size: 1.4rem;
-    padding: 1.3rem 1rem;
-    width: 100%;
+  body {
+    font-size: 1.2rem;
+    line-height: 1.8;
   }
 
-  #reset-button {
-    width: auto;
+  header h1 {
+    font-size: 1.3rem;
+  }
+
+  button, #start-button, #reset-button {
+    font-size: 1.4rem;
+    padding: 1.3rem 1.5rem;
+  }
+
+  .main-content {
+    padding: 0.8rem 1rem;
   }
 }
