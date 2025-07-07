@@ -1320,20 +1320,13 @@ function adaptSheetLayout() {
           const newColumn = document.createElement('div');
           newColumn.className = 'sheet-column';
           
-          // Trouver le h3 "P'tite triche" et le bouton associé
-          const tricheH3 = sheetColumn.querySelector('h3:last-of-type'); // Dernier h3
-          const tricheButton = sheetColumn.querySelector('#btn-retour-chapitre');
-          
           // Déplacer tous les éléments à partir du h3 "Sac à dos" vers la nouvelle colonne
-          // SAUF le h3 "P'tite triche" et son bouton
           let currentElement = sacADosH3;
           const elementsToMove = [];
           
-          // Collecter tous les éléments à déplacer (sauf triche)
+          // Collecter tous les éléments à déplacer
           while (currentElement) {
-            if (currentElement !== tricheH3 && currentElement !== tricheButton) {
-              elementsToMove.push(currentElement);
-            }
+            elementsToMove.push(currentElement);
             currentElement = currentElement.nextElementSibling;
           }
           

@@ -813,8 +813,6 @@ header {
 .sheet-column {
   flex: 1;
   min-width: 0; /* Permet aux colonnes de se rétrécir */
-  display: flex;
-  flex-direction: column;
 }
 
 /* Media query pour tablette et desktop */
@@ -827,22 +825,6 @@ header {
   .sheet-column {
     flex: 1;
     max-width: 50%;
-  }
-  
-  /* La première colonne pousse le contenu triche en bas */
-  .sheet-column:first-child {
-    justify-content: space-between;
-  }
-  
-  /* Grouper le contenu principal de la première colonne */
-  .sheet-column:first-child > *:not(h3:last-of-type):not(#btn-retour-chapitre) {
-    margin-bottom: 0;
-  }
-  
-  /* Espacer la section triche du reste */
-  .sheet-column:first-child h3:last-of-type {
-    margin-top: auto;
-    padding-top: 2rem;
   }
   
   /* La feuille d'aventure prend toute la place disponible */
