@@ -49,6 +49,7 @@ header h1 {
 
 /* Conteneur principal */
 .main-content {
+  
   max-width: 70ch;
   margin: 0 auto;
   padding: 2rem;
@@ -366,10 +367,7 @@ body {
 /* Empêche tout débordement horizontal */
 html, body {
   overflow-x: hidden;
-  overflow-y: auto;   /* ✅ autorise le scroll vertical */
 }
-
-
 
 /* Evite que .sheet en 100vw + padding provoque un scroll infini */
 
@@ -797,6 +795,4 @@ header {
   padding: 0.5em 1em !important; /* ou fixe si besoin */
   width: auto !important;       /* ne force pas la largeur */
 }
-
-
 

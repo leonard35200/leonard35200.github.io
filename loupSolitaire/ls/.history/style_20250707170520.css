@@ -366,10 +366,7 @@ body {
 /* Empêche tout débordement horizontal */
 html, body {
   overflow-x: hidden;
-  overflow-y: auto;   /* ✅ autorise le scroll vertical */
 }
-
-
 
 /* Evite que .sheet en 100vw + padding provoque un scroll infini */
 
@@ -800,3 +797,37 @@ header {
 
 
 
+/* 1. Assure le contrôle total de la hauteur */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* on bloque le scroll général */
+}
+
+/* 2. Le header est fixé en haut */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 64px; /* ou ce que tu veux */
+  background-color: #fff;
+  z-index: 1000;
+}
+
+/* 3. Conteneur scrollable */
+.main-content {
+  position: absolute;
+  top: 64px; /* même hauteur que le header */
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
+  padding: 1rem;
+}
+
+/* 4. Scroll correct vers un paragraphe */
+.main-content p {
+  scroll-margin-top: 64px; /* ou scroll-padding-top dans .main-content */
+}

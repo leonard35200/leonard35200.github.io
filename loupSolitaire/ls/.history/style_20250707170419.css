@@ -366,10 +366,7 @@ body {
 /* Empêche tout débordement horizontal */
 html, body {
   overflow-x: hidden;
-  overflow-y: auto;   /* ✅ autorise le scroll vertical */
 }
-
-
 
 /* Evite que .sheet en 100vw + padding provoque un scroll infini */
 
@@ -799,4 +796,10 @@ header {
 }
 
 
+.main-content {
+  /* si header = 64px, utilisez : */
+  max-height: calc(100vh - 64px);
+  overflow-y: auto;
+  scroll-padding-top: 64px;
+}
 

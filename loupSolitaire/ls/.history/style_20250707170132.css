@@ -366,10 +366,7 @@ body {
 /* Empêche tout débordement horizontal */
 html, body {
   overflow-x: hidden;
-  overflow-y: auto;   /* ✅ autorise le scroll vertical */
 }
-
-
 
 /* Evite que .sheet en 100vw + padding provoque un scroll infini */
 
@@ -798,5 +795,19 @@ header {
   width: auto !important;       /* ne force pas la largeur */
 }
 
+/* -------------- */
+/* Scroll interne du contenu */
+/* -------------- */
+.main-content {
+  /* limite la hauteur au viewport moins la hauteur du header (ici ~4rem) */
+  max-height: calc(100vh - 4rem);
+  overflow-y: auto;               /* rend ce conteneur scrollable */
+  scroll-padding-top: 3rem;       /* espace sous le header fixe */
+}
+
+/* si vous préférez gérer le décalage sur chaque paragraphe */
+.main-content p {
+  scroll-margin-top: 3rem;        /* même valeur que scroll-padding-top */
+}
 
 

@@ -367,8 +367,12 @@ body {
 html, body {
   overflow-x: hidden;
   overflow-y: auto;   /* ✅ autorise le scroll vertical */
+  height: auto;       /* ✅ ne force pas 100% s'il n'y a pas besoin */
 }
-
+html {
+  overflow-y: auto;   /* ✅ autorise le scroll vertical */
+  height: auto;       /* ✅ ne force pas 100% s'il n'y a pas besoin */
+}
 
 
 /* Evite que .sheet en 100vw + padding provoque un scroll infini */

@@ -676,7 +676,7 @@ requestAnimationFrame(() => {
     const extraOffset = 40;         // pour "remonter un peu plus haut"
     const y = p.getBoundingClientRect().top + window.scrollY - headerHeight - extraOffset;
     const target = Math.max(0, y);  // évite de scroller en négatif
-    htmlCC.style.height = 'auto';
+    htmlCC.style.height = '100%';
     window.scrollTo({ top: target, behavior: 'smooth' });
     console.log("[showParagraph] scroll vers", target);
   }
@@ -849,11 +849,11 @@ if (btnRetour) {
       sheet.classList.toggle('hidden');
       sheet.scrollTo(0, 0);
 
-      if (!sheet.classList.contains('hidden') && textarea && htmlCC) {
+      if (!sheet.classList.contains('hidden') && textarea && html) {
         requestAnimationFrame(() => {
           textarea.style.height = 'auto';
           textarea.style.height = textarea.scrollHeight + 'px';
-          htmlCC.style.height = '100%';
+          html.style.height = 'auto';
           console.log("Hauteur du HTML ajustée à auto pour éviter le scroll");
         });
       }

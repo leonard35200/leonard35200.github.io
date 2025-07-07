@@ -849,7 +849,7 @@ if (btnRetour) {
       sheet.classList.toggle('hidden');
       sheet.scrollTo(0, 0);
 
-      if (!sheet.classList.contains('hidden') && textarea && htmlCC) {
+      if (!sheet.classList.contains('hidden') && textarea && html) {
         requestAnimationFrame(() => {
           textarea.style.height = 'auto';
           textarea.style.height = textarea.scrollHeight + 'px';

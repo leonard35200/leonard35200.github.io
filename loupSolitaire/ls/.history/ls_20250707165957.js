@@ -4,7 +4,6 @@
 
 // Colonnes : quotient d'attaque de -11 ou moins à +11 ou plus (index 0 à 12)
 // Lignes : chiffre de la table de hasard (0 à 9)
-  const htmlCC = document.querySelector('html');
 
 const degatsEnnemi = [
   // -11  -10/-9  -8/-7  -6/-5  -4/-3  -2/-1  0/0  +1/+2  +3/+4  +5/+6  +7/+8  +9/+10  +11 ou sup
@@ -668,23 +667,13 @@ const showParagraph = (id) => {
   console.log("[showParagraph] Scroll demandé pour le paragraphe", id);
 
   // Scroll tout en haut de la page APRÈS affichage effectif
-requestAnimationFrame(() => {
-  const p = document.getElementById(id);
-  if (p) {
+  requestAnimationFrame(() => {
+    
 
-    const headerHeight = 80;        // hauteur du header
-    const extraOffset = 40;         // pour "remonter un peu plus haut"
-    const y = p.getBoundingClientRect().top + window.scrollY - headerHeight - extraOffset;
-    const target = Math.max(0, y);  // évite de scroller en négatif
-    htmlCC.style.height = 'auto';
-    window.scrollTo({ top: target, behavior: 'smooth' });
-    console.log("[showParagraph] scroll vers", target);
-  }
-});
-
-
-
-
+    setTimeout(() => {
+      console.log("[showParagraph] scrollY après :", window.scrollY);
+    }, 700);
+  });
 
   // Gestion des visites
   let visites = JSON.parse(localStorage.getItem('chapitres_visites') || '[]');
@@ -844,17 +833,16 @@ if (btnRetour) {
   const sheet = document.getElementById('character-sheet');
   const closeBtn = document.getElementById('close-sheet');
   const textarea = document.getElementById('objetsSpeciaux');
+
   if (sheetToggle && sheet) {
     sheetToggle.addEventListener('click', () => {
       sheet.classList.toggle('hidden');
       sheet.scrollTo(0, 0);
 
-      if (!sheet.classList.contains('hidden') && textarea && htmlCC) {
+      if (!sheet.classList.contains('hidden') && textarea) {
         requestAnimationFrame(() => {
           textarea.style.height = 'auto';
           textarea.style.height = textarea.scrollHeight + 'px';
-          htmlCC.style.height = '100%';
-          console.log("Hauteur du HTML ajustée à auto pour éviter le scroll");
         });
       }
     });
@@ -863,8 +851,6 @@ if (btnRetour) {
   if (closeBtn && sheet) {
     closeBtn.addEventListener('click', () => {
       sheet.classList.add('hidden');
-            html.style.height = ' 100%'; // Rétablit la hauteur du HTML
-
     });
   }
 }
@@ -1272,19 +1258,13 @@ function ajusterMarginSections() {
   const hauteurHeaderRem = hauteurHeader / fontSizeRoot;
   const espaceSupplementaireRem = 3; // espace supplémentaire en rem
 
-  ['#intro-screen', '#tuto-screen'].forEach(selector => {
+  ['.main-content', '#intro-screen', '#tuto-screen'].forEach(selector => {
     const el = document.querySelector(selector);
     if (el) {
  el.style.marginTop = hauteurHeaderRem + 'rem';
 el.style.paddingTop = '0.5rem';
       
     }
-    const mainContent = document.querySelector('.main-content');
-    if (mainContent) {
-      mainContent.style.marginTop = (hauteurHeaderRem + espaceSupplementaireRem) + 'rem';
-      mainContent.style.paddingTop = '0.5rem'; // Ajoute un peu de padding pour l'esthétique
-    }
-   
   });
 }
 

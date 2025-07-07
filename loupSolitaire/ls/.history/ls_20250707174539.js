@@ -4,7 +4,6 @@
 
 // Colonnes : quotient d'attaque de -11 ou moins à +11 ou plus (index 0 à 12)
 // Lignes : chiffre de la table de hasard (0 à 9)
-  const htmlCC = document.querySelector('html');
 
 const degatsEnnemi = [
   // -11  -10/-9  -8/-7  -6/-5  -4/-3  -2/-1  0/0  +1/+2  +3/+4  +5/+6  +7/+8  +9/+10  +11 ou sup
@@ -671,12 +670,10 @@ const showParagraph = (id) => {
 requestAnimationFrame(() => {
   const p = document.getElementById(id);
   if (p) {
-
     const headerHeight = 80;        // hauteur du header
     const extraOffset = 40;         // pour "remonter un peu plus haut"
     const y = p.getBoundingClientRect().top + window.scrollY - headerHeight - extraOffset;
     const target = Math.max(0, y);  // évite de scroller en négatif
-    htmlCC.style.height = 'auto';
     window.scrollTo({ top: target, behavior: 'smooth' });
     console.log("[showParagraph] scroll vers", target);
   }
@@ -844,17 +841,19 @@ if (btnRetour) {
   const sheet = document.getElementById('character-sheet');
   const closeBtn = document.getElementById('close-sheet');
   const textarea = document.getElementById('objetsSpeciaux');
+  const html = document.querySelector('html');
   if (sheetToggle && sheet) {
     sheetToggle.addEventListener('click', () => {
       sheet.classList.toggle('hidden');
       sheet.scrollTo(0, 0);
 
-      if (!sheet.classList.contains('hidden') && textarea && htmlCC) {
+      if (!sheet.classList.contains('hidden') && textarea && html) {
         requestAnimationFrame(() => {
           textarea.style.height = 'auto';
           textarea.style.height = textarea.scrollHeight + 'px';
-          htmlCC.style.height = '100%';
-          console.log("Hauteur du HTML ajustée à auto pour éviter le scroll");
+  
+          html.style.height = 'auto';
+
         });
       }
     });
