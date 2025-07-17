@@ -419,18 +419,7 @@ class NavigationManager {
 
     // Variables du combat courant
     const ennemi = combats[index];
-    console.log(`[COMBAT] Ennemi détecté :`);
-console.log(`Nom        : ${ennemi.nom}`);
-console.log(`HABILETÉ   : ${ennemi.hab}`);
-console.log(`ENDURANCE  : ${ennemi.end}`);
-
-// Bonus psy
-if (ennemi.nom.toLowerCase().includes("vordak") || ennemi.nom.toLowerCase().includes("kraan")) {
-  console.log(`⚠️ Ennemi sensible à la puissance psychique`);
-} else {
-  console.log(`ℹ️ Ennemi non sensible à la puissance psychique`);
-}
-
+    
     let vieMonstre = ennemi.end;
     let habMonstre = ennemi.hab;
     const vieMonstreMax = vieMonstre;
