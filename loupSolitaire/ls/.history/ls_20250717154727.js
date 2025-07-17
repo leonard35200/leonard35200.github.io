@@ -712,7 +712,7 @@ const degatsMonstre = degatsEnnemi[ligne][col];
   if (inputEnd) inputEnd.value = vieHeroCourant;
   localStorage.setItem('stat_monstre', vieMonstreCourant);
 
- if (vieHeroCourant <= 0 && zoneCombat) { 
+ if (vieHeroCourant <= 0 && zoneCombat) {
   zoneCombat.innerHTML = `
     <div style="
       padding: 20px;

@@ -43,12 +43,6 @@ function afficherFinCombat() {
   `;
 }
 
-function remapperLancerDe(lancerDe) {
-  if (lancerDe === 0) return 9; // 0 → ligne 10 (index 9)
-  else return lancerDe - 1;     // 1→0 (ligne1), 2→1 (ligne2), ..., 9→8 (ligne9)
-}
-
-
 // Remplace intégralement votre ancienne déclaration de CONFIG par celle-ci :
 const CONFIG = {
   // Identifiants des 5 selects
@@ -682,9 +676,8 @@ const messageEffet = effetsCombat.resume;
   else if (q >= 11) col = 12;
   else col = Math.floor((q + 11) / 2);
 
-  const ligne = remapperLancerDe(lancerDe);
-const degatsHeros = degatsLS[ligne][col];
-const degatsMonstre = degatsEnnemi[ligne][col];
+  const degatsHeros = degatsLS[lancerDe][col];
+  const degatsMonstre = degatsEnnemi[lancerDe][col];
 
   if (degatsHeros === "T") vieHeroCourant = 0;
   else vieHeroCourant = Math.max(0, vieHeroCourant + degatsHeros);
@@ -702,7 +695,7 @@ const degatsMonstre = degatsEnnemi[ligne][col];
     div.querySelector('#zoneBarresCombat').appendChild(zoneMsg);
   }
 
-  zoneMsg.textContent = `Dé : ${lancerDe} / Héros  - ${degatsHeros === "T" ? vieHeroCourant : -degatsHeros} END / ${ennemi.nom}  - ${degatsMonstre === "T" ? vieMonstreCourant : -degatsMonstre} END.`;
+  zoneMsg.textContent = `Dé : ${lancerDe}  Héros -${degatsHeros === "T" ? vieHeroCourant : -degatsHeros} END   ${ennemi.nom} - ${degatsMonstre === "T" ? vieMonstreCourant : -degatsMonstre} END.`;
 
   majBarre("vieHeroBarre", "vieHeroRestante", "iconeHeroVie", vieHeroCourant, vieHeroMax, "❤️", "💀");
   majBarre("vieMonstreBarre", "vieMonstreRestante", "iconeMonstreVie", vieMonstreCourant, vieMonstreMax, "👹", "💀");
@@ -712,33 +705,12 @@ const degatsMonstre = degatsEnnemi[ligne][col];
   if (inputEnd) inputEnd.value = vieHeroCourant;
   localStorage.setItem('stat_monstre', vieMonstreCourant);
 
- if (vieHeroCourant <= 0 && zoneCombat) { 
-  zoneCombat.innerHTML = `
-    <div style="
-      padding: 20px;
-      background: #ff4c4c;
-      color: white;
-      font-weight: bold;
-      font-size: 1.5em;
-      border-radius: 12px;
-      text-align: center;
-      box-shadow: 0 0 15px #ff0000aa;
-      user-select: none;
-    ">
-      💀 Vous êtes mort 💀
-    </div>
-  `;
-document.querySelectorAll('a').forEach(a => {
-  a.style.pointerEvents = 'none';
-  a.style.color = '#999';
-  a.style.textDecoration = 'none';
-  a.removeAttribute('href');
-});
-
-
-  return;
-}
-
+  if (vieHeroCourant <= 0) {
+    alert("Le héros est vaincu !");
+    // Logique fin combat (ex: bloquer le bouton, ou reset, ou retour)
+    div.querySelector("#btnRoundCombat").disabled = true;
+    return;
+  }
   if (vieMonstreCourant <= 0) {
     setTimeout(() => {
       div.remove();
@@ -752,40 +724,11 @@ document.querySelectorAll('a').forEach(a => {
 
 
 
-    let vieHeroCourant = vieHero;
-let vieMonstreCourant = vieMonstre;
+      let vieHeroCourant = vieHero;
+      let vieMonstreCourant = vieMonstre;
 
-const zoneCombat = div.querySelector('#zoneBarresCombat');
-if (vieHeroCourant <= 0 && zoneCombat) {
-  zoneCombat.innerHTML = `
-    <div style="
-      padding: 20px;
-      background: #ff4c4c;
-      color: white;
-      font-weight: bold;
-      font-size: 1.5em;
-      border-radius: 12px;
-      text-align: center;
-      box-shadow: 0 0 15px #ff0000aa;
-      user-select: none;
-    ">
-      💀 Vous êtes mort 💀
-    </div>
-  `;
-document.querySelectorAll('a').forEach(a => {
-  a.style.pointerEvents = 'none';
-  a.style.color = '#999';
-  a.style.textDecoration = 'none';
-  a.removeAttribute('href');
-});
-
-
-  return;
-}
-
-// Sinon, affichage normal des barres et activation du bouton
-majBarre("vieHeroBarre", "vieHeroRestante", "iconeHeroVie", vieHeroCourant, vieHeroMax, "❤️", "💀");
-majBarre("vieMonstreBarre", "vieMonstreRestante", "iconeMonstreVie", vieMonstreCourant, vieMonstreMax, "👹", "💀");
+      majBarre("vieHeroBarre", "vieHeroRestante", "iconeHeroVie", vieHeroCourant, vieHeroMax, "❤️", "💀");
+      majBarre("vieMonstreBarre", "vieMonstreRestante", "iconeMonstreVie", vieMonstreCourant, vieMonstreMax, "👹", "💀");
 
       
 

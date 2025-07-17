@@ -33,22 +33,6 @@ const degatsLS = [
   [ -3,  -3,     -2,     0,     0,     0,    0,  0,   0,   0,   0,   0,    0], // 9
   [ 0,    0,      0,     0,     0,     0,    0,  0,   0,   0,   0,   0,   0]  // 0
 ];
-function afficherFinCombat() {
-  const zoneCombat = document.getElementById('zoneBarresCombat');
-  zoneCombat.innerHTML = `
-    <div style="text-align:center; padding:40px; font-size:32px; color:#900; user-select:none;">
-      <div style="font-size:80px;">💀</div>
-      <p>Vous êtes mort.</p>
-    </div>
-  `;
-}
-
-function remapperLancerDe(lancerDe) {
-  if (lancerDe === 0) return 9; // 0 → ligne 10 (index 9)
-  else return lancerDe - 1;     // 1→0 (ligne1), 2→1 (ligne2), ..., 9→8 (ligne9)
-}
-
-
 // Remplace intégralement votre ancienne déclaration de CONFIG par celle-ci :
 const CONFIG = {
   // Identifiants des 5 selects
@@ -400,68 +384,20 @@ class NavigationManager {
     this.initResetButton();
   }
 
+function logCombat(paragraphe, ennemi) {
+  const vuln = paragraphe.dataset.vulnerablepsy || 'False';
+  const attaquePsy = paragraphe.dataset.attaquepsy || 'False';
+  const quotient = paragraphe.dataset.attaquequotient || '0hab';
+  const bonus = paragraphe.dataset.bonus || '0hab';
 
- logCombat(paragraphe, ennemi) {
-    const vuln = paragraphe.dataset.vulnerablepsy || 'False';
-    const attaquePsy = paragraphe.dataset.attaquepsy || 'False';
-    const quotient = paragraphe.dataset.attaquequotient || '0hab';
-    const bonus = paragraphe.dataset.bonus || '0hab';
-
-    console.log(`🛡️ [COMBAT - ${paragraphe.id}]`);
-    console.log(`Nom ennemi         : ${ennemi.nom}`);
-    console.log(`HABILETÉ / ENDURANCE : ${ennemi.hab} / ${ennemi.end}`);
-    console.log(`Vulnérable psy     : ${vuln}`);
-    console.log(`Attaque psy        : ${attaquePsy}`);
-    console.log(`Malus sur quotient : ${quotient}`);
-    console.log(`Bonus combat       : ${bonus}`);
-    console.log('------------------------------------');
-  }
-
-  appliquerEffetsCombatTemporaire(paragraphe, ennemi, habHeroBase) {
-  let bonusCombat = 0;
-  let malusQuotient = 0;
-  let message = "";
-
-  const isVulnerable = paragraphe.dataset.vulnerablepsy === "True";
-  const subitAttaquePsy = paragraphe.dataset.attaquepsy === "True";
-  const dataQuotient = paragraphe.dataset.attaquequotient || "0hab";
-  const dataBonus = paragraphe.dataset.bonus || "0hab";
-
-  const bonusMatch = dataBonus.match(/([-+]?\d+)hab/);
-  if (bonusMatch) {
-    bonusCombat += parseInt(bonusMatch[1], 10);
-    if (bonusCombat !== 0) message += `🟢 Bonus combat temporaire : ${bonusCombat} HABILETÉ\n`;
-  }
-
-  const malusMatch = dataQuotient.match(/([-+]?\d+)hab/);
-  if (malusMatch) {
-    malusQuotient += parseInt(malusMatch[1], 10);
-    if (malusQuotient !== 0) message += ` `;
-  }
-
-  const psyActive = isVulnerable && Object.values(localStorage).some(val => val && val.includes("Puissance psychique"));
-  if (psyActive) {
-    bonusCombat += 2;
-    message += `🧠 Ennemi sensible à la puissance psychique : +2 HABILETÉ\n`;
-  }
-
-  const psySubit = subitAttaquePsy && !Object.values(localStorage).some(val => val && val.includes("Bouclier psychique"));
-  if (psySubit) {
-    bonusCombat += malusQuotient;
-    message += `🧠 Attaque mentale subie : ${malusQuotient} HABILETÉ\n`;
-  }
-
-  const habCombat = habHeroBase + bonusCombat;
-  const quotientFinal = habCombat - ennemi.hab;
-
-  console.log(`[COMBAT TEMPORAIRE] Héros: ${habHeroBase} → ${habCombat}, quotient ajusté: ${quotientFinal}`);
-  if (message) console.log(message.trim());
-
-  return {
-    habCombat,
-    quotientFinal,
-    resume: message
-  };
+  console.log(`🛡️ [COMBAT - ${paragraphe.id}]`);
+  console.log(`Nom ennemi         : ${ennemi.nom}`);
+  console.log(`HABILETÉ / ENDURANCE : ${ennemi.hab} / ${ennemi.end}`);
+  console.log(`Vulnérable psy     : ${vuln}`);
+  console.log(`Attaque psy        : ${attaquePsy}`);
+  console.log(`Malus sur quotient : ${quotient}`);
+  console.log(`Bonus combat       : ${bonus}`);
+  console.log('------------------------------------');
 }
 
 
@@ -500,7 +436,7 @@ class NavigationManager {
 
     // Variables du combat courant
     const ennemi = combats[index];
-    this.logCombat(p, ennemi);
+    
     let vieMonstre = ennemi.end;
     let habMonstre = ennemi.hab;
     const vieMonstreMax = vieMonstre;
@@ -562,9 +498,7 @@ class NavigationManager {
 
     // Fonction pour afficher les barres de vie et le quotient d'attaque
     const afficherBarres = (bonusPsy, messagePsy, habHeroMax, vieHeroMax) => {
-const effetsCombat = this.appliquerEffetsCombatTemporaire(p, ennemi, habHeroMax + bonusPsy + bonusArme);
-const quotient = effetsCombat.quotientFinal;
-const messageEffet = effetsCombat.resume;
+      const quotient = habHeroMax + bonusPsy - habMonstre;
       const vieHero = parseInt(localStorage.getItem('stat_end'), 10) || vieHeroMax;
 
       let html = `
@@ -576,6 +510,7 @@ const messageEffet = effetsCombat.resume;
             <div class="rond-vie" id="vieHeroRestante">${vieHero}</div>
           </div>
         </div>
+        <button id="btnHeroMoins2" style="margin-bottom:10px;">-2 Héros</button>
         <div class="barre-container" style="margin-bottom:10px;">
           <div class="vie-remplissage" id="vieMonstreBarre"></div>
           <div class="contenu-barre">
@@ -584,12 +519,10 @@ const messageEffet = effetsCombat.resume;
             <div class="rond-vie" id="vieMonstreRestante">${vieMonstre}</div>
           </div>
         </div>
-
-<button id="btnRoundCombat" style="margin-bottom:10px;">🎲 Lancer un round de combat</button>
-        <div style="margin-top:1em;font-size:1.2em;">
+        <button id="btnMonstreMoins2">-2 ${ennemi.nom}</button>
+<div style="margin-top:1em;font-size:1.2em;">
   Quotient d'attaque : ${quotient} ${messagePsy}<br>
-  ${messageMainNue}<br>
- ${messageEffet.replace(/\n/g, "<br>")}
+  ${messageMainNue}
 </div>
       `;
       div.querySelector('#zoneBarresCombat').innerHTML = html;
@@ -674,122 +607,33 @@ const messageEffet = effetsCombat.resume;
         vieText.textContent = vie;
         icone.textContent = vie === 0 ? iconeVide : iconePleine;
       }
-     div.querySelector("#btnRoundCombat").onclick = () => {
-  const lancerDe = Math.floor(Math.random() * 10);
-  const q = Math.max(-11, Math.min(11, quotient));
-  let col;
-  if (q <= -11) col = 0;
-  else if (q >= 11) col = 12;
-  else col = Math.floor((q + 11) / 2);
 
-  const ligne = remapperLancerDe(lancerDe);
-const degatsHeros = degatsLS[ligne][col];
-const degatsMonstre = degatsEnnemi[ligne][col];
+      let vieHeroCourant = vieHero;
+      let vieMonstreCourant = vieMonstre;
 
-  if (degatsHeros === "T") vieHeroCourant = 0;
-  else vieHeroCourant = Math.max(0, vieHeroCourant + degatsHeros);
+      majBarre("vieHeroBarre", "vieHeroRestante", "iconeHeroVie", vieHeroCourant, vieHeroMax, "❤️", "💀");
+      majBarre("vieMonstreBarre", "vieMonstreRestante", "iconeMonstreVie", vieMonstreCourant, vieMonstreMax, "👹", "💀");
 
-  if (degatsMonstre === "T") vieMonstreCourant = 0;
-  else vieMonstreCourant = Math.max(0, vieMonstreCourant + degatsMonstre);
+      div.querySelector("#btnHeroMoins2").onclick = () => {
+        vieHeroCourant = Math.max(0, vieHeroCourant - 2);
+        majBarre("vieHeroBarre", "vieHeroRestante", "iconeHeroVie", vieHeroCourant, vieHeroMax, "❤️", "💀");
+        localStorage.setItem('stat_end', vieHeroCourant);
+        const inputEnd = document.getElementById('end');
+        if (inputEnd) inputEnd.value = vieHeroCourant;
+      };
 
-  // Création ou mise à jour du message affiché à l'écran
-  let zoneMsg = div.querySelector('#messageResultat');
-  if (!zoneMsg) {
-    zoneMsg = document.createElement('div');
-    zoneMsg.id = 'messageResultat';
-    zoneMsg.style.marginTop = '10px';
-    zoneMsg.style.fontWeight = 'bold';
-    div.querySelector('#zoneBarresCombat').appendChild(zoneMsg);
-  }
-
-  zoneMsg.textContent = `Dé : ${lancerDe} / Héros  - ${degatsHeros === "T" ? vieHeroCourant : -degatsHeros} END / ${ennemi.nom}  - ${degatsMonstre === "T" ? vieMonstreCourant : -degatsMonstre} END.`;
-
-  majBarre("vieHeroBarre", "vieHeroRestante", "iconeHeroVie", vieHeroCourant, vieHeroMax, "❤️", "💀");
-  majBarre("vieMonstreBarre", "vieMonstreRestante", "iconeMonstreVie", vieMonstreCourant, vieMonstreMax, "👹", "💀");
-
-  localStorage.setItem('stat_end', vieHeroCourant);
-  const inputEnd = document.getElementById('end');
-  if (inputEnd) inputEnd.value = vieHeroCourant;
-  localStorage.setItem('stat_monstre', vieMonstreCourant);
-
- if (vieHeroCourant <= 0 && zoneCombat) { 
-  zoneCombat.innerHTML = `
-    <div style="
-      padding: 20px;
-      background: #ff4c4c;
-      color: white;
-      font-weight: bold;
-      font-size: 1.5em;
-      border-radius: 12px;
-      text-align: center;
-      box-shadow: 0 0 15px #ff0000aa;
-      user-select: none;
-    ">
-      💀 Vous êtes mort 💀
-    </div>
-  `;
-document.querySelectorAll('a').forEach(a => {
-  a.style.pointerEvents = 'none';
-  a.style.color = '#999';
-  a.style.textDecoration = 'none';
-  a.removeAttribute('href');
-});
-
-
-  return;
-}
-
-  if (vieMonstreCourant <= 0) {
-    setTimeout(() => {
-      div.remove();
-      lancerCombat(index + 1);
-    }, 2000);
-  }
-
-  
-
-};
-
-
-
-    let vieHeroCourant = vieHero;
-let vieMonstreCourant = vieMonstre;
-
-const zoneCombat = div.querySelector('#zoneBarresCombat');
-if (vieHeroCourant <= 0 && zoneCombat) {
-  zoneCombat.innerHTML = `
-    <div style="
-      padding: 20px;
-      background: #ff4c4c;
-      color: white;
-      font-weight: bold;
-      font-size: 1.5em;
-      border-radius: 12px;
-      text-align: center;
-      box-shadow: 0 0 15px #ff0000aa;
-      user-select: none;
-    ">
-      💀 Vous êtes mort 💀
-    </div>
-  `;
-document.querySelectorAll('a').forEach(a => {
-  a.style.pointerEvents = 'none';
-  a.style.color = '#999';
-  a.style.textDecoration = 'none';
-  a.removeAttribute('href');
-});
-
-
-  return;
-}
-
-// Sinon, affichage normal des barres et activation du bouton
-majBarre("vieHeroBarre", "vieHeroRestante", "iconeHeroVie", vieHeroCourant, vieHeroMax, "❤️", "💀");
-majBarre("vieMonstreBarre", "vieMonstreRestante", "iconeMonstreVie", vieMonstreCourant, vieMonstreMax, "👹", "💀");
-
-      
-
-      
+      div.querySelector("#btnMonstreMoins2").onclick = () => {
+        vieMonstreCourant = Math.max(0, vieMonstreCourant - 2);
+        majBarre("vieMonstreBarre", "vieMonstreRestante", "iconeMonstreVie", vieMonstreCourant, vieMonstreMax, "👹", "💀");
+        localStorage.setItem('stat_monstre', vieMonstreCourant);
+        // Si le monstre est mort, on passe au suivant
+        if (vieMonstreCourant <= 0) {
+          setTimeout(() => {
+            div.remove();
+            lancerCombat(index + 1);
+          }, 600);
+        }
+      };
     };
 
     // === Ajout des listeners pour boutons psy ===

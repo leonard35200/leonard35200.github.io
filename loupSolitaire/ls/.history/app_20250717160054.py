@@ -1,0 +1,214 @@
+from flask import Flask, render_template_string, request, redirect
+import os
+
+app = Flask(__name__)
+
+HTML_FILE = "paragraphe.html"
+NUM_FILE = "current_para_num.txt"
+
+if not os.path.exists(NUM_FILE):
+    with open(NUM_FILE, "w") as f:
+        f.write("1")
+
+if not os.path.exists(HTML_FILE):
+    with open(HTML_FILE, "w", encoding="utf-8") as f:
+        f.write("""<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><title>Loup Solitaire</title></head>
+<body><h1>Loup Solitaire - Paragraphe 1</h1></body></html>
+""")
+
+@app.route("/", methods=["GET", "POST"])
+def index():
+    with open(NUM_FILE, "r") as f:
+        current_num = int(f.read().strip())
+
+    if request.method == "POST":
+        # Le texte avec balises <span> et <a> envoyé par JS
+        texte = request.form.get("texte_final", "").strip()
+        if texte:
+            with open(HTML_FILE, "r+", encoding="utf-8") as f:
+                content = f.read()
+                insert_pos = content.rfind('<p style="display: none;">écrire avant ici</p>')
+
+                para_html = f'<p id="para{current_num}"><strong>{current_num} :</strong> {texte}</p>\n'
+                new_content = content[:insert_pos] + para_html + content[insert_pos:]
+                f.seek(0)
+                f.write(new_content)
+                f.truncate()
+
+            current_num += 1
+            with open(NUM_FILE, "w") as f:
+                f.write(str(current_num))
+
+            return redirect("/")
+
+    page = f"""
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Éditeur Loup Solitaire</title>
+<style>
+.number-highlight {{
+  background-color: yellow;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 3px;
+  user-select: none;
+}}
+.number-link {{
+  background-color: #87cefa; /* bleu clair */
+  font-weight: bold;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 3px;
+  user-select: none;
+  text-decoration: underline;
+}}
+#texte {{
+  width: 90%;
+  height: 150px;
+  white-space: pre-wrap;
+  font-family: monospace;
+  margin-bottom: 10px;
+}}
+#preview {{
+  border: 1px solid #aaa;
+  padding: 10px;
+  white-space: pre-wrap;
+  min-height: 150px;
+  max-height: 300px;
+  overflow-y: auto;
+  font-family: monospace;
+}}
+button {{
+  margin-right: 10px;
+}}
+</style>
+</head>
+<body>
+<h2>Paragraphe actuel : {current_num}</h2>
+
+<textarea id="texte" placeholder="Collez votre paragraphe ici..."></textarea><br>
+<button onclick="applyHighlight()">Surligner les nombres</button>
+<button onclick="wrapSelectedText()" style="background-color:yellow">Mettre en gras</button>
+<button onclick="submitText()" style="background-color:red">Valider et Ajouter</button>
+
+<div id="preview" contenteditable="true" spellcheck="false" aria-label="Prévisualisation du paragraphe avec sélection des liens"></div>
+
+<form id="form" method="post" style="display:none;">
+  <input type="hidden" name="texte_final" id="texte_final">
+</form>
+
+<script>
+// Trouve tous les nombres et les remplace par des spans surlignés
+function applyHighlight() {{
+  const rawText = document.getElementById("texte").value;
+  const escaped = rawText
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+  // Remplace les nombres par des spans jaunes
+  const withHighlights = escaped.replace(/(\\d+)/g, '<span class="number-highlight" onclick="toggleLink(event)">$1</span>');
+  const preview = document.getElementById("preview");
+  preview.innerHTML = withHighlights;
+}}
+
+// Au clic sur un nombre, toggle la classe number-link
+function toggleLink(event) {{
+  const span = event.target;
+  if (span.classList.contains("number-link")) {{
+    span.classList.remove("number-link");
+    span.classList.add("number-highlight");
+  }} else {{
+    span.classList.remove("number-highlight");
+    span.classList.add("number-link");
+  }}
+  event.stopPropagation();
+}}
+
+// Avant envoi, remplace les spans bleus par des liens <a href="#paraX">
+function submitText() {{
+  let preview = document.getElementById("preview");
+  // clone pour manipulation
+  let clone = preview.cloneNode(true);
+  // Remplace les spans class number-link par des liens
+  clone.querySelectorAll("span.number-link").forEach(span => {{
+    const num = span.textContent;
+    const a = document.createElement("a");
+    a.href = "#para" + num;
+    a.textContent = num;
+    a.style.textDecoration = "underline";
+    a.style.color = "blue";
+    span.replaceWith(a);
+  }});
+  // Remplace les spans jaunes non-liens par leur texte brut
+  clone.querySelectorAll("span.number-highlight").forEach(span => {{
+    const txt = document.createTextNode(span.textContent);
+    span.replaceWith(txt);
+  }});
+  document.getElementById("texte_final").value = clone.innerHTML;
+  document.getElementById("form").submit();
+}}
+
+</script>
+
+<script>
+function wrapSelectedText() {
+  const selection = window.getSelection();
+  if (!selection || selection.rangeCount === 0) return;
+
+  const range = selection.getRangeAt(0);
+  const preview = document.getElementById("preview");
+
+  if (!preview || !preview.contains(range.commonAncestorContainer)) return;
+
+  // Demander les vraies données
+  const vulnerablePsy = prompt("data-vulnerablePsy (true/false) :");
+  if (vulnerablePsy === null) return;
+  const attaquePsy = prompt("data-attaquePsy (true/false) :");
+  if (attaquePsy === null) return;
+  const attaqueQuotient = prompt("data-attaqueQuotient (exemple : 0hab) :");
+  if (attaqueQuotient === null) return;
+  const bonus = prompt("data-bonus (exemple : 0hab) :");
+  if (bonus === null) return;
+
+  const strong = document.createElement("strong");
+  strong.textContent = range.toString();
+
+  range.deleteContents();
+
+  const fragment = document.createDocumentFragment();
+  fragment.appendChild(document.createElement("br"));
+  fragment.appendChild(document.createElement("br"));
+  fragment.appendChild(strong);
+  fragment.appendChild(document.createElement("br"));
+  fragment.appendChild(document.createElement("br"));
+
+  range.insertNode(fragment);
+
+  // Stocker les données dans preview dataset pour l'envoi
+  preview.dataset.vulnerablePsy = vulnerablePsy;
+  preview.dataset.attaquePsy = attaquePsy;
+  preview.dataset.attaqueQuotient = attaqueQuotient;
+  preview.dataset.bonus = bonus;
+}
+
+</script>
+
+
+<p>Instructions :  
+1. Collez votre paragraphe dans la zone de texte.  
+2. Cliquez sur “Surligner les nombres” pour repérer tous les nombres.  
+3. Cliquez sur les nombres que vous souhaitez transformer en liens (ils passent en bleu).  
+4. Cliquez sur “Valider et Ajouter” pour sauvegarder.</p>
+
+</body>
+</html>
+"""
+    return render_template_string(page)
+
+if __name__ == "__main__":
+    app.run(debug=True)

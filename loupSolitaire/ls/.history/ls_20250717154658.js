@@ -702,7 +702,7 @@ const degatsMonstre = degatsEnnemi[ligne][col];
     div.querySelector('#zoneBarresCombat').appendChild(zoneMsg);
   }
 
-  zoneMsg.textContent = `Dé : ${lancerDe} / Héros  - ${degatsHeros === "T" ? vieHeroCourant : -degatsHeros} END / ${ennemi.nom}  - ${degatsMonstre === "T" ? vieMonstreCourant : -degatsMonstre} END.`;
+  zoneMsg.textContent = `Dé : ${lancerDe} / Héros -${degatsHeros === "T" ? vieHeroCourant : -degatsHeros} END  ${ennemi.nom} - ${degatsMonstre === "T" ? vieMonstreCourant : -degatsMonstre} END.`;
 
   majBarre("vieHeroBarre", "vieHeroRestante", "iconeHeroVie", vieHeroCourant, vieHeroMax, "❤️", "💀");
   majBarre("vieMonstreBarre", "vieMonstreRestante", "iconeMonstreVie", vieMonstreCourant, vieMonstreMax, "👹", "💀");
@@ -712,7 +712,7 @@ const degatsMonstre = degatsEnnemi[ligne][col];
   if (inputEnd) inputEnd.value = vieHeroCourant;
   localStorage.setItem('stat_monstre', vieMonstreCourant);
 
- if (vieHeroCourant <= 0 && zoneCombat) { 
+ if (vieHeroCourant <= 0 && zoneCombat) {
   zoneCombat.innerHTML = `
     <div style="
       padding: 20px;
