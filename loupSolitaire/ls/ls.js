@@ -1,7 +1,7 @@
 // ======================
 // Configuration générale
 // ======================
-
+console.log("✅ Script chargé");
 // Colonnes : quotient d'attaque de -11 ou moins à +11 ou plus (index 0 à 12)
 // Lignes : chiffre de la table de hasard (0 à 9)
   const htmlCC = document.querySelector('html');
