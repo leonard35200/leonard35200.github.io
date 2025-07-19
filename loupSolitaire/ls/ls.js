@@ -563,7 +563,7 @@ if (armesPsy) {
     // Fonction pour afficher les barres de vie et le quotient d'attaque
 
     
-    const afficherBarres(bonusPsy, messagePsy, habHeroMax, vieHeroMax) => {
+    const afficherBarres = (bonusPsy, messagePsy, habHeroMax, vieHeroMax) => {
 const effetsCombat = this.appliquerEffetsCombatTemporaire(p, ennemi, habHeroMax + bonusPsy + bonusArme);
 const quotient = effetsCombat.quotientFinal;
 const messageEffet = effetsCombat.resume;
