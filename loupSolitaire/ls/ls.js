@@ -2,6 +2,10 @@
 // Configuration générale
 // ======================
 
+window.onerror = function(msg, url, lineNo, columnNo, error) {
+  document.body.innerHTML += `<div style="color:red;">Erreur: ${msg} à ${lineNo}:${columnNo}</div>`;
+}
+
 // Colonnes : quotient d'attaque de -11 ou moins à +11 ou plus (index 0 à 12)
 // Lignes : chiffre de la table de hasard (0 à 9)
   const htmlCC = document.querySelector('html');
