@@ -548,20 +548,14 @@ class NavigationManager {
         <div style="font-size:2em; margin-bottom:1em;">COMBAT contre <b>${ennemi.nom}</b></div>
     `;
 
-    if (armesPsy) {
-      confirmationHTML += `<div id="confirmationPsy" style="margin-bottom:1em;">
-        <b>Discipline psychique détectée :</b><br>
-        <button id="btnPsy2" style="margin:0.5em;">Activer bonus +2</button>
-        <button id="btnPsy0" style="margin:0.5em;">Aucun bonus</button>
-      </div>`;
-    }
+    
 
     confirmationHTML += `<div id="zoneBarresCombat" style="display:none"></div></div>`;
     div.innerHTML = confirmationHTML;
     p.appendChild(div);
 
     // Fonction pour afficher les barres de vie et le quotient d'attaque
-    const afficherBarres = (bonusPsy, messagePsy, habHeroMax, vieHeroMax) => {
+    const afficherBarres = (habHeroMax, vieHeroMax) => {
 const effetsCombat = this.appliquerEffetsCombatTemporaire(p, ennemi, habHeroMax + bonusPsy + bonusArme);
 const quotient = effetsCombat.quotientFinal;
 const messageEffet = effetsCombat.resume;
