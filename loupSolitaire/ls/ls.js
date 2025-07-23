@@ -529,15 +529,23 @@ class NavigationManager {
     const armesPsy = Object.values(localStorage).some(val => val && val.includes("Puissance psychique"));
     const bouclierPsy = Object.values(localStorage).some(val => val && val.includes("Bouclier psychique"));
 
+    
     // Gestion bonus Maîtrise des armes
-    let bonusArme = 0;
-    let armeMaitrisee = localStorage.getItem('arme_maitrisee');
-    const disciplineArme = localStorage.getItem('discipline1') === ("Maîtrise des armes (+2 hab. si possède " + armeMaitrisee + ")");
-    const armePossedee = [localStorage.getItem('arme1'), localStorage.getItem('arme2')].includes(armeMaitrisee);
+let bonusArme = 0;
+const armeMaitrisee = localStorage.getItem('arme_maitrisee');
+const arme1 = localStorage.getItem('arme1');
+const arme2 = localStorage.getItem('arme2');
 
-    if (disciplineArme && armePossedee) {
-      bonusArme = 2;
-    }
+const aLaDiscipline = Object.keys(localStorage).some(key =>
+  key.startsWith("discipline") && localStorage.getItem(key)?.startsWith("Maîtrise des armes")
+);
+
+const armePossedee = [arme1, arme2].includes(armeMaitrisee);
+
+if (aLaDiscipline && armePossedee) {
+  bonusArme = 2;
+  messagePsy += `🗡️ Maîtrise des armes : +2 HABILETÉ avec ${armeMaitrisee}\n`;
+}
 
     // Création de la boîte de combat AVANT les barres de vie
     const div = document.createElement('div');
