@@ -531,13 +531,21 @@ class NavigationManager {
 
     // Gestion bonus Maîtrise des armes
     let bonusArme = 0;
-    let armeMaitrisee = localStorage.getItem('arme_maitrisee');
-    const disciplineArme = localStorage.getItem('discipline1') === ("Maîtrise des armes (+2 hab. si possède " + armeMaitrisee + ")");
-    const armePossedee = [localStorage.getItem('arme1'), localStorage.getItem('arme2')].includes(armeMaitrisee);
+    const armeMaitrisee = localStorage.getItem('arme_maitrisee');
+const arme1 = localStorage.getItem('arme1');
+const arme2 = localStorage.getItem('arme2');
 
-    if (disciplineArme && armePossedee) {
-      bonusArme = 2;
-    }
+// Vérifie si une discipline commence par "Maîtrise des armes"
+const aLaDiscipline = Object.keys(localStorage).some(key => {
+  return key.startsWith("discipline") && localStorage.getItem(key)?.startsWith("Maîtrise des armes");
+});
+
+// Vérifie si l'arme maîtrisée est équipée
+const armePossedee = [arme1, arme2].includes(armeMaitrisee);
+
+if (aLaDiscipline && armePossedee) {
+  bonusArme = 2;
+}
 
     // Création de la boîte de combat AVANT les barres de vie
     const div = document.createElement('div');
