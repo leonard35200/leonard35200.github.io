@@ -894,3 +894,17 @@ header {
 .sheet-column ul li {
   margin-bottom: 0.5rem;
 }
+
+.combat-popup {
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  margin: 1rem auto;
+}
+
+@media (max-width: 480px) {
+  .combat-popup {
+    padding: 1rem 0.5rem;
+    font-size: 1rem;
+  }
+}
