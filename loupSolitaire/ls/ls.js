@@ -544,7 +544,7 @@ class NavigationManager {
     div.className = 'combat-popup';
 
     let confirmationHTML = `
-      <div style="background:#222; color:#fff; border:2px solid #c00; padding:1em; margin-top:1em; text-align:center; border-radius:12px; box-shadow:0 4px 16px #000a;">
+      <div style="background:#222; color:#fff; border:2px solid #c00; padding:1em; margin-top:1em; text-align:center; border-radius:12px; box-shadow:0 4px 16px #000a; max-width:100%; box-sizing:border-box; overflow-x:hidden;">
         <div style="font-size:2em; margin-bottom:1em;">COMBAT contre <b>${ennemi.nom}</b></div>
     `;
 
