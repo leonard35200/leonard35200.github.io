@@ -400,12 +400,40 @@ class NavigationManager {
     this.initResetButton();
   }
 
+extraireInfosCombat(paragraphe) {
+  const html = paragraphe.innerHTML;
+  const innerStrong = paragraphe.querySelector('strong');
+  let m;
+
+  const isVulnerable = paragraphe.hasAttribute('data-vulnerablepsy')
+    ? paragraphe.dataset.vulnerablepsy === "True"
+    : (innerStrong?.dataset.vulnerablepsy === "True"
+      || /vulnerablepsy="True"/i.test(html));
+
+  const subitAttaquePsy = paragraphe.hasAttribute('data-attaquepsy')
+    ? paragraphe.dataset.attaquepsy === "True"
+    : (innerStrong?.dataset.attaquepsy === "True"
+      || /attaquepsy="True"/i.test(html));
+
+  const dataQuotient = paragraphe.hasAttribute('data-attaquequotient')
+    ? paragraphe.dataset.attaquequotient
+    : (innerStrong?.dataset.attaquequotient
+      ?? ((m = html.match(/([+-]?\d+hab)/i)) && m[1]) || "0hab");
+
+  const dataBonus = paragraphe.hasAttribute('data-bonus')
+    ? paragraphe.dataset.bonus
+    : (innerStrong?.dataset.bonus
+      ?? ((m = html.match(/data-bonus="([^"]+)"/i)) && m[1]) || "0hab");
+
+  return { isVulnerable, subitAttaquePsy, dataQuotient, dataBonus };
+}
 
  logCombat(paragraphe, ennemi) {
-    const vuln = paragraphe.dataset.vulnerablepsy || 'False';
-    const attaquePsy = paragraphe.dataset.attaquepsy || 'False';
-    const quotient = paragraphe.dataset.attaquequotient || '0hab';
-    const bonus = paragraphe.dataset.bonus || '0hab';
+    const { isVulnerable, subitAttaquePsy, dataQuotient, dataBonus } = this.extraireInfosCombat(paragraphe);
+const vuln = isVulnerable ? "True" : "False";
+const attaquePsy = subitAttaquePsy ? "True" : "False";
+const quotient = dataQuotient;
+const bonus = dataBonus;
 
     console.log(`🛡️ [COMBAT - ${paragraphe.id}]`);
     console.log(`Nom ennemi         : ${ennemi.nom}`);
@@ -422,30 +450,7 @@ class NavigationManager {
   let malusQuotient = 0;
   let message = "";
 
-  const html = paragraphe.innerHTML;
-const innerStrong = paragraphe.querySelector('strong');
-
-const isVulnerable = paragraphe.hasAttribute('data-vulnerablepsy')
-  ? paragraphe.dataset.vulnerablepsy === "True"
-  : (innerStrong?.dataset.vulnerablepsy === "True"
-    || /vulnerablepsy="True"/i.test(html));
-
-const subitAttaquePsy = paragraphe.hasAttribute('data-attaquepsy')
-  ? paragraphe.dataset.attaquepsy === "True"
-  : (innerStrong?.dataset.attaquepsy === "True"
-    || /attaquepsy="True"/i.test(html));
-
-let m;
-
-const dataQuotient = paragraphe.hasAttribute('data-attaquequotient')
-  ? paragraphe.dataset.attaquequotient
-  : (innerStrong?.dataset.attaquequotient
-    ?? ((m = html.match(/([+-]?\d+hab)/i)) && m[1]) || "0hab");
-
-const dataBonus = paragraphe.hasAttribute('data-bonus')
-  ? paragraphe.dataset.bonus
-  : (innerStrong?.dataset.bonus
-    ?? ((m = html.match(/data-bonus="([^"]+)"/i)) && m[1]) || "0hab");
+  const { isVulnerable, subitAttaquePsy, dataQuotient, dataBonus } = this.extraireInfosCombat(paragraphe);
 
   const bonusMatch = dataBonus.match(/([-+]?\d+)hab/);
   if (bonusMatch) {
