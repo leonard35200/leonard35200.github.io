@@ -422,10 +422,30 @@ class NavigationManager {
   let malusQuotient = 0;
   let message = "";
 
-  const isVulnerable = paragraphe.dataset.vulnerablepsy === "True";
-  const subitAttaquePsy = paragraphe.dataset.attaquepsy === "True";
-  const dataQuotient = paragraphe.dataset.attaquequotient || "0hab";
-  const dataBonus = paragraphe.dataset.bonus || "0hab";
+  const html = paragraphe.innerHTML;
+const innerStrong = paragraphe.querySelector('strong');
+
+const isVulnerable = paragraphe.hasAttribute('data-vulnerablepsy')
+  ? paragraphe.dataset.vulnerablepsy === "True"
+  : (innerStrong?.dataset.vulnerablepsy === "True"
+    || /vulnerablepsy="True"/i.test(html));
+
+const subitAttaquePsy = paragraphe.hasAttribute('data-attaquepsy')
+  ? paragraphe.dataset.attaquepsy === "True"
+  : (innerStrong?.dataset.attaquepsy === "True"
+    || /attaquepsy="True"/i.test(html));
+
+let m;
+
+const dataQuotient = paragraphe.hasAttribute('data-attaquequotient')
+  ? paragraphe.dataset.attaquequotient
+  : (innerStrong?.dataset.attaquequotient
+    ?? ((m = html.match(/([+-]?\d+hab)/i)) && m[1]) || "0hab");
+
+const dataBonus = paragraphe.hasAttribute('data-bonus')
+  ? paragraphe.dataset.bonus
+  : (innerStrong?.dataset.bonus
+    ?? ((m = html.match(/data-bonus="([^"]+)"/i)) && m[1]) || "0hab");
 
   const bonusMatch = dataBonus.match(/([-+]?\d+)hab/);
   if (bonusMatch) {
