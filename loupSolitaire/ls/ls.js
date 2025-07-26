@@ -422,28 +422,10 @@ class NavigationManager {
   let malusQuotient = 0;
   let message = "";
 
-const html = paragraphe.innerHTML;
-const innerStrong = paragraphe.querySelector('strong');
-
-const isVulnerable = paragraphe.hasAttribute('data-vulnerablepsy')
-  ? paragraphe.dataset.vulnerablepsy === "True"
-  : innerStrong?.dataset.vulnerablepsy === "True"
-    ?? /vulnerablepsy="True"/i.test(html);
-
-const subitAttaquePsy = paragraphe.hasAttribute('data-attaquepsy')
-  ? paragraphe.dataset.attaquepsy === "True"
-  : innerStrong?.dataset.attaquepsy === "True"
-    ?? /attaquepsy="True"/i.test(html);
-
-const dataQuotient = paragraphe.hasAttribute('data-attaquequotient')
-  ? paragraphe.dataset.attaquequotient
-  : innerStrong?.dataset.attaquequotient
-    ?? ((m = html.match(/([+-]?\d+hab)/i)) && m[1]) || "0hab";
-
-const dataBonus = paragraphe.hasAttribute('data-bonus')
-  ? paragraphe.dataset.bonus
-  : innerStrong?.dataset.bonus
-    ?? ((m = html.match(/data-bonus="([^"]+)"/i)) && m[1]) || "0hab";
+  const isVulnerable = paragraphe.dataset.vulnerablepsy === "True";
+  const subitAttaquePsy = paragraphe.dataset.attaquepsy === "True";
+  const dataQuotient = paragraphe.dataset.attaquequotient || "0hab";
+  const dataBonus = paragraphe.dataset.bonus || "0hab";
 
   const bonusMatch = dataBonus.match(/([-+]?\d+)hab/);
   if (bonusMatch) {
@@ -547,23 +529,15 @@ const dataBonus = paragraphe.hasAttribute('data-bonus')
     const armesPsy = Object.values(localStorage).some(val => val && val.includes("Puissance psychique"));
     const bouclierPsy = Object.values(localStorage).some(val => val && val.includes("Bouclier psychique"));
 
-    
     // Gestion bonus Maîtrise des armes
-let bonusArme = 0;
-const armeMaitrisee = localStorage.getItem('arme_maitrisee');
-const arme1 = localStorage.getItem('arme1');
-const arme2 = localStorage.getItem('arme2');
+    let bonusArme = 0;
+    let armeMaitrisee = localStorage.getItem('arme_maitrisee');
+    const disciplineArme = localStorage.getItem('discipline1') === ("Maîtrise des armes (+2 hab. si possède " + armeMaitrisee + ")");
+    const armePossedee = [localStorage.getItem('arme1'), localStorage.getItem('arme2')].includes(armeMaitrisee);
 
-const aLaDiscipline = Object.keys(localStorage).some(key =>
-  key.startsWith("discipline") && localStorage.getItem(key)?.startsWith("Maîtrise des armes")
-);
-
-const armePossedee = [arme1, arme2].includes(armeMaitrisee);
-
-if (aLaDiscipline && armePossedee) {
-  bonusArme = 2;
-  messagePsy += `🗡️ Maîtrise des armes : +2 HABILETÉ avec ${armeMaitrisee}\n`;
-}
+    if (disciplineArme && armePossedee) {
+      bonusArme = 2;
+    }
 
     // Création de la boîte de combat AVANT les barres de vie
     const div = document.createElement('div');
