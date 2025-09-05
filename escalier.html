@@ -15,14 +15,19 @@
 *{box-sizing:border-box}
 html,body{min-height:100%;}
 body {
-  margin: 32px 0 32px 32px; /* haut | droite | bas | gauche */
+  margin: 32px;
   font-family: Inter,system-ui,Segoe UI,Roboto,sans-serif;
   color: var(--ink);
   background: radial-gradient(1000px 600px at 15% 10%, #1b1f36 0%, #121528 40%, #0d1022 100%) , var(--bg);
   display: block;
   min-height: 100vh;
 }
-.wrap{width:min(920px,92vw); display:grid; gap:18px;}
+.wrap {
+  width: min(920px, 92vw);
+  display: grid;
+  gap: 18px;
+  margin: 0 auto; /* <-- centre horizontalement */
+}
 header{display:flex; gap:14px; justify-content:center; align-items:center;}
 h1{margin:0; font-size:clamp(22px,3vw,30px);}
 .logo{width:44px; height:44px; border-radius:12px;
@@ -268,18 +273,45 @@ function findPath(start,end){
 }
 
 // Mettre en surbrillance
+
 function highlightRoute(path){
+  // Nettoyer les anciens surlignages
   document.querySelectorAll('.stair, .corridor').forEach(el=>el.classList.remove('route'));
+  clearArrows(); // <- on enlève les anciennes flèches
+
   for(let i=0;i<path.length;i++){
     const stair = document.getElementById(path[i]);
     if(stair) stair.classList.add('route');
+
     if(i<path.length-1){
-      const corridorId = path[i]+(graph.nodes.includes(path[i+1]) ? '-' + path[i+1] : '') ;
-      const corridor = document.getElementById(corridorId);
-      if(corridor) corridor.classList.add('route');
+      const corridorId = path[i] + '-' + path[i+1];
+      const corridorAlt = path[i+1] + '-' + path[i];
+      let corridor = document.getElementById(corridorId) || document.getElementById(corridorAlt);
+
+      if(corridor){
+        corridor.classList.add('route');
+
+        // Calcul de la direction
+        let dir = null;
+        const a = document.getElementById(path[i]);
+        const b = document.getElementById(path[i+1]);
+        if(a && b){
+          const ax = a.offsetLeft, ay = a.offsetTop;
+          const bx = b.offsetLeft, by = b.offsetTop;
+          if(Math.abs(ax - bx) > Math.abs(ay - by)){
+            dir = (bx > ax) ? "right" : "left";
+          } else {
+            dir = (by > ay) ? "down" : "up";
+          }
+        }
+
+        // Ajouter la flèche
+        addArrow(corridor, dir);
+      }
     }
   }
-  // Ajout : surligner aussi G si couloir TP svt, et E si couloir TP physique chimie
+
+  // Cas spéciaux couloirs TP
   const last = path[path.length-1];
   if(last === "couloir TP svt") {
     const g = document.getElementById("G");
@@ -289,6 +321,26 @@ function highlightRoute(path){
     const e = document.getElementById("E");
     if(e) e.classList.add("route");
   }
+}
+function clearArrows() {
+  document.querySelectorAll(".arrow").forEach(el => el.remove());
+}
+
+function addArrow(corridor, dir) {
+  const arrow = document.createElement("div");
+  arrow.className = "arrow";
+
+  // Position au centre du couloir
+  arrow.style.left = (corridor.offsetLeft + corridor.offsetWidth/2 - 8) + "px";
+  arrow.style.top  = (corridor.offsetTop + corridor.offsetHeight/2 - 8) + "px";
+
+  // Choix de la flèche
+  if (dir === "right") arrow.textContent = "→";
+  if (dir === "left") arrow.textContent = "←";
+  if (dir === "up") arrow.textContent = "↑";
+  if (dir === "down") arrow.textContent = "↓";
+
+  document.querySelector(".map-container").appendChild(arrow);
 }
 
 // Construire message
