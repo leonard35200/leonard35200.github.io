@@ -116,6 +116,19 @@ button{padding:12px 16px; border-radius:14px; border:0; cursor:pointer;
   text-shadow: 0 0 4px #22c55e, 0 0 2px #000;
   pointer-events: none;
 }
+
+/* Ajustements spécifiques mobile */
+@media (max-width: 720px) {
+  body {
+    margin: 0; /* on enlève le margin fixe */
+  }
+  .wrap {
+    width: 100%;          /* prend toute la largeur */
+    padding: 0 clamp(12px, 4vw, 24px); 
+    /* min 12px de padding, max 24px, 
+       et 4vw qui s'adapte à la largeur */
+  }
+}
 </style>
 </head>
 <body>
