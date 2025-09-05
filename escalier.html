@@ -85,7 +85,13 @@ button{padding:12px 16px; border-radius:14px; border:0; cursor:pointer;
   line-height:1.5;
   margin-bottom:12px; /* <- espace sous le cadre */
 }
+/* uniquement pour couloir TP svt et couloir TP physique chimie */
 
+
+/* Ajoute une marge au-dessus du plan */
+.map-container {
+  margin-top: 36px; /* augmente la valeur si besoin */
+}
 </style>
 </head>
 <body>
@@ -96,15 +102,12 @@ button{padding:12px 16px; border-radius:14px; border:0; cursor:pointer;
     <div class="grid">
       <div>
 <label for="target">
-  Je veux aller en salle 
-  <span style="color:#b0b3c6; font-weight:normal; font-size:0.9em;">
-    (les salles du premier étage ne sont pas encore ajoutées, mais elles arriveront bientôt)
-  </span>
+  Je veux aller en salle :
 </label>
         <input id="target" inputmode="numeric" placeholder="ex. 272, 334" />
       </div>
       <div>
-        <label for="from">(optionnel) Je suis actuellement en salle</label>
+        <label for="from">(optionnel) Je suis actuellement en salle :</label>
         <input id="from" inputmode="numeric" placeholder="ex. 201" />
       </div>
     </div>
@@ -129,7 +132,15 @@ button{padding:12px 16px; border-radius:14px; border:0; cursor:pointer;
     <!-- Couloirs centrés -->
     <div class="corridor horizontal" id="G-O" style="top:20px; left:40px; width:80px;"></div>
     <div class="corridor horizontal" id="O-T" style="top:20px; left:160px; width:80px;"></div>
-    <div class="corridor vertical" id="G-E" style="top:40px; left:20px; height:60px;"></div>
+<!-- Couloir au-dessus de G-E (calé sur les autres) -->
+<div class="corridor vertical" id="couloir TP svt" style="top:-30px; left:20px; height:60px;"></div>
+
+<!-- Couloir G-E (calé sur les autres) -->
+<div class="corridor vertical" id="G-E" style="top:40px; left:20px; height:60px;"></div>
+
+<!-- Couloir en dessous de G-E (calé sur les autres) -->
+<div class="corridor vertical" id="couloir TP physique chimie" style="top:140px; left:20px; height:60px;"></div>
+
     <div class="corridor vertical" id="O-R" style="top:40px; left:140px; height:60px;"></div>
     <div class="corridor horizontal" id="E-R" style="top:120px; left:40px; width:80px;"></div>
     <div class="corridor vertical" id="R-W" style="top:140px; left:140px; height:60px;"></div>
@@ -174,25 +185,36 @@ const data={
 
 };
 
+data[1].push(
+  { rooms: [122,121], stairs: 'couloir TP svt' },    // salles au-dessus de G-E
+  { rooms: [110,111,112,113], stairs: 'couloir TP physique chimie' } // salles en dessous de G-E
+);
+
+
 // Graphe escaliers et couloirs
 const graph = {
-  nodes:['G','O','T','E','R','W','G-O','O-T','E-R','G-E','O-R','R-W'],
-  edges:{
-    'G':['G-O','G-E'],
-    'O':['G-O','O-T','O-R'],
-    'T':['O-T'],
-    'E':['G-E','E-R'],
-    'R':['E-R','O-R','R-W'],
-    'W':['R-W'],
-    'G-O':['G','O'],
-    'O-T':['O','T'],
-    'E-R':['E','R'],
-    'G-E':['G','E'],
-    'O-R':['O','R'],
-    'R-W':['R','W']
+  nodes: [
+    'G','O','T','E','R','W',
+    'G-O','O-T','E-R','G-E','O-R','R-W',
+    'couloir TP svt','couloir TP physique chimie'
+  ],
+  edges: {
+    'G': ['G-O','G-E','couloir TP svt'],
+    'O': ['G-O','O-T','O-R'],
+    'T': ['O-T'],
+    'E': ['G-E','E-R','couloir TP physique chimie'],
+    'R': ['E-R','O-R','R-W'],
+    'W': ['R-W'],
+    'G-O': ['G','O'],
+    'O-T': ['O','T'],
+    'E-R': ['E','R'],
+    'G-E': ['G','E'],
+    'O-R': ['O','R'],
+    'R-W': ['R','W'],
+    'couloir TP svt': ['G'],
+    'couloir TP physique chimie': ['E']
   }
 };
-
 
 // Lookup
 function lookup(num){
@@ -232,10 +254,20 @@ function highlightRoute(path){
     const stair = document.getElementById(path[i]);
     if(stair) stair.classList.add('route');
     if(i<path.length-1){
-    const corridorId = path[i]+(graph.nodes.includes(path[i+1]) ? '-' + path[i+1] : '') ;
+      const corridorId = path[i]+(graph.nodes.includes(path[i+1]) ? '-' + path[i+1] : '') ;
       const corridor = document.getElementById(corridorId);
       if(corridor) corridor.classList.add('route');
     }
+  }
+  // Ajout : surligner aussi G si couloir TP svt, et E si couloir TP physique chimie
+  const last = path[path.length-1];
+  if(last === "couloir TP svt") {
+    const g = document.getElementById("G");
+    if(g) g.classList.add("route");
+  }
+  if(last === "couloir TP physique chimie") {
+    const e = document.getElementById("E");
+    if(e) e.classList.add("route");
   }
 }
 
