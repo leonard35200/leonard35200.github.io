@@ -34,7 +34,7 @@
   </main>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbxiw-pphmMM38oSzZ_udbVQSkULO0u6qfgxahY3D3FhyCh2G-awEzx07N9lGhycPSV_/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbwTywb_sd-quCqAswOBHH_4lcdptwXyRzookWH2DCf36ebK16rtBRJHsX5sMbJpVDzw/exec";
 
     async function fetchRecipes() {
       try {
@@ -44,7 +44,8 @@
         list.innerHTML = '';
         data.forEach(item => {
           const li = document.createElement('li');
-          li.innerHTML = `<a href="${item.Lien}" target="_blank">${item.Titre}</a><span class="category">${item.Catégorie}</span>`;
+        li.innerHTML = `<a href="${item[1]}" target="_blank">${item[0]}</a>
+        <span class="category">${item[2]}</span>`;
           list.appendChild(li);
         });
       } catch (error) {
