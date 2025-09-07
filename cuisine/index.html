@@ -2,58 +2,30 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Recettes Familiales</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <title>Redirection vers Cuisine</title>
+  <!-- Redirection automatique après 0 seconde -->
+  <meta http-equiv="refresh" content="0; url=https://script.google.com/macros/s/AKfycbw4IUESgkyljiREriF9kTBMNK7ddDFcAtUPsHTT5wxodl-T_qa5Qb_25DZsNPmkxoKd/exec">
   <style>
-    body { font-family: 'Roboto', sans-serif; margin: 0; padding: 0; background: #f5f5f5; }
-    header { background: #ff6f61; color: white; text-align: center; padding: 1rem; }
-    main { max-width: 800px; margin: 2rem auto; padding: 1rem; }
-    h1 { margin: 0 0 1rem 0; }
-    ul { list-style: none; padding: 0; }
-    li { background: white; margin-bottom: 0.5rem; padding: 1rem; border-radius: 8px; transition: 0.2s; }
-    li:hover { box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-    a { text-decoration: none; color: #ff6f61; font-weight: bold; }
-    .category { display: inline-block; margin-left: 1rem; font-size: 0.9rem; color: #555; }
-    .btn-add { display: block; text-align: center; margin: 2rem 0; }
-    .btn-add a { background: #ff6f61; color: white; padding: 0.8rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: bold; transition: 0.2s; }
-    .btn-add a:hover { background: #e65b50; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #1c1c2b, #283046);
+      color: #fff;
+      text-align: center;
+    }
+    a {
+      color: #00ffff;
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Recettes Familiales</h1>
-  </header>
-  <main>
-    <div class="btn-add">
-      <a href="ajout.html">Ajouter une recette</a>
-    </div>
-    <ul id="recipes-list">
-      <!-- Les recettes seront affichées ici -->
-    </ul>
-  </main>
-
-  <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbw3rCy3pFSVEkwu5ofscQW2dmiW_fI_yLi5tAucThD90OB4WdWe-VdFoHVP22fHj2Iw/exec";
-
-    async function fetchRecipes() {
-      try {
-        const response = await fetch(API_URL);
-        const data = await response.json();
-        const list = document.getElementById('recipes-list');
-        list.innerHTML = '';
-        data.forEach(item => {
-          const li = document.createElement('li');
-        li.innerHTML = `<a href="${item[1]}" target="_blank">${item[0]}</a>
-        <span class="category">${item[2]}</span>`;
-          list.appendChild(li);
-        });
-      } catch (error) {
-        console.error('Erreur lors du chargement des recettes', error);
-      }
-    }
-
-    fetchRecipes();
-  </script>
+  <div>
+    <h1>Redirection en cours...</h1>
+    <p>Si vous n'êtes pas redirigé automatiquement, <a href="https://script.google.com/macros/s/AKfycbw4IUESgkyljiREriF9kTBMNK7ddDFcAtUPsHTT5wxodl-T_qa5Qb_25DZsNPmkxoKd/exec">cliquez ici</a>.</p>
+  </div>
 </body>
 </html>
