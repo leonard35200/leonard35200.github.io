@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Où est ma salle ? — Lycée Zola</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0f1220; --ink:#e9ecf1; --muted:#a9b0c6; 
+  --accent:#7dd3fc; --accent-2:#a78bfa;
+  --radius:18px; --shadow:0 10px 25px rgba(2,6,23,.55);
+  --route-color:#22c55e;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; font-family:Inter,system-ui,Segoe UI,Roboto,sans-serif;
+  color:var(--ink);
+  background: radial-gradient(1000px 600px at 15% 10%, #1b1f36 0%, #121528 40%, #0d1022 100%) , var(--bg);
+  display:grid; place-items:center;
+}
+.wrap{width:min(920px,92vw); display:grid; gap:18px;}
+header{display:flex; gap:14px; justify-content:center; align-items:center;}
+h1{margin:0; font-size:clamp(22px,3vw,30px);}
+.logo{width:44px; height:44px; border-radius:12px;
+  background:conic-gradient(from 200deg,var(--accent),var(--accent-2),#60a5fa,var(--accent));
+  box-shadow:0 6px 28px rgba(124,58,237,.35);}
+.card{background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08);
+  border-radius:var(--radius); padding:22px; box-shadow:var(--shadow);}
+label{display:block; font-weight:600; margin-bottom:8px; color:var(--muted);}
+input{width:100%; padding:14px 16px; font-size:16px; color:var(--ink);
+  background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.1);
+  border-radius:14px; outline:none; transition:.2s;}
+input:focus{border-color:var(--accent); box-shadow:0 0 0 6px rgba(125,211,252,.12);}
+.grid{display:grid; gap:14px;}
+@media(min-width:720px){.grid{grid-template-columns:1fr 1fr}}
+.actions{display:flex; gap:10px; margin-top:14px}
+button{padding:12px 16px; border-radius:14px; border:0; cursor:pointer;
+  background:linear-gradient(90deg,var(--accent),var(--accent-2));
+  color:#0b1020; font-weight:700;}
+.ghost{background:transparent; border:1px dashed rgba(255,255,255,.18); color:var(--ink);}
+.result,.error{border-radius:16px; padding:16px; line-height:1.5;}
+.result{background:rgba(34,197,94,.08); border:1px solid rgba(34,197,94,.35)}
+.error{background:rgba(239,68,68,.08); border:1px solid rgba(239,68,68,.35)}
+
+/* Plan absolu avec couloirs centrés et espacement */
+.map-container{position:relative; width:280px; height:260px; margin:auto;}
+.stair{
+  background: var(--accent);
+  color:#0b1020;
+  font-weight:bold;
+  display:flex; align-items:center; justify-content:center;
+  border-radius:10px;
+  width:40px; height:40px;
+  position:absolute;
+  transition:.3s;
+  z-index:2;
+}
+.corridor{
+  position:absolute;
+  background:var(--muted);
+  transition:.3s;
+  z-index:1;
+}
+.corridor.horizontal{height:10px; top:50%; transform:translateY(-50%);}
+.corridor.vertical{width:10px; left:50%; transform:translateX(-50%);}
+.route{background:var(--route-color) !important;}
+@keyframes moveArrow{
+  0%{background-position:0 0;}
+  100%{background-position:20px 0;}
+}
+.corridor.route.horizontal{
+  background: repeating-linear-gradient(90deg, var(--route-color), var(--route-color) 10px, transparent 10px, transparent 20px);
+  animation: moveArrow 0.5s linear infinite;
+}
+.corridor.route.vertical{
+  background: repeating-linear-gradient(180deg, var(--route-color), var(--route-color) 10px, transparent 10px, transparent 20px);
+  animation: moveArrow 0.5s linear infinite;
+}
+
+.result, .error {
+  border-radius:16px; 
+  padding:16px; 
+  line-height:1.5;
+  margin-bottom:12px; /* <- espace sous le cadre */
+}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><div class="logo"></div><h1>Où est ma salle&nbsp;?</h1></header>
+
+  <section class="card">
+    <div class="grid">
+      <div>
+<label for="target">
+  Je veux aller en salle 
+  <span style="color:#b0b3c6; font-weight:normal; font-size:0.9em;">
+    (les salles du premier étage ne sont pas encore ajoutées, mais elles arriveront bientôt)
+  </span>
+</label>
+        <input id="target" inputmode="numeric" placeholder="ex. 272, 334" />
+      </div>
+      <div>
+        <label for="from">(optionnel) Je suis actuellement en salle</label>
+        <input id="from" inputmode="numeric" placeholder="ex. 201" />
+      </div>
+    </div>
+    <div class="actions">
+      <button id="go">Trouver</button>
+      <button id="reset" class="ghost" type="button">Effacer</button>
+    </div>
+  </section>
+
+  <section id="out"></section>
+
+  <!-- Plan absolu corrigé -->
+  <section class="map-container">
+    <!-- Escaliers -->
+    <div class="stair" id="G" style="top:0; left:0;">G</div>
+    <div class="stair" id="O" style="top:0; left:120px;">O</div>
+    <div class="stair" id="T" style="top:0; left:240px;">T</div>
+    <div class="stair" id="E" style="top:100px; left:0;">E</div>
+    <div class="stair" id="R" style="top:100px; left:120px;">R</div>
+    <div class="stair" id="W" style="top:200px; left:120px;">W</div>
+
+    <!-- Couloirs centrés -->
+    <div class="corridor horizontal" id="G-O" style="top:20px; left:40px; width:80px;"></div>
+    <div class="corridor horizontal" id="O-T" style="top:20px; left:160px; width:80px;"></div>
+    <div class="corridor vertical" id="G-E" style="top:40px; left:20px; height:60px;"></div>
+    <div class="corridor vertical" id="O-R" style="top:40px; left:140px; height:60px;"></div>
+    <div class="corridor horizontal" id="E-R" style="top:120px; left:40px; width:80px;"></div>
+    <div class="corridor vertical" id="R-W" style="top:140px; left:140px; height:60px;"></div>
+  </section>
+
+  <footer style="text-align:center; margin-top:20px; font-size:14px; color:var(--muted);">
+  &copy; 2025 Leonard Loquet — Tous droits réservés
+</footer>
+
+</div>
+
+<script>
+// Données salles
+const data={
+  2:[
+    {rooms:[200,201,202,203],stairs:'W'},
+    {rooms:[270,271,272],stairs:'R'},
+    {rooms:[273,274,275],stairs:'E'},
+    {rooms:[243,242],stairs:'G'},
+    {rooms:[241,240],stairs:'O',cote:'droite'},
+    {rooms:[253],stairs:'O',cote:'gauche'},
+    {rooms:[252,250,251],stairs:'T'},
+    {rooms:[234,233,232,231],stairs:'O',cote:'droite'},
+  ],
+  3:[
+    {rooms:[300,301,302,303,304],stairs:'W'},
+    {rooms:[370],stairs:'R'},
+    {rooms:[371,372],stairs:'E'},
+    {rooms:[343,344,342],stairs:'G'},
+    {rooms:[334,333,332,331],stairs:'O',cote:'droite'},
+    {rooms:[353,354,352],stairs:'O',cote:'gauche'},
+    {rooms:[352,350,351],stairs:'T'},
+  ],
+  1:[
+  {rooms:[155],stairs:'G-O'},
+  {rooms:[],stairs:'O-T'},
+  {rooms:[],stairs:'E-R'},
+  {rooms:[],stairs:'G-E'},
+  {rooms:[],stairs:'O-R'},
+  {rooms:[156],stairs:'R-W'}
+]
+
+};
+
+// Graphe escaliers et couloirs
+const graph = {
+  nodes:['G','O','T','E','R','W','G-O','O-T','E-R','G-E','O-R','R-W'],
+  edges:{
+    'G':['G-O','G-E'],
+    'O':['G-O','O-T','O-R'],
+    'T':['O-T'],
+    'E':['G-E','E-R'],
+    'R':['E-R','O-R','R-W'],
+    'W':['R-W'],
+    'G-O':['G','O'],
+    'O-T':['O','T'],
+    'E-R':['E','R'],
+    'G-E':['G','E'],
+    'O-R':['O','R'],
+    'R-W':['R','W']
+  }
+};
+
+
+// Lookup
+function lookup(num){
+  const floor=Math.floor(num/100);
+  const groups=data[floor];
+  if(!groups) return {floor,found:false};
+  for(const g of groups){
+    if(g.rooms.includes(num)){
+      return {floor,found:true,stairs:g.stairs};
+    }
+  }
+  return {floor,found:false};
+}
+
+function fmtFloor(f){return f===0?'RDC':(f===1?'1ᵉʳ étage': f+'ᵉ étage');}
+
+// BFS
+function findPath(start,end){
+  const visited={};
+  const queue=[[start]];
+  while(queue.length){
+    const path = queue.shift();
+    const node = path[path.length-1];
+    if(node===end) return path;
+    visited[node]=true;
+    for(const n of graph.edges[node]||[]){
+      if(!visited[n]) queue.push([...path,n]);
+    }
+  }
+  return [];
+}
+
+// Mettre en surbrillance
+function highlightRoute(path){
+  document.querySelectorAll('.stair, .corridor').forEach(el=>el.classList.remove('route'));
+  for(let i=0;i<path.length;i++){
+    const stair = document.getElementById(path[i]);
+    if(stair) stair.classList.add('route');
+    if(i<path.length-1){
+    const corridorId = path[i]+(graph.nodes.includes(path[i+1]) ? '-' + path[i+1] : '') ;
+      const corridor = document.getElementById(corridorId);
+      if(corridor) corridor.classList.add('route');
+    }
+  }
+}
+
+// Construire message
+function buildMessage(target,from){
+  const t=lookup(target);
+  if(!t.found) return `<div class="error">Salle ${target} non répertoriée.</div>`;
+  
+  let html=`<div class="result">Salle <strong>${target}</strong> — ${fmtFloor(Math.floor(target/100))}<br/>
+    Escalier/couloir : <strong>${t.stairs}</strong>.
+  </div>`;
+
+  if(from){
+    const f=lookup(from);
+    if(f.found){
+      const route = findPath(f.stairs,t.stairs);
+      html += `<div class="result">Itinéraire depuis la salle ${from}: ${route.join(' → ')}</div>`;
+      highlightRoute(route);
+    } else {
+      highlightRoute([t.stairs]);
+    }
+  } else {
+    highlightRoute([t.stairs]);
+  }
+
+  return html;
+}
+
+// Événements
+const out=document.getElementById('out');
+document.getElementById('go').onclick=()=>{
+  const t=Number(document.getElementById('target').value.trim());
+  const fVal=document.getElementById('from').value.trim();
+  const f=fVal?Number(fVal):null;
+  if(!t){out.innerHTML='<div class="error">Entre un numéro de salle.</div>';return;}
+  out.innerHTML=buildMessage(t,f);
+};
+document.getElementById('reset').onclick=()=>{
+  document.getElementById('target').value='';
+  document.getElementById('from').value='';
+  out.innerHTML='';
+  highlightRoute([]);
+};
+</script>
+</body>
+</html>
