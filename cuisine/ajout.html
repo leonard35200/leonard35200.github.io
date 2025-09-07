@@ -3,70 +3,64 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ajouter une recette</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <title>Ajouter une Recette</title>
   <style>
-    body { font-family: 'Roboto', sans-serif; margin: 0; padding: 0; background: #f5f5f5; }
-    header { background: #ff6f61; color: white; text-align: center; padding: 1rem; }
-    main { max-width: 500px; margin: 2rem auto; padding: 1rem; }
-    h1 { margin: 0 0 1rem 0; text-align: center; }
-    form { background: white; padding: 1rem 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-    label { display: block; margin: 0.8rem 0 0.3rem 0; font-weight: bold; }
-    input { width: 100%; padding: 0.5rem; border-radius: 5px; border: 1px solid #ccc; }
-    button { margin-top: 1rem; width: 100%; padding: 0.8rem; border: none; border-radius: 8px; background: #ff6f61; color: white; font-weight: bold; font-size: 1rem; cursor: pointer; transition: 0.2s; }
-    button:hover { background: #e65b50; }
-    .btn-back { text-align: center; margin-top: 1rem; }
-    .btn-back a { color: #ff6f61; text-decoration: none; font-weight: bold; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      color: #333;
+      padding: 20px;
+    }
+    h1 { text-align: center; }
+    form {
+      max-width: 500px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: 8px;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 16px;
+    }
+    button {
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover { background-color: #0056b3; }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Ajouter une recette</h1>
-  </header>
-  <main>
-    <form id="add-form">
-      <label for="titre">Titre</label>
-      <input type="text" id="titre" required>
-
-      <label for="lien">Lien</label>
-      <input type="url" id="lien" required>
-
-      <label for="categorie">Catégorie</label>
-      <input type="text" id="categorie" required>
-
-      <button type="submit">Ajouter</button>
-    </form>
-    <div class="btn-back">
-      <a href="index.html">← Retour à la liste</a>
-    </div>
-  </main>
+  <h1>Ajouter une Recette</h1>
+  <form id="addRecipeForm">
+    <input type="text" id="title" placeholder="Titre" required>
+    <input type="url" id="link" placeholder="Lien (https://...)" required>
+    <input type="text" id="category" placeholder="Catégorie" required>
+    <button type="submit">Ajouter</button>
+  </form>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbzn-R4frY3-DRrwGnP6hLeefhskgtSaxNHU6EPc-UwGe1HMCWbO5ikXt5MCRo3UUquA/exec";
-    const form = document.getElementById('add-form');
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const titre = document.getElementById('titre').value;
-      const lien = document.getElementById('lien').value;
-      const categorie = document.getElementById('categorie').value;
+    const url = 'https://script.google.com/macros/s/AKfycbzEs2u7EKdE60IS2udbHsbdOYi2T6uHpxq77ZJaXTjsfKgBP-_7My5ycXS2gt1f0PaB/exec';
 
-      try {
-        const response = await fetch(API_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ Titre: titre, Lien: lien, Catégorie: categorie })
-        });
-        const data = await response.json();
-        if (data.result === 'success') {
+    document.getElementById('addRecipeForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const title = document.getElementById('title').value;
+      const link = document.getElementById('link').value;
+      const category = document.getElementById('category').value;
+
+      fetch(`${url}?title=${encodeURIComponent(title)}&link=${encodeURIComponent(link)}&category=${encodeURIComponent(category)}`)
+        .then(response => response.json())
+        .then(data => {
           alert('Recette ajoutée !');
-          form.reset();
-        } else {
-          alert('Erreur lors de l’ajout');
-        }
-      } catch (error) {
-        console.error(error);
-        alert('Erreur réseau');
-      }
+          document.getElementById('addRecipeForm').reset();
+        })
+        .catch(err => console.error('Erreur:', err));
     });
   </script>
 </body>
