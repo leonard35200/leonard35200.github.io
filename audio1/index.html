@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
@@ -7,15 +6,27 @@
   <style>
     body { font-family: sans-serif; text-align: center; margin:0; background:#f6f6f6; }
     h1 { background:black; color:white; margin:0; padding:1em; }
-    button { margin:20px; padding:10px 20px; font-size:1.2em; border-radius:10px; background:black; color:white; border:none; }
+
+    /* style pour que l'image soit cliquable mais sans cadre */
+    #downloadAll {
+      cursor: pointer;
+      display: inline-block;
+    }
+
+    #downloadAll img {
+      height: 120px;       /* taille de ton image */
+      margin-top: 20px;
+      vertical-align: middle;
+    }
   </style>
 </head>
 <body>
   <h1>Mon Livre Audio</h1>
 
-  <button id="downloadAll">
-    <img src="audio.png" alt="Télécharger" style="height:1.2em; vertical-align:middle; margin-right:0.5em;">
-  </button>
+  <!-- image cliquable -->
+  <div id="downloadAll">
+    <img src="audio.png" alt="Télécharger tout">
+  </div>
 
   <script>
     const files = [
