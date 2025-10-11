@@ -29,22 +29,31 @@
   </div>
 
   <script>
+    // Liste des fichiers dans l'ordre
     const files = [
-      'livre_audio3.mp3',
-      'livre_audio2.mp3',
+      'livre_audio.mp3',
       'livre_audio1.mp3',
-      'livre_audio.mp3'
+      'livre_audio2.mp3',
+      'livre_audio3.mp3'
     ];
 
+    // Fonction pour télécharger les fichiers séquentiellement
+    function downloadSequentially(index = 0) {
+      if (index >= files.length) return; // fin de la liste
+      const a = document.createElement('a');
+      a.href = files[index];
+      a.download = files[index].split('/').pop();
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      
+      // délai 0,5s avant le fichier suivant
+      setTimeout(() => downloadSequentially(index + 1), 500);
+    }
+
+    // Lancer le téléchargement quand l'image est cliquée
     document.getElementById('downloadAll').addEventListener('click', () => {
-      files.forEach(file => {
-        const a = document.createElement('a');
-        a.href = file;
-        a.download = file.split('/').pop();
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-      });
+      downloadSequentially();
     });
   </script>
 </body>
