@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mon livre audio</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="audio.png">
+  <meta name="theme-color" content="#000000">
+  <style>
+    body { font-family: sans-serif; text-align: center; margin:0; background:#f6f6f6; color:#222; }
+    h1 { background:black; color:white; margin:0; padding:1em; }
+    audio { margin-top:30px; width:80%; }
+    a { display:block; margin:20px auto; color:white; background:black; padding:10px 20px; border-radius:10px; text-decoration:none; width:fit-content; }
+  </style>
+</head>
+<body>
+  <h1>Mon livre audio</h1>
+  <img src="audio.png" width="200" alt="Icône du livre audio">
+  <audio id="audioPlayer" controls src="livre_audio.mp3"></audio>
+  <a href="livre_audio.mp3" download>Télécharger le livre audio</a>
+
+  <script>
+    // Service Worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js');
+    }
+
+    // Sauvegarde de la position audio
+    const audio = document.getElementById('audioPlayer');
+    const key = 'positionAudio';
+
+    // Charger la position précédente
+    const savedTime = localStorage.getItem(key);
+    if(savedTime) audio.currentTime = parseFloat(savedTime);
+
+    // Sauvegarder en continu
+    audio.addEventListener('timeupdate', () => {
+      localStorage.setItem(key, audio.currentTime);
+    });
+  </script>
+</body>
+</html>
