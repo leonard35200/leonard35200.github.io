@@ -45,70 +45,25 @@
 <audio id="audioPlayer"></audio>
 
 <script>
-// --- Paramètres (fichiers triés par numéro) --- //
+// --- Paramètres (fichiers triés par numéro) ---
 const files = [
-  '0.Intro et remerciment Jean.mp3',
-  '1. préface.mp3',
-  '3. Chap 2.mp3',
-  '4. Chap 3.mp3',
-  '5. Chap 4.mp3',
-  '6. Chap 5.mp3',
-  '7. Chap 6.mp3',
-  '8. Chap 7.mp3',
-  '9. Chap 8.mp3',
-  '10. Chap 9.mp3',
-  '11. Chap 10.mp3',
-  '12. Chap 11.mp3',
-  '13. Chap 12.mp3',
-  '14. Chap 13.mp3',
-  '15. Chap 14.mp3',
-  '16. Chap 15.mp3',
-  '17. Chap 16.mp3',
-  '18. Chap 17.mp3',
-  '19. Chap 18.mp3',
-  '20. Chap 19.mp3',
-  '21. Chap 20.mp3',
-  '22. Chap 21.mp3',
-  '23. Chap 22.mp3',
-  '24. Chap 23.mp3',
-  '25. Chap 24.mp3',
-  '26. Chap 25.mp3'
-  //,'intro Flo.mp3'
+  '0.Intro et remerciment Jean.mp3', '1. préface.mp3', '3. Chap 2.mp3', '4. Chap 3.mp3', 
+  '5. Chap 4.mp3', '6. Chap 5.mp3', '7. Chap 6.mp3', '8. Chap 7.mp3', 
+  '9. Chap 8.mp3', '10. Chap 9.mp3', '11. Chap 10.mp3', '12. Chap 11.mp3', 
+  '13. Chap 12.mp3', '14. Chap 13.mp3', '15. Chap 14.mp3', '16. Chap 15.mp3', 
+  '17. Chap 16.mp3', '18. Chap 17.mp3', '19. Chap 18.mp3', '20. Chap 19.mp3', 
+  '21. Chap 20.mp3', '22. Chap 21.mp3', '23. Chap 22.mp3', '24. Chap 23.mp3', 
+  '25. Chap 24.mp3', '26. Chap 25.mp3'
 ];
 
 const durations = [
-  14,     // 0.Intro et remerciment Jean.mp3
-  19.5,   // 1. préface.mp3
-  308,    // 3. Chap 2.mp3
-  46,     // 4. Chap 3.mp3
-  470,    // 5. Chap 4.mp3
-  239,    // 6. Chap 5.mp3
-  58,     // 7. Chap 6.mp3
-  305,    // 8. Chap 7.mp3
-  196,    // 9. Chap 8.mp3
-  101,    // 10. Chap 9.mp3
-  374,    // 11. Chap 10.mp3
-  289.5,  // 12. Chap 11.mp3
-  85.3,   // 13. Chap 12.mp3
-  363.2,  // 14. Chap 13.mp3
-  249.5,  // 15. Chap 14.mp3
-  90.5,   // 16. Chap 15.mp3
-  314,    // 17. Chap 16.mp3
-  160,    // 18. Chap 17.mp3
-  92,     // 19. Chap 18.mp3
-  213,    // 20. Chap 19.mp3
-  330.5,  // 21. Chap 20.mp3
-  330.5,  // 22. Chap 21.mp3
-  438.5,  // 23. Chap 22.mp3
-  312,    // 24. Chap 23.mp3
-  473,    // 25. Chap 24.mp3
-  352.5,  // 26. Chap 25.mp3
-  //6       // intro Flo.mp3 
+  14, 19.5, 308, 46, 470, 239, 58, 305, 196, 101, 374, 289.5, 85.3, 363.2, 
+  249.5, 90.5, 314, 160, 92, 213, 330.5, 330.5, 438.5, 312, 473, 352.5
 ];
 
 const totalDuration = durations.reduce((a,b)=>a+b,0);
 
-// --- Variables DOM --- //
+// --- Variables DOM ---
 const player = document.getElementById('audioPlayer');
 const imagePlay = document.getElementById('imagePlay');
 const playerUI = document.getElementById('playerUI');
@@ -129,18 +84,21 @@ let currentIndex = 0;
 let lastPosition = 0;
 let hasStarted = false;
 
-// --- Formatage du temps --- //
+// --- Formatage du temps ---
 function formatTime(seconds){
-  const m = Math.floor(seconds / 60);
-  const s = Math.floor(seconds % 60);
-  return m + ':' + (s < 10 ? '0' : '') + s;
+  seconds = Math.floor(seconds);
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = seconds % 60;
+  if(h>0) return h+':'+(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+  return m+':'+(s<10?'0':'')+s;
 }
 
-// --- IndexedDB --- //
+// --- IndexedDB ---
 const request = indexedDB.open('audioProgressDB',1);
 request.onupgradeneeded = e=>{
   db = e.target.result;
-  if (!db.objectStoreNames.contains('progress')) db.createObjectStore('progress',{keyPath:'id'});
+  if(!db.objectStoreNames.contains('progress')) db.createObjectStore('progress',{keyPath:'id'});
 };
 request.onsuccess = e=>{
   db = e.target.result;
@@ -156,7 +114,7 @@ request.onsuccess = e=>{
   };
 };
 
-// --- Sauvegarde --- //
+// --- Sauvegarde ---
 function saveProgress(){
   if(!db) return;
   const tx = db.transaction('progress','readwrite');
@@ -164,7 +122,7 @@ function saveProgress(){
   store.put({id:'state', index:currentIndex, time:player.currentTime});
 }
 
-// --- Lecture --- //
+// --- Lecture ---
 function loadTrack(index, start=0){
   if(index >= files.length){
     chapterEl.textContent = "Fin du livre";
@@ -182,86 +140,56 @@ function loadTrack(index, start=0){
   progressBar.classList.add('progress-pulse');
 }
 
-// --- Progression --- //
+// --- Progression ---
 function updateProgress(){
   const playedBefore = durations.slice(0,currentIndex).reduce((a,b)=>a+b,0);
   const playedTotal = playedBefore + player.currentTime;
   const percent = (playedTotal / totalDuration) * 100;
   progressBar.style.width = percent + "%";
 
-  // --- Temps écoulé et restant ---
   elapsedEl.textContent = formatTime(playedTotal);
   const remainingTotal = totalDuration - playedTotal;
   remainingEl.textContent = "-" + formatTime(Math.max(0, remainingTotal));
 }
 
-// --- Boutons --- //
-imagePlay.addEventListener('click',()=>{
-  if(!hasStarted){
-    loadTrack(currentIndex,lastPosition);
-  } else {
-    player.paused ? player.play() : player.pause();
-  }
-});
-
-pauseBtn.addEventListener('click',()=>{ player.paused ? player.play() : player.pause(); });
-prevBtn.addEventListener('click',()=>{
-  if(currentIndex > 0){
-    currentIndex--;
-    loadTrack(currentIndex,0);
-  }
-});
-nextBtn.addEventListener('click',()=>{
-  if(currentIndex < files.length - 1){
-    currentIndex++;
-    loadTrack(currentIndex,0);
-  }
-});
-rewindBtn.addEventListener('click',()=>{ player.currentTime = Math.max(0, player.currentTime - 15); });
-forwardBtn.addEventListener('click',()=>{ player.currentTime = Math.min(player.duration, player.currentTime + 15); });
-
-// --- Événements --- //
-player.addEventListener('timeupdate',()=>{
-  updateProgress();
-  saveProgress();
-});
-player.addEventListener('ended',()=>{
-  currentIndex++;
-  if(currentIndex < files.length){
-    loadTrack(currentIndex,0);
-  } else {
-    progressBar.style.width = "100%";
-    chapterEl.textContent = "Fin du livre";
-    elapsedEl.textContent = formatTime(totalDuration);
-    remainingEl.textContent = "-0:00";
-  }
-});
-
-// --- Volume --- //
-volumeControl.addEventListener('input', e=>{ player.volume = e.target.value; });
-
-// --- Mise en pause si l’onglet est masqué --- //
-document.addEventListener('visibilitychange',()=>{ if(document.hidden) player.pause(); });
-
-// clic sur barre progression
+// --- Barre cliquable ---
 progressContainer.addEventListener('click', (e) => {
   const rect = progressContainer.getBoundingClientRect();
   const clickX = e.clientX - rect.left;
   const width = rect.width;
   const percent = clickX / width;
 
-  // calculer le temps total correspondant
   const playedBefore = durations.slice(0, currentIndex).reduce((a,b)=>a+b,0);
-  const targetTime = percent * totalDuration - playedBefore;
-
-  // s'assurer que le temps reste dans la piste actuelle
-  player.currentTime = Math.max(0, Math.min(player.duration, targetTime));
+  let targetTime = percent * totalDuration - playedBefore;
+  targetTime = Math.max(0, Math.min(player.duration, targetTime));
+  player.currentTime = targetTime;
   updateProgress();
 });
 
-// --- Sauvegarde avant fermeture --- //
+// --- Boutons ---
+imagePlay.addEventListener('click',()=>{ player.paused||!hasStarted ? loadTrack(currentIndex,lastPosition) : player.pause(); });
+pauseBtn.addEventListener('click',()=>{ player.paused ? player.play() : player.pause(); });
+prevBtn.addEventListener('click',()=>{ if(currentIndex>0){ currentIndex--; loadTrack(currentIndex,0); } });
+nextBtn.addEventListener('click',()=>{ if(currentIndex<files.length-1){ currentIndex++; loadTrack(currentIndex,0); } });
+rewindBtn.addEventListener('click',()=>{ player.currentTime = Math.max(0, player.currentTime - 15); });
+forwardBtn.addEventListener('click',()=>{ player.currentTime = Math.min(player.duration, player.currentTime + 15); });
+
+// --- Événements ---
+player.addEventListener('timeupdate',()=>{ updateProgress(); saveProgress(); });
+player.addEventListener('ended',()=>{ currentIndex++; if(currentIndex<files.length){ loadTrack(currentIndex,0); } else { progressBar.style.width="100%"; chapterEl.textContent="Fin du livre"; elapsedEl.textContent=formatTime(totalDuration); remainingEl.textContent="-0:00"; } });
+
+// --- Volume ---
+volumeControl.addEventListener('input', e=>{ player.volume = e.target.value; });
+
+// --- Pause si onglet masqué ---
+document.addEventListener('visibilitychange',()=>{ if(document.hidden) player.pause(); });
+
+// --- Sauvegarde avant fermeture ---
 window.addEventListener('beforeunload', saveProgress);
-updateProgress(); // <-- temps initial affiché
+
+// --- Initialiser le temps au chargement ---
+updateProgress();
+
 </script>
 
 
