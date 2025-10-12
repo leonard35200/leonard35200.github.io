@@ -1,29 +1,26 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>57 rue du soleil</title>
 <style>
-  body { font-family: sans-serif; margin:0; background:#f6f6f6; color:#333; text-align:center; }
-  h1 { background:black; color:white; margin:0; padding:1em; }
+body { font-family:sans-serif; margin:0; background:#f6f6f6; color:#333; text-align:center; }
+h1 { background:black; color:white; margin:0; padding:1em; }
 
-  #imagePlay { width:200px; height:200px; margin:40px auto; cursor:pointer; object-fit:cover; display:block; }
+#imagePlay { width:200px; height:200px; margin:40px auto; cursor:pointer; object-fit:cover; display:block; }
 
-  #playerUI { display:none; margin-top:20px; }
-  #progressContainer { position:relative; width:80%; max-width:600px; height:15px; background:#ddd; border-radius:10px; margin:20px auto; cursor:pointer; overflow:hidden; }
-  /* la barre intérieure était manquante dans ta version */
-  #progressBar { height:100%; width:0%; background:linear-gradient(90deg,#4a90e2,#7b4397); border-radius:10px; transition:width 0.2s linear; }
-  #volumeContainer { display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:10px; }
-  #chapter { font-size:1.1em; margin-bottom:20px; font-weight:bold; }
-  input[type="range"] { width:100px; }
-  .time { display:flex; justify-content:space-between; width:80%; max-width:600px; font-size:0.9em; margin:5px auto; opacity:0.8; }
-  button { margin:5px; padding:8px 16px; font-size:1em; border:none; border-radius:20px; cursor:pointer; background:black; color:white; }
-  button:hover { background:#222; }
-
-  /* Animation barre de progression */
-  .progress-pulse { animation:pulse 2s infinite; }
-  @keyframes pulse { 0% { box-shadow:0 0 5px #4a90e2; } 50% { box-shadow:0 0 15px #7b4397; } 100% { box-shadow:0 0 5px #4a90e2; } }
+#playerUI { display:none; margin-top:20px; }
+#progressContainer { position:relative; width:80%; max-width:600px; height:15px; background:#ddd; border-radius:10px; margin:20px auto; cursor:pointer; overflow:hidden; }
+#progressBar { height:100%; width:0%; background:linear-gradient(90deg,#4a90e2,#7b4397); border-radius:10px; transition:width 0.2s linear; }
+#volumeContainer { display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:10px; }
+#chapter { font-size:1.1em; margin-bottom:20px; font-weight:bold; }
+input[type="range"] { width:100px; }
+.time { display:flex; justify-content:space-between; width:80%; max-width:600px; font-size:0.9em; margin:5px auto; opacity:0.8; }
+button { margin:5px; padding:8px 16px; font-size:1em; border:none; border-radius:20px; cursor:pointer; background:black; color:white; }
+button:hover { background:#222; }
+.progress-pulse { animation:pulse 2s infinite; }
+@keyframes pulse { 0% { box-shadow:0 0 5px #4a90e2; } 50% { box-shadow:0 0 15px #7b4397; } 100% { box-shadow:0 0 5px #4a90e2; } }
 </style>
 </head>
 <body>
@@ -31,19 +28,18 @@
 <img src="audio.png" id="imagePlay" alt="Lire / mettre en pause le livre audio" role="button" tabindex="0">
 
 <div id="playerUI">
-  <!-- ici on remet bien la barre intérieure -->
   <div id="progressContainer" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
     <div id="progressBar" aria-hidden="true"></div>
   </div>
 
   <div class="time">
     <span id="currentTime">0:00</span>
-    <span id="remainingTime">-0:00</span>
+    <span id="remainingTime">-3:52</span>
   </div>
   <div id="volumeContainer">🔊 <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="1"></div>
   <div id="chapter">Chapitre 0</div>
   <button id="prevChapterBtn">Chapitre précédent ⏮️</button>
-  <button id="pauseBtn">Pause ⏸️</button>
+  <button id="pauseBtn">▶️</button>
   <button id="nextChapterBtn">Chapitre suivant ⏭️</button>
   <button id="rewindBtn">⏪ 15s</button>
   <button id="forwardBtn">15s ⏩</button>
@@ -53,6 +49,9 @@
 
 <script>
 const files = ['livre_audio.mp3','livre_audio1.mp3','livre_audio2.mp3','livre_audio3.mp3'];
+const chapterDuration = 58; // chaque fichier = 58s
+const totalDuration = files.length * chapterDuration;
+
 const player = document.getElementById('audioPlayer');
 const imagePlay = document.getElementById('imagePlay');
 const playerUI = document.getElementById('playerUI');
@@ -68,213 +67,101 @@ const nextChapterBtn = document.getElementById('nextChapterBtn');
 const rewindBtn = document.getElementById('rewindBtn');
 const forwardBtn = document.getElementById('forwardBtn');
 
-let currentIndex = parseInt(localStorage.getItem('audioIndex'))||0;
-let lastPosition = parseFloat(localStorage.getItem('audioTime'))||0;
-let durations=[];
-let totalDuration=0;
-let hasStarted=false;
+let currentIndex = parseInt(localStorage.getItem('audioIndex')) || 0;
+let lastPosition = parseFloat(localStorage.getItem('audioTime')) || 0;
+let hasStarted = false;
 
-// initialise le volume du player depuis le slider
-player.volume = parseFloat(volumeControl.value) || 1;
+player.volume = parseFloat(volumeControl.value);
 
-// Précharger durées
-function preloadDurations(index=0){
-  if(index>=files.length) return;
-  const a=new Audio();
-  a.src=files[index];
-  a.addEventListener('loadedmetadata',()=>{
-    durations[index]=a.duration;
-    totalDuration = durations.reduce((acc,val)=>acc + (val||0), 0);
-    preloadDurations(index+1);
-  });
+// format temps
+function formatTime(sec){
+  const m = Math.floor(sec/60);
+  const s = Math.floor(sec%60);
+  return m+":"+s.toString().padStart(2,'0');
 }
-preloadDurations();
 
+// update barre et temps
+function updateProgress(){
+  const elapsed = currentIndex*chapterDuration + (player.currentTime||0);
+  const percent = Math.min(elapsed/totalDuration,1)*100;
+  progressBar.style.width = percent+"%";
+  currentTimeEl.textContent = formatTime(elapsed);
+  remainingTimeEl.textContent = "-"+formatTime(Math.max(totalDuration-elapsed,0));
+}
+
+// charger et jouer un chapitre
 function loadTrack(index,startTime=0){
   if(index>=files.length){
     chapterEl.textContent="Fin du livre";
-    if(progressBar) progressBar.style.width="100%";
-    currentTimeEl.textContent=formatTime(totalDuration);
+    progressBar.style.width="100%";
+    currentTimeEl.textContent = formatTime(totalDuration);
     remainingTimeEl.textContent="-0:00";
     return;
   }
-
-  // fixer l'UI immédiatement
-  chapterEl.textContent="Chapitre "+index;
-  player.pause();
   player.src = files[index];
-  player.load();
-
-  // attendre metadata pour pouvoir définir currentTime correctement
-  player.addEventListener('loadedmetadata', function setPos(){
-    // clamp startTime à la durée effective
-    const safeTime = Math.min(startTime || 0, Math.max(0, player.duration - 0.05));
-    try { player.currentTime = safeTime; } catch(e){ /* certains navigateurs peuvent lancer une erreur si startTime invalide */ }
-    player.play().catch(()=>{/* play() peut échouer si bloqué par l'autoplay du navigateur */});
-    hasStarted = true;
-    playerUI.style.display = "block";
-    if(progressBar) progressBar.classList.add('progress-pulse');
-    // enlever le listener (once)
-    player.removeEventListener('loadedmetadata', setPos);
-  }, { once: true });
+  player.currentTime = startTime;
+  chapterEl.textContent = "Chapitre "+index;
+  player.play().catch(()=>{}); // autoplay mobile-friendly
+  hasStarted = true;
+  playerUI.style.display = "block";
 }
 
-function updateProgress(){
-  // recalculer totalDuration si nécessaire
-  if(!totalDuration && durations.length > 0) totalDuration = durations.reduce((acc,val)=>acc + (val||0), 0);
-
-  let elapsed=0;
-  for(let i=0;i<currentIndex;i++) elapsed += durations[i] || 0;
-  elapsed += (player.currentTime || 0);
-  const percent = totalDuration ? (elapsed / totalDuration) * 100 : 0;
-  if(progressBar) progressBar.style.width = percent + "%";
-  progressContainer.setAttribute("aria-valuenow", Math.round(percent));
-  currentTimeEl.textContent = formatTime(elapsed);
-  remainingTimeEl.textContent = "-" + formatTime(Math.max(0, totalDuration - elapsed));
-}
-
-function formatTime(sec){
-  if(isNaN(sec) || sec === Infinity) return "0:00";
-  const m = Math.floor(sec / 60);
-  const s = Math.floor(sec % 60);
-  return m + ":" + s.toString().padStart(2,'0');
-}
-
-// Image cliquable : play/pause toggle
-imagePlay.addEventListener('click', ()=>{
-  if(!hasStarted){
-    // démarre et révèle l'UI
-    loadTrack(currentIndex, lastPosition);
-  } else {
-    if(player.paused) player.play();
-    else player.pause();
-  }
+// clic sur image = toggle play/pause
+imagePlay.addEventListener('click',()=>{
+  if(!hasStarted) loadTrack(currentIndex,lastPosition);
+  else player.paused ? player.play() : player.pause();
 });
 
-// Pause bouton
-pauseBtn.addEventListener('click', ()=>{ player.pause(); });
+// toggle pause bouton
+pauseBtn.addEventListener('click', ()=>{
+  if(player.paused){ player.play(); }
+  else { player.pause(); }
+});
 
-// chapitres précédent/suivant
-prevChapterBtn.addEventListener('click', ()=>{
-  if(currentIndex > 0){
-    currentIndex--;
-    lastPosition = 0;
-    loadTrack(currentIndex, 0);
-  }
-});
-nextChapterBtn.addEventListener('click', ()=>{
-  if(currentIndex < files.length - 1){
-    currentIndex++;
-    lastPosition = 0;
-    loadTrack(currentIndex, 0);
-  }
-});
+// chapitres
+prevChapterBtn.addEventListener('click', ()=>{ if(currentIndex>0){currentIndex--; loadTrack(currentIndex,0); }});
+nextChapterBtn.addEventListener('click', ()=>{ if(currentIndex<files.length-1){currentIndex++; loadTrack(currentIndex,0); }});
 
 // +/-15s
-rewindBtn.addEventListener('click', ()=>{ 
-  if (!isNaN(player.currentTime)) player.currentTime = Math.max(0, player.currentTime - 15); 
-});
-forwardBtn.addEventListener('click', ()=>{ 
-  if (!isNaN(player.currentTime) && !isNaN(player.duration)) player.currentTime = Math.min(player.duration, player.currentTime + 15); 
-});
-
-// mise à jour pendant la lecture
-player.addEventListener('timeupdate', ()=>{
-  updateProgress();
-  localStorage.setItem('audioTime', player.currentTime);
-  localStorage.setItem('audioIndex', currentIndex);
-});
-
-// fin d'un fichier -> passer au suivant automatiquement
-player.addEventListener('ended', ()=>{
-  currentIndex++;
-  lastPosition = 0;
-  localStorage.setItem('audioIndex', currentIndex);
-  localStorage.setItem('audioTime', 0);
-  loadTrack(currentIndex, 0);
-});
-
-// clic sur la barre globale pour sauter
-progressContainer.addEventListener('click', e=>{
-  if(!totalDuration) return;
-  const rect = progressContainer.getBoundingClientRect();
-  const clickX = e.clientX - rect.left;
-  const ratio = Math.max(0, Math.min(1, clickX / rect.width));
-  const targetTime = ratio * totalDuration;
-  let sum = 0;
-  for(let i=0;i<files.length;i++){
-    const dur = durations[i] || 0;
-    if(sum + dur >= targetTime){
-      currentIndex = i;
-      lastPosition = Math.max(0, targetTime - sum);
-      loadTrack(currentIndex, lastPosition);
-      break;
-    }
-    sum += dur;
-  }
-});
+rewindBtn.addEventListener('click', ()=>{ player.currentTime = Math.max(0,player.currentTime-15); });
+forwardBtn.addEventListener('click', ()=>{ player.currentTime = Math.min(chapterDuration,player.currentTime+15); });
 
 // volume
-volumeControl.addEventListener('input', e=>{ 
-  const v = parseFloat(e.target.value);
-  player.volume = isNaN(v) ? 1 : v;
+volumeControl.addEventListener('input',e=>{ player.volume = parseFloat(e.target.value); });
+
+// mise à jour continue
+player.addEventListener('timeupdate', updateProgress);
+player.addEventListener('timeupdate', ()=>{
+  localStorage.setItem('audioTime',player.currentTime);
+  localStorage.setItem('audioIndex',currentIndex);
 });
 
-// Pause si page inactive
-document.addEventListener('visibilitychange', ()=>{ if(document.hidden) player.pause(); });
-
-// Sauvegarde avant de quitter
-window.addEventListener('beforeunload', ()=>{
-  try {
-    localStorage.setItem('audioTime', player.currentTime || 0);
-    localStorage.setItem('audioIndex', currentIndex || 0);
-  } catch(e){}
+// fin d’un chapitre -> suivant auto
+player.addEventListener('ended', ()=>{
+  currentIndex++;
+  lastPosition=0;
+  localStorage.setItem('audioIndex',currentIndex);
+  localStorage.setItem('audioTime',0);
+  loadTrack(currentIndex,0);
 });
 
-// Contrôles clavier pour accessibilité
-document.addEventListener('keydown', (e) => {
-  if (!hasStarted) return; // ne rien faire si la lecture n'a pas commencé
+// clic barre pour sauter
+progressContainer.addEventListener('click',e=>{
+  const rect = progressContainer.getBoundingClientRect();
+  const ratio = (e.clientX - rect.left)/rect.width;
+  const targetTime = ratio*totalDuration;
+  currentIndex = Math.floor(targetTime/chapterDuration);
+  const offset = targetTime - currentIndex*chapterDuration;
+  loadTrack(currentIndex, offset);
+});
 
-  switch(e.code){
-    case 'Space': // toggle play/pause
-      e.preventDefault();
-      player.paused ? player.play() : player.pause();
-      break;
-    case 'ArrowLeft': // reculer 15s
-      e.preventDefault();
-      player.currentTime = Math.max(0, player.currentTime - 15);
-      break;
-    case 'ArrowRight': // avancer 15s
-      e.preventDefault();
-      player.currentTime = Math.min(player.duration || Infinity, player.currentTime + 15);
-      break;
-    case 'ArrowUp': // augmenter volume
-      e.preventDefault();
-      player.volume = Math.min(1, player.volume + 0.05);
-      volumeControl.value = player.volume;
-      break;
-    case 'ArrowDown': // baisser volume
-      e.preventDefault();
-      player.volume = Math.max(0, player.volume - 0.05);
-      volumeControl.value = player.volume;
-      break;
-    case 'PageUp': // chapitre précédent
-      e.preventDefault();
-      if(currentIndex > 0){
-        currentIndex--;
-        lastPosition = 0;
-        loadTrack(currentIndex, 0);
-      }
-      break;
-    case 'PageDown': // chapitre suivant
-      e.preventDefault();
-      if(currentIndex < files.length - 1){
-        currentIndex++;
-        lastPosition = 0;
-        loadTrack(currentIndex, 0);
-      }
-      break;
-  }
+// pause si page inactive
+document.addEventListener('visibilitychange',()=>{ if(document.hidden) player.pause(); });
+
+// sauvegarde avant fermeture
+window.addEventListener('beforeunload',()=>{
+  localStorage.setItem('audioTime',player.currentTime);
+  localStorage.setItem('audioIndex',currentIndex);
 });
 </script>
 </body>
