@@ -198,7 +198,7 @@ function updateProgress(){
 
   elapsedEl.textContent = formatTime(playedTotal);
   const remainingTotal = totalDuration - playedTotal;
-  remainingEl.textContent = "-" + formatTime(Math.max(0, remainingTotal));
+  remainingEl.textContent = "reste " + formatTime(Math.max(0, remainingTotal));
 }
 
 // --- Barre cliquable ---
