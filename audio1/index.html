@@ -1,245 +1,175 @@
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mon Livre Audio</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      text-align: center;
-      margin: 0;
-      background: #f6f6f6;
-    }
-
-    h1 {
-      background: black;
-      color: white;
-      margin: 0;
-      padding: 1em;
-    }
-
-    #downloadAll {
-      cursor: pointer;
-      display: inline-block;
-      margin-top: 30px;
-    }
-
-    #downloadAll img {
-      width: 180px;
-      height: 180px;
-      border-radius: 12px;
-    }
-
-    #controls {
-      display: none;
-      margin-top: 20px;
-    }
-
-    button {
-      background: black;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      padding: 10px 16px;
-      margin: 4px;
-      cursor: pointer;
-      font-size: 15px;
-    }
-
-    button:hover {
-      background: #444;
-    }
-
-    #progressContainer {
-      margin: 20px auto;
-      width: 80%;
-      height: 12px;
-      background: #ddd;
-      border-radius: 8px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    #progressBar {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #4caf50, #8bc34a);
-      transition: width 0.2s;
-    }
-
-    #chapterInfo {
-      font-weight: bold;
-      margin-top: 10px;
-    }
-
-    #endMessage {
-      display: none;
-      font-size: 1.3em;
-      font-weight: bold;
-      color: #4caf50;
-      margin-top: 30px;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>57 rue du soleil</title>
+<style>
+  body { font-family: sans-serif; margin:0; background:#f6f6f6; color:#333; text-align:center; }
+  h1 { background:black; color:white; margin:0; padding:1em; }
+  #imagePlay { width:200px; height:200px; margin:40px auto; cursor:pointer; object-fit:cover; display:block; border-radius:10px; }
+  #playerUI { display:none; margin-top:20px; }
+  #progressContainer { position:relative; width:80%; max-width:600px; height:15px; background:#ddd; border-radius:10px; margin:20px auto; cursor:pointer; overflow:hidden; }
+  #progressBar { height:100%; width:0%; background:linear-gradient(90deg,#4a90e2,#7b4397); border-radius:10px; transition:width 0.2s linear; }
+  #volumeContainer { display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:10px; }
+  #chapter { font-size:1.1em; margin-bottom:20px; font-weight:bold; }
+  input[type="range"] { width:100px; }
+  button { margin:5px; padding:8px 16px; font-size:1em; border:none; border-radius:20px; cursor:pointer; background:black; color:white; }
+  button:hover { background:#222; }
+  .progress-pulse { animation:pulse 2s infinite; }
+  @keyframes pulse { 0% { box-shadow:0 0 5px #4a90e2; } 50% { box-shadow:0 0 15px #7b4397; } 100% { box-shadow:0 0 5px #4a90e2; } }
+</style>
 </head>
 <body>
-  <h1>Mon Livre Audio</h1>
+<h1>Audio 57 rue du soleil</h1>
+<img src="audio.png" id="imagePlay" alt="Lire / mettre en pause le livre audio">
 
-  <div id="downloadAll">
-    <img src="audio.png" alt="Lecture du livre">
+<div id="playerUI">
+  <div id="progressContainer">
+    <div id="progressBar"></div>
   </div>
+  <div id="volumeContainer">🔊 <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="1"></div>
+  <div id="chapter">Chapitre 0</div>
+  <button id="prevChapterBtn">Chapitre précédent ⏮️</button>
+  <button id="pauseBtn">Lecture / Pause ⏯️</button>
+  <button id="nextChapterBtn">Chapitre suivant ⏭️</button>
+  <button id="rewindBtn">⏪ 15s</button>
+  <button id="forwardBtn">15s ⏩</button>
+</div>
 
-  <div id="controls">
-    <div id="progressContainer"><div id="progressBar"></div></div>
-    <div>
-      <button id="back15">-15 s</button>
-      <button id="prev">Chapitre précédent</button>
-      <button id="pausePlay">⏯️ Pause/Lecture</button>
-      <button id="next">Chapitre suivant</button>
-      <button id="fwd15">+15 s</button>
-    </div>
-    <div id="chapterInfo"></div>
-  </div>
+<audio id="audioPlayer"></audio>
 
-  <div id="endMessage">📘 Fin du livre !</div>
+<script>
+// --- Paramètres --- //
+const files = ['livre_audio.mp3','livre_audio1.mp3','livre_audio2.mp3','livre_audio3.mp3'];
+const durations = [58, 58, 58, 58]; // Durées (secondes)
+const totalDuration = durations.reduce((a,b)=>a+b,0);
 
-  <script>
-    // --- PARAMÈTRES ---
-    const files = [
-      'livre_audio.mp3',
-      'livre_audio1.mp3',
-      'livre_audio2.mp3',
-      'livre_audio3.mp3'
-    ];
-    const totalDuration = 4 * 58; // en secondes
+// --- Variables --- //
+const player = document.getElementById('audioPlayer');
+const imagePlay = document.getElementById('imagePlay');
+const playerUI = document.getElementById('playerUI');
+const progressContainer = document.getElementById('progressContainer');
+const progressBar = document.getElementById('progressBar');
+const volumeControl = document.getElementById('volumeControl');
+const chapterEl = document.getElementById('chapter');
+const pauseBtn = document.getElementById('pauseBtn');
+const prevBtn = document.getElementById('prevChapterBtn');
+const nextBtn = document.getElementById('nextChapterBtn');
+const rewindBtn = document.getElementById('rewindBtn');
+const forwardBtn = document.getElementById('forwardBtn');
 
-    let audio = new Audio();
-    let currentIndex = 0;
-    let isPlaying = false;
+let db;
+let currentIndex = 0;
+let lastPosition = 0;
+let hasStarted = false;
 
-    const dbName = "audioProgressDB";
-    let db;
-
-    const playBtn = document.getElementById("pausePlay");
-    const progressBar = document.getElementById("progressBar");
-    const controls = document.getElementById("controls");
-    const downloadAll = document.getElementById("downloadAll");
-    const chapterInfo = document.getElementById("chapterInfo");
-    const endMessage = document.getElementById("endMessage");
-
-    // --- IndexedDB ---
-    function initDB() {
-      return new Promise((resolve, reject) => {
-        const request = indexedDB.open(dbName, 1);
-        request.onupgradeneeded = function(e) {
-          db = e.target.result;
-          if (!db.objectStoreNames.contains("progress")) {
-            db.createObjectStore("progress", { keyPath: "id" });
-          }
-        };
-        request.onsuccess = function(e) {
-          db = e.target.result;
-          resolve();
-        };
-        request.onerror = reject;
-      });
+// --- IndexedDB --- //
+const request = indexedDB.open('audioProgressDB',1);
+request.onupgradeneeded = e=>{
+  db = e.target.result;
+  db.createObjectStore('progress',{keyPath:'id'});
+};
+request.onsuccess = e=>{
+  db = e.target.result;
+  const tx = db.transaction('progress','readonly');
+  const store = tx.objectStore('progress');
+  const getReq = store.get('state');
+  getReq.onsuccess = ()=>{
+    const data = getReq.result;
+    if(data){
+      currentIndex = data.index || 0;
+      lastPosition = data.time || 0;
     }
+  };
+};
 
-    function saveProgress(index, time) {
-      const tx = db.transaction("progress", "readwrite");
-      const store = tx.objectStore("progress");
-      store.put({ id: "save", index, time });
-    }
+// --- Sauvegarde --- //
+function saveProgress(){
+  if(!db) return;
+  const tx = db.transaction('progress','readwrite');
+  const store = tx.objectStore('progress');
+  store.put({id:'state', index:currentIndex, time:player.currentTime});
+}
 
-    function loadProgress() {
-      return new Promise((resolve) => {
-        const tx = db.transaction("progress", "readonly");
-        const store = tx.objectStore("progress");
-        const req = store.get("save");
-        req.onsuccess = () => resolve(req.result || { index: 0, time: 0 });
-      });
-    }
+// --- Lecture --- //
+function loadTrack(index, start=0){
+  if(index >= files.length){
+    chapterEl.textContent = "Fin du livre";
+    progressBar.style.width = "100%";
+    return;
+  }
+  player.src = files[index];
+  player.currentTime = start;
+  player.play();
+  chapterEl.textContent = "Chapitre " + index;
+  hasStarted = true;
+  playerUI.style.display = "block";
+  progressBar.classList.add('progress-pulse');
+}
 
-    // --- AUDIO ---
-    async function startOrToggleAudio() {
-      controls.style.display = "block";
-      endMessage.style.display = "none";
+// --- Progression --- //
+function updateProgress(){
+  const playedBefore = durations.slice(0,currentIndex).reduce((a,b)=>a+b,0);
+  const playedTotal = playedBefore + player.currentTime;
+  const percent = (playedTotal / totalDuration) * 100;
+  progressBar.style.width = percent + "%";
+}
 
-      if (!isPlaying) {
-        audio.play();
-        isPlaying = true;
-      } else {
-        audio.pause();
-        isPlaying = false;
-      }
-    }
+// --- Boutons --- //
+imagePlay.addEventListener('click',()=>{
+  if(!hasStarted){
+    loadTrack(currentIndex,lastPosition);
+  } else {
+    player.paused ? player.play() : player.pause();
+  }
+});
 
-    function updateProgress() {
-      const playedTotal = (currentIndex * 58) + audio.currentTime;
-      const percent = (playedTotal / totalDuration) * 100;
-      progressBar.style.width = `${Math.min(percent, 100)}%`;
-      saveProgress(currentIndex, audio.currentTime);
-    }
+pauseBtn.addEventListener('click',()=>{
+  player.paused ? player.play() : player.pause();
+});
 
-    function loadChapter(index) {
-      if (index < 0) index = 0;
-      if (index >= files.length) {
-        controls.style.display = "none";
-        endMessage.style.display = "block";
-        audio.pause();
-        isPlaying = false;
-        return;
-      }
-      currentIndex = index;
-      audio.src = files[index];
-      audio.currentTime = 0;
-      audio.play();
-      isPlaying = true;
-      updateChapterInfo();
-    }
+prevBtn.addEventListener('click',()=>{
+  if(currentIndex > 0){
+    currentIndex--;
+    loadTrack(currentIndex,0);
+  }
+});
 
-    function updateChapterInfo() {
-      chapterInfo.textContent = `Chapitre ${currentIndex} (${currentIndex === 0 ? "intro" : "partie " + currentIndex})`;
-    }
+nextBtn.addEventListener('click',()=>{
+  if(currentIndex < files.length - 1){
+    currentIndex++;
+    loadTrack(currentIndex,0);
+  }
+});
 
-    function setupAudioListeners() {
-      audio.addEventListener("timeupdate", updateProgress);
-      audio.addEventListener("ended", () => {
-        if (currentIndex < files.length - 1) {
-          loadChapter(currentIndex + 1);
-        } else {
-          endMessage.style.display = "block";
-          controls.style.display = "none";
-        }
-      });
-    }
+rewindBtn.addEventListener('click',()=>{ player.currentTime = Math.max(0, player.currentTime - 15); });
+forwardBtn.addEventListener('click',()=>{ player.currentTime = Math.min(player.duration, player.currentTime + 15); });
 
-    // --- CONTROLES ---
-    document.getElementById("next").addEventListener("click", () => loadChapter(currentIndex + 1));
-    document.getElementById("prev").addEventListener("click", () => loadChapter(currentIndex - 1));
-    document.getElementById("back15").addEventListener("click", () => { audio.currentTime = Math.max(audio.currentTime - 15, 0); });
-    document.getElementById("fwd15").addEventListener("click", () => { audio.currentTime = Math.min(audio.currentTime + 15, audio.duration); });
-    playBtn.addEventListener("click", startOrToggleAudio);
-    downloadAll.addEventListener("click", startOrToggleAudio);
+// --- Événements --- //
+player.addEventListener('timeupdate',()=>{
+  updateProgress();
+  saveProgress();
+});
 
-    // --- INITIALISATION ---
-    document.addEventListener("visibilitychange", () => {
-      if (document.hidden) audio.pause();
-    });
+player.addEventListener('ended',()=>{
+  currentIndex++;
+  if(currentIndex < files.length){
+    loadTrack(currentIndex,0);
+  } else {
+    progressBar.style.width = "100%";
+    chapterEl.textContent = "Fin du livre";
+  }
+});
 
-    window.addEventListener("beforeunload", () => {
-      audio.pause();
-      saveProgress(currentIndex, audio.currentTime);
-    });
+// --- Volume --- //
+volumeControl.addEventListener('input', e=>{ player.volume = e.target.value; });
 
-    (async () => {
-      await initDB();
-      const { index, time } = await loadProgress();
-      currentIndex = index;
-      audio.src = files[currentIndex];
-      audio.currentTime = time;
-      setupAudioListeners();
-      updateChapterInfo();
-    })();
-  </script>
+// --- Mise en pause si l’onglet est masqué --- //
+document.addEventListener('visibilitychange',()=>{ if(document.hidden) player.pause(); });
+
+// --- Sauvegarde avant fermeture --- //
+window.addEventListener('beforeunload', saveProgress);
+</script>
 </body>
 </html>
