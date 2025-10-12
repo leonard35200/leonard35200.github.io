@@ -28,6 +28,15 @@
   button:hover { background:#222; }
   .progress-pulse { animation:pulse 2s infinite; }
   @keyframes pulse { 0% { box-shadow:0 0 5px #4a90e2; } 50% { box-shadow:0 0 15px #7b4397; } 100% { box-shadow:0 0 5px #4a90e2; } }
+  p {
+  text-align: left;          /* alignement à gauche */
+  line-height: 1.6;          /* pour faciliter la lecture */
+  font-size: clamp(16px, 2vw, 20px);  /* taille responsive : minimum 16px, maximum 20px, 2vw pour s’adapter à l’écran */
+  max-width: 800px;          /* limite la largeur pour ne pas étirer le texte sur grand écran */
+  margin: 20px auto;         /* centrage horizontal du bloc si tu veux limiter sa largeur */
+  color: #333;               /* couleur de texte agréable */
+}
+
 </style>
 </head>
 <body>
