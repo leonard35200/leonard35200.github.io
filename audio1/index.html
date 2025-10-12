@@ -25,6 +25,11 @@
 <img src="audio.png" id="imagePlay" alt="Lire / mettre en pause le livre audio">
 
 <div id="playerUI">
+  <div id="timeContainer" style="display:flex; justify-content:space-between; width:80%; max-width:600px; margin:0 auto; font-size:0.9em;">
+  <span id="elapsed">0:00</span>
+  <span id="remaining">-0:00</span>
+</div>
+
   <div id="progressContainer">
     <div id="progressBar"></div>
   </div>
@@ -40,14 +45,70 @@
 <audio id="audioPlayer"></audio>
 
 <script>
-// --- Paramètres --- //
+// --- Paramètres (fichiers triés par numéro) --- //
+const files = [
+  '0.Intro et remerciment Jean.mp3',
+  '1. préface.mp3',
+  '3. Chap 2.mp3',
+  '4. Chap 3.mp3',
+  '5. Chap 4.mp3',
+  '6. Chap 5.mp3',
+  '7. Chap 6.mp3',
+  '8. Chap 7.mp3',
+  '9. Chap 8.mp3',
+  '10. Chap 9.mp3',
+  '11. Chap 10.mp3',
+  '12. Chap 11.mp3',
+  '13. Chap 12.mp3',
+  '14. Chap 13.mp3',
+  '15. Chap 14.mp3',
+  '16. Chap 15.mp3',
+  '17. Chap 16.mp3',
+  '18. Chap 17.mp3',
+  '19. Chap 18.mp3',
+  '20. Chap 19.mp3',
+  '21. Chap 20.mp3',
+  '22. Chap 21.mp3',
+  '23. Chap 22.mp3',
+  '24. Chap 23.mp3',
+  '25. Chap 24.mp3',
+  '26. Chap 25.mp3'
+  //,'intro Flo.mp3'
+];
 
-const files = ['0.Intro et remerciment Jean.mp3', '1. préface.mp3', '10. Chap 9.mp3', '11. Chap 10.mp3', '12. Chap 11.mp3', '13. Chap 12.mp3', '14. Chap 13.mp3', '15. Chap 14.mp3', '16. Chap 15.mp3', '17. Chap 16.mp3', '18. Chap 17.mp3', '19. Chap 18.mp3', '20. Chap 19.mp3', '21. Chap 20.mp3', '22. Chap 21.mp3', '23. Chap 22.mp3', '24. Chap 23.mp3', '25. Chap 24.mp3', '26. Chap 25.mp3', '3. Chap 2.mp3', '4. Chap 3.mp3', '5. Chap 4.mp3', '6. Chap 5.mp3', '7. Chap 6.mp3', '8. Chap 7.mp3', '9. Chap 8.mp3'];
-const durations = [14, 19.5, 101, 374, 289.5, 85.3, 363.2, 249.5, 90.5, 314, 160, 92, 213, 330.5, 330.5, 438.5, 312, 473, 352.5, 308, 46, 470, 239, 58, 305, 196];
+const durations = [
+  14,     // 0.Intro et remerciment Jean.mp3
+  19.5,   // 1. préface.mp3
+  308,    // 3. Chap 2.mp3
+  46,     // 4. Chap 3.mp3
+  470,    // 5. Chap 4.mp3
+  239,    // 6. Chap 5.mp3
+  58,     // 7. Chap 6.mp3
+  305,    // 8. Chap 7.mp3
+  196,    // 9. Chap 8.mp3
+  101,    // 10. Chap 9.mp3
+  374,    // 11. Chap 10.mp3
+  289.5,  // 12. Chap 11.mp3
+  85.3,   // 13. Chap 12.mp3
+  363.2,  // 14. Chap 13.mp3
+  249.5,  // 15. Chap 14.mp3
+  90.5,   // 16. Chap 15.mp3
+  314,    // 17. Chap 16.mp3
+  160,    // 18. Chap 17.mp3
+  92,     // 19. Chap 18.mp3
+  213,    // 20. Chap 19.mp3
+  330.5,  // 21. Chap 20.mp3
+  330.5,  // 22. Chap 21.mp3
+  438.5,  // 23. Chap 22.mp3
+  312,    // 24. Chap 23.mp3
+  473,    // 25. Chap 24.mp3
+  352.5,  // 26. Chap 25.mp3
+  //6       // intro Flo.mp3 
+];
 
 const totalDuration = durations.reduce((a,b)=>a+b,0);
 
-// --- Variables --- //
+// --- Variables DOM --- //
 const player = document.getElementById('audioPlayer');
 const imagePlay = document.getElementById('imagePlay');
 const playerUI = document.getElementById('playerUI');
@@ -60,17 +121,26 @@ const prevBtn = document.getElementById('prevChapterBtn');
 const nextBtn = document.getElementById('nextChapterBtn');
 const rewindBtn = document.getElementById('rewindBtn');
 const forwardBtn = document.getElementById('forwardBtn');
+const elapsedEl = document.getElementById('elapsed');
+const remainingEl = document.getElementById('remaining');
 
 let db;
 let currentIndex = 0;
 let lastPosition = 0;
 let hasStarted = false;
 
+// --- Formatage du temps --- //
+function formatTime(seconds){
+  const m = Math.floor(seconds / 60);
+  const s = Math.floor(seconds % 60);
+  return m + ':' + (s < 10 ? '0' : '') + s;
+}
+
 // --- IndexedDB --- //
 const request = indexedDB.open('audioProgressDB',1);
 request.onupgradeneeded = e=>{
   db = e.target.result;
-  db.createObjectStore('progress',{keyPath:'id'});
+  if (!db.objectStoreNames.contains('progress')) db.createObjectStore('progress',{keyPath:'id'});
 };
 request.onsuccess = e=>{
   db = e.target.result;
@@ -99,6 +169,8 @@ function loadTrack(index, start=0){
   if(index >= files.length){
     chapterEl.textContent = "Fin du livre";
     progressBar.style.width = "100%";
+    elapsedEl.textContent = formatTime(totalDuration);
+    remainingEl.textContent = "-0:00";
     return;
   }
   player.src = files[index];
@@ -116,6 +188,11 @@ function updateProgress(){
   const playedTotal = playedBefore + player.currentTime;
   const percent = (playedTotal / totalDuration) * 100;
   progressBar.style.width = percent + "%";
+
+  // --- Temps écoulé et restant ---
+  elapsedEl.textContent = formatTime(playedTotal);
+  const remainingTotal = totalDuration - playedTotal;
+  remainingEl.textContent = "-" + formatTime(Math.max(0, remainingTotal));
 }
 
 // --- Boutons --- //
@@ -127,24 +204,19 @@ imagePlay.addEventListener('click',()=>{
   }
 });
 
-pauseBtn.addEventListener('click',()=>{
-  player.paused ? player.play() : player.pause();
-});
-
+pauseBtn.addEventListener('click',()=>{ player.paused ? player.play() : player.pause(); });
 prevBtn.addEventListener('click',()=>{
   if(currentIndex > 0){
     currentIndex--;
     loadTrack(currentIndex,0);
   }
 });
-
 nextBtn.addEventListener('click',()=>{
   if(currentIndex < files.length - 1){
     currentIndex++;
     loadTrack(currentIndex,0);
   }
 });
-
 rewindBtn.addEventListener('click',()=>{ player.currentTime = Math.max(0, player.currentTime - 15); });
 forwardBtn.addEventListener('click',()=>{ player.currentTime = Math.min(player.duration, player.currentTime + 15); });
 
@@ -153,7 +225,6 @@ player.addEventListener('timeupdate',()=>{
   updateProgress();
   saveProgress();
 });
-
 player.addEventListener('ended',()=>{
   currentIndex++;
   if(currentIndex < files.length){
@@ -161,6 +232,8 @@ player.addEventListener('ended',()=>{
   } else {
     progressBar.style.width = "100%";
     chapterEl.textContent = "Fin du livre";
+    elapsedEl.textContent = formatTime(totalDuration);
+    remainingEl.textContent = "-0:00";
   }
 });
 
@@ -173,5 +246,7 @@ document.addEventListener('visibilitychange',()=>{ if(document.hidden) player.pa
 // --- Sauvegarde avant fermeture --- //
 window.addEventListener('beforeunload', saveProgress);
 </script>
+
+
 </body>
 </html>
