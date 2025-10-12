@@ -77,8 +77,6 @@ figcaption.hidden {
   <button id="prevChapterBtn">Chapitre précédent ⏮️</button>
   <button id="pauseBtn">Lecture / Pause ⏯️</button>
   <button id="nextChapterBtn">Chapitre suivant ⏭️</button>
-  <button id="rewindBtn">⏪ 15s</button>
-  <button id="forwardBtn">15s ⏩</button>
 </div>
 
 <audio id="audioPlayer"></audio>
@@ -119,8 +117,6 @@ const chapterEl = document.getElementById('chapter');
 const pauseBtn = document.getElementById('pauseBtn');
 const prevBtn = document.getElementById('prevChapterBtn');
 const nextBtn = document.getElementById('nextChapterBtn');
-const rewindBtn = document.getElementById('rewindBtn');
-const forwardBtn = document.getElementById('forwardBtn');
 const elapsedEl = document.getElementById('elapsed');
 const remainingEl = document.getElementById('remaining');
 
@@ -251,8 +247,6 @@ imagePlay.addEventListener('click', () => {
 pauseBtn.addEventListener('click',()=>{ player.paused ? player.play() : player.pause(); });
 prevBtn.addEventListener('click',()=>{ if(currentIndex>0){ currentIndex--; loadTrack(currentIndex,0); } });
 nextBtn.addEventListener('click',()=>{ if(currentIndex<files.length-1){ currentIndex++; loadTrack(currentIndex,0); } });
-rewindBtn.addEventListener('click',()=>{ player.currentTime = Math.max(0, player.currentTime - 15); });
-forwardBtn.addEventListener('click',()=>{ player.currentTime = Math.min(player.duration, player.currentTime + 15); });
 
 // --- Événements ---
 player.addEventListener('timeupdate',()=>{ updateProgress(); saveProgress(); });
