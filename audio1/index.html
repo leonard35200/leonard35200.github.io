@@ -37,11 +37,30 @@
   color: #333;               /* couleur de texte agréable */
 }
 
+figcaption {
+  font-size: clamp(14px, 1.5vw, 16px);
+  color: #555;
+  margin-top: 10px;
+  text-align: center;
+  transition: opacity 0.3s ease;
+}
+figcaption.hidden {
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+
 </style>
 </head>
 <body>
 <h1>57 rue du soleil version audio</h1>
-<img src="audio.png" id="imagePlay" alt="afficher / cacher le lecteur audio" title="Cliquer pour afficher / cacher le lecteur audio">
+<figure>
+  <img src="audio.png" id="imagePlay" alt="afficher / cacher le lecteur audio" title="Cliquer pour afficher / cacher le lecteur audio">
+  <figcaption>
+    Cliquer sur l’image pour afficher ou cacher le lecteur audio.
+  </figcaption>
+</figure>
 
 <div id="playerUI">
   <div id="timeContainer" style="display:flex; justify-content:space-between; width:80%; max-width:600px; margin:0 auto; font-size:0.9em;">
@@ -208,23 +227,24 @@ progressContainer.addEventListener('click', (e) => {
 
 // --- Boutons ---
 imagePlay.addEventListener('click', () => {
+  const figcaptionEl = imagePlay.nextElementSibling; // récupère la légende
   if (!hasStarted) {
-    // Premier clic : lance la lecture et affiche les commandes
     loadTrack(currentIndex, lastPosition);
     playerUI.style.display = 'block';
+    figcaptionEl.classList.remove('hidden');
   } else {
-    // Toggle affichage et lecture
     if (playerUI.style.display === 'block') {
-      // Si visible → cacher + pause
       playerUI.style.display = 'none';
       player.pause();
+      figcaptionEl.classList.add('hidden'); // cacher la légende
     } else {
-      // Si caché → afficher + jouer
       playerUI.style.display = 'block';
       player.play();
+      figcaptionEl.classList.remove('hidden'); // afficher la légende
     }
   }
 });
+
 
 pauseBtn.addEventListener('click',()=>{ player.paused ? player.play() : player.pause(); });
 prevBtn.addEventListener('click',()=>{ if(currentIndex>0){ currentIndex--; loadTrack(currentIndex,0); } });
