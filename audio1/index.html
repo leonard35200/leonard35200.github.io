@@ -231,16 +231,16 @@ imagePlay.addEventListener('click', () => {
   if (!hasStarted) {
     loadTrack(currentIndex, lastPosition);
     playerUI.style.display = 'block';
-    figcaptionEl.classList.remove('hidden');
+    figcaptionEl.classList.add('hidden');
   } else {
     if (playerUI.style.display === 'block') {
       playerUI.style.display = 'none';
       player.pause();
-      figcaptionEl.classList.add('hidden'); // cacher la légende
+      figcaptionEl.classList.remove('hidden'); // cacher la légende
     } else {
       playerUI.style.display = 'block';
       player.play();
-      figcaptionEl.classList.remove('hidden'); // afficher la légende
+      figcaptionEl.classList.add('hidden'); // afficher la légende
     }
   }
 });
