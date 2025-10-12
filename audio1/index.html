@@ -179,7 +179,13 @@ function loadTrack(index, start=0){
   player.src = files[index];
   player.currentTime = start;
   player.play();
-  chapterEl.textContent = "Chapitre " + index;
+  if (index == 0){
+    chapterEl.textContent = "Intro";}
+  else if (index == 1){
+    chapterEl.textContent = "Préface";}
+  else {
+    let chap = index - 1
+    chapterEl.textContent = "Chapitre " + chap;}
   hasStarted = true;
   playerUI.style.display = "block";
   progressBar.classList.add('progress-pulse');
