@@ -1,3 +1,4 @@
+<!doctype html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
@@ -11,6 +12,7 @@
 
   #playerUI { display:none; margin-top:20px; }
   #progressContainer { position:relative; width:80%; max-width:600px; height:15px; background:#ddd; border-radius:10px; margin:20px auto; cursor:pointer; overflow:hidden; }
+  /* la barre intérieure était manquante dans ta version */
   #progressBar { height:100%; width:0%; background:linear-gradient(90deg,#4a90e2,#7b4397); border-radius:10px; transition:width 0.2s linear; }
   #volumeContainer { display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:10px; }
   #chapter { font-size:1.1em; margin-bottom:20px; font-weight:bold; }
@@ -29,7 +31,11 @@
 <img src="audio.png" id="imagePlay" alt="Lire / mettre en pause le livre audio" role="button" tabindex="0">
 
 <div id="playerUI">
-  <div id="progressContainer" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+  <!-- ici on remet bien la barre intérieure -->
+  <div id="progressContainer" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+    <div id="progressBar" aria-hidden="true"></div>
+  </div>
+
   <div class="time">
     <span id="currentTime">0:00</span>
     <span id="remainingTime">-0:00</span>
@@ -68,6 +74,9 @@ let durations=[];
 let totalDuration=0;
 let hasStarted=false;
 
+// initialise le volume du player depuis le slider
+player.volume = parseFloat(volumeControl.value) || 1;
+
 // Précharger durées
 function preloadDurations(index=0){
   if(index>=files.length) return;
@@ -75,7 +84,7 @@ function preloadDurations(index=0){
   a.src=files[index];
   a.addEventListener('loadedmetadata',()=>{
     durations[index]=a.duration;
-    totalDuration=durations.reduce((acc,val)=>acc+val,0);
+    totalDuration = durations.reduce((acc,val)=>acc + (val||0), 0);
     preloadDurations(index+1);
   });
 }
@@ -84,108 +93,144 @@ preloadDurations();
 function loadTrack(index,startTime=0){
   if(index>=files.length){
     chapterEl.textContent="Fin du livre";
-    progressBar.style.width="100%";
+    if(progressBar) progressBar.style.width="100%";
     currentTimeEl.textContent=formatTime(totalDuration);
     remainingTimeEl.textContent="-0:00";
     return;
   }
-  player.src=files[index];
-  player.currentTime=startTime;
+
+  // fixer l'UI immédiatement
   chapterEl.textContent="Chapitre "+index;
-  player.play();
-  hasStarted=true;
-  playerUI.style.display="block";
-  progressBar.classList.add('progress-pulse');
+  player.pause();
+  player.src = files[index];
+  player.load();
+
+  // attendre metadata pour pouvoir définir currentTime correctement
+  player.addEventListener('loadedmetadata', function setPos(){
+    // clamp startTime à la durée effective
+    const safeTime = Math.min(startTime || 0, Math.max(0, player.duration - 0.05));
+    try { player.currentTime = safeTime; } catch(e){ /* certains navigateurs peuvent lancer une erreur si startTime invalide */ }
+    player.play().catch(()=>{/* play() peut échouer si bloqué par l'autoplay du navigateur */});
+    hasStarted = true;
+    playerUI.style.display = "block";
+    if(progressBar) progressBar.classList.add('progress-pulse');
+    // enlever le listener (once)
+    player.removeEventListener('loadedmetadata', setPos);
+  }, { once: true });
 }
 
 function updateProgress(){
+  // recalculer totalDuration si nécessaire
+  if(!totalDuration && durations.length > 0) totalDuration = durations.reduce((acc,val)=>acc + (val||0), 0);
+
   let elapsed=0;
-  for(let i=0;i<currentIndex;i++) elapsed+=durations[i]||0;
-  elapsed+=player.currentTime;
-  const percent=totalDuration?(elapsed/totalDuration)*100:0;
-  progressBar.style.width=percent+"%";
-  progressBar.setAttribute("aria-valuenow",percent);
-  currentTimeEl.textContent=formatTime(elapsed);
-  remainingTimeEl.textContent="-"+formatTime(totalDuration-elapsed);
+  for(let i=0;i<currentIndex;i++) elapsed += durations[i] || 0;
+  elapsed += (player.currentTime || 0);
+  const percent = totalDuration ? (elapsed / totalDuration) * 100 : 0;
+  if(progressBar) progressBar.style.width = percent + "%";
+  progressContainer.setAttribute("aria-valuenow", Math.round(percent));
+  currentTimeEl.textContent = formatTime(elapsed);
+  remainingTimeEl.textContent = "-" + formatTime(Math.max(0, totalDuration - elapsed));
 }
 
 function formatTime(sec){
-  if(isNaN(sec)) return "0:00";
-  const m=Math.floor(sec/60);
-  const s=Math.floor(sec%60);
-  return m+":"+s.toString().padStart(2,'0');
+  if(isNaN(sec) || sec === Infinity) return "0:00";
+  const m = Math.floor(sec / 60);
+  const s = Math.floor(sec % 60);
+  return m + ":" + s.toString().padStart(2,'0');
 }
 
 // Image cliquable : play/pause toggle
-imagePlay.addEventListener('click',()=>{
-  if(!hasStarted) loadTrack(currentIndex,lastPosition);
-  else player.paused?player.play():player.pause();
+imagePlay.addEventListener('click', ()=>{
+  if(!hasStarted){
+    // démarre et révèle l'UI
+    loadTrack(currentIndex, lastPosition);
+  } else {
+    if(player.paused) player.play();
+    else player.pause();
+  }
 });
 
-pauseBtn.addEventListener('click',()=>{ player.pause(); });
+// Pause bouton
+pauseBtn.addEventListener('click', ()=>{ player.pause(); });
 
-prevChapterBtn.addEventListener('click',()=>{
-  if(currentIndex>0){
+// chapitres précédent/suivant
+prevChapterBtn.addEventListener('click', ()=>{
+  if(currentIndex > 0){
     currentIndex--;
-    lastPosition=0;
-    loadTrack(currentIndex);
+    lastPosition = 0;
+    loadTrack(currentIndex, 0);
   }
 });
-
-nextChapterBtn.addEventListener('click',()=>{
-  if(currentIndex<files.length-1){
+nextChapterBtn.addEventListener('click', ()=>{
+  if(currentIndex < files.length - 1){
     currentIndex++;
-    lastPosition=0;
-    loadTrack(currentIndex);
+    lastPosition = 0;
+    loadTrack(currentIndex, 0);
   }
 });
 
-rewindBtn.addEventListener('click',()=>{ player.currentTime=Math.max(0,player.currentTime-15); });
-forwardBtn.addEventListener('click',()=>{ player.currentTime=Math.min(player.duration,player.currentTime+15); });
+// +/-15s
+rewindBtn.addEventListener('click', ()=>{ 
+  if (!isNaN(player.currentTime)) player.currentTime = Math.max(0, player.currentTime - 15); 
+});
+forwardBtn.addEventListener('click', ()=>{ 
+  if (!isNaN(player.currentTime) && !isNaN(player.duration)) player.currentTime = Math.min(player.duration, player.currentTime + 15); 
+});
 
-player.addEventListener('timeupdate',()=>{
+// mise à jour pendant la lecture
+player.addEventListener('timeupdate', ()=>{
   updateProgress();
-  localStorage.setItem('audioTime',player.currentTime);
-  localStorage.setItem('audioIndex',currentIndex);
+  localStorage.setItem('audioTime', player.currentTime);
+  localStorage.setItem('audioIndex', currentIndex);
 });
 
-player.addEventListener('ended',()=>{
+// fin d'un fichier -> passer au suivant automatiquement
+player.addEventListener('ended', ()=>{
   currentIndex++;
-  lastPosition=0;
-  localStorage.setItem('audioIndex',currentIndex);
-  localStorage.setItem('audioTime',0);
-  loadTrack(currentIndex);
+  lastPosition = 0;
+  localStorage.setItem('audioIndex', currentIndex);
+  localStorage.setItem('audioTime', 0);
+  loadTrack(currentIndex, 0);
 });
 
-progressContainer.addEventListener('click',e=>{
+// clic sur la barre globale pour sauter
+progressContainer.addEventListener('click', e=>{
   if(!totalDuration) return;
-  const rect=progressContainer.getBoundingClientRect();
-  const clickX=e.clientX-rect.left;
-  const ratio=clickX/rect.width;
-  const targetTime=ratio*totalDuration;
-  let sum=0;
+  const rect = progressContainer.getBoundingClientRect();
+  const clickX = e.clientX - rect.left;
+  const ratio = Math.max(0, Math.min(1, clickX / rect.width));
+  const targetTime = ratio * totalDuration;
+  let sum = 0;
   for(let i=0;i<files.length;i++){
-    const dur=durations[i]||0;
-    if(sum+dur>=targetTime){
-      currentIndex=i;
-      lastPosition=targetTime-sum;
-      loadTrack(currentIndex,lastPosition);
+    const dur = durations[i] || 0;
+    if(sum + dur >= targetTime){
+      currentIndex = i;
+      lastPosition = Math.max(0, targetTime - sum);
+      loadTrack(currentIndex, lastPosition);
       break;
     }
-    sum+=dur;
+    sum += dur;
   }
 });
 
-volumeControl.addEventListener('input',e=>{ player.volume=e.target.value; });
+// volume
+volumeControl.addEventListener('input', e=>{ 
+  const v = parseFloat(e.target.value);
+  player.volume = isNaN(v) ? 1 : v;
+});
 
 // Pause si page inactive
-document.addEventListener('visibilitychange',()=>{ if(document.hidden) player.pause(); });
+document.addEventListener('visibilitychange', ()=>{ if(document.hidden) player.pause(); });
 
 // Sauvegarde avant de quitter
-window.addEventListener('beforeunload',()=>{
-  localStorage.setItem('audioTime',player.currentTime);
-  localStorage.setItem('audioIndex',currentIndex);
+window.addEventListener('beforeunload', ()=>{
+  try {
+    localStorage.setItem('audioTime', player.currentTime || 0);
+    localStorage.setItem('audioIndex', currentIndex || 0);
+  } catch(e){}
 });
+
 // Contrôles clavier pour accessibilité
 document.addEventListener('keydown', (e) => {
   if (!hasStarted) return; // ne rien faire si la lecture n'a pas commencé
@@ -201,7 +246,7 @@ document.addEventListener('keydown', (e) => {
       break;
     case 'ArrowRight': // avancer 15s
       e.preventDefault();
-      player.currentTime = Math.min(player.duration, player.currentTime + 15);
+      player.currentTime = Math.min(player.duration || Infinity, player.currentTime + 15);
       break;
     case 'ArrowUp': // augmenter volume
       e.preventDefault();
@@ -218,7 +263,7 @@ document.addEventListener('keydown', (e) => {
       if(currentIndex > 0){
         currentIndex--;
         lastPosition = 0;
-        loadTrack(currentIndex);
+        loadTrack(currentIndex, 0);
       }
       break;
     case 'PageDown': // chapitre suivant
@@ -226,7 +271,7 @@ document.addEventListener('keydown', (e) => {
       if(currentIndex < files.length - 1){
         currentIndex++;
         lastPosition = 0;
-        loadTrack(currentIndex);
+        loadTrack(currentIndex, 0);
       }
       break;
   }
