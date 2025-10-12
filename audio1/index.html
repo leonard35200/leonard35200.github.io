@@ -22,7 +22,7 @@
 </head>
 <body>
 <h1>Audio 57 rue du soleil</h1>
-<img src="audio.png" id="imagePlay" alt="Lire / mettre en pause le livre audio">
+<img src="audio.png" id="imagePlay" alt="afficher / cacher le lecteur audio" title="Cliquer pour afficher / cacher le lecteur audio">
 
 <div id="playerUI">
   <div id="timeContainer" style="display:flex; justify-content:space-between; width:80%; max-width:600px; margin:0 auto; font-size:0.9em;">
@@ -177,7 +177,27 @@ progressContainer.addEventListener('click', (e) => {
 
 
 // --- Boutons ---
-imagePlay.addEventListener('click',()=>{ player.paused||!hasStarted ? loadTrack(currentIndex,lastPosition) : player.pause(); });
+imagePlay.addEventListener('click', () => {
+  // Si la lecture n'a pas encore commencé, on charge et joue le chapitre
+  if (!hasStarted) {
+    loadTrack(currentIndex, lastPosition);
+  } else {
+    // Toggle pause / lecture
+    if (player.paused) {
+      player.play();
+    } else {
+      player.pause();
+    }
+  }
+
+  // Toggle affichage des commandes audio
+  if (playerUI.style.display === 'block') {
+    playerUI.style.display = 'none';
+  } else {
+    playerUI.style.display = 'block';
+  }
+});
+
 pauseBtn.addEventListener('click',()=>{ player.paused ? player.play() : player.pause(); });
 prevBtn.addEventListener('click',()=>{ if(currentIndex>0){ currentIndex--; loadTrack(currentIndex,0); } });
 nextBtn.addEventListener('click',()=>{ if(currentIndex<files.length-1){ currentIndex++; loadTrack(currentIndex,0); } });
