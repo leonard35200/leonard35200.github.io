@@ -159,12 +159,22 @@ progressContainer.addEventListener('click', (e) => {
   const width = rect.width;
   const percent = clickX / width;
 
-  const playedBefore = durations.slice(0, currentIndex).reduce((a,b)=>a+b,0);
-  let targetTime = percent * totalDuration - playedBefore;
-  targetTime = Math.max(0, Math.min(player.duration, targetTime));
-  player.currentTime = targetTime;
-  updateProgress();
+  // Calcul du temps absolu sur tout le livre
+  const targetTotalTime = percent * totalDuration;
+
+  // Trouver le chapitre correspondant
+  let cumulative = 0;
+  for (let i = 0; i < durations.length; i++) {
+    if (cumulative + durations[i] > targetTotalTime) {
+      currentIndex = i;
+      const timeInChapter = targetTotalTime - cumulative;
+      loadTrack(currentIndex, timeInChapter);
+      break;
+    }
+    cumulative += durations[i];
+  }
 });
+
 
 // --- Boutons ---
 imagePlay.addEventListener('click',()=>{ player.paused||!hasStarted ? loadTrack(currentIndex,lastPosition) : player.pause(); });
