@@ -15,7 +15,7 @@
   font-size: 1.5rem;
   border-radius: 0 0 10px 10px;
   box-shadow: 0 6px 18px rgba(0,0,0,0.08);
- }
+}
 
   #imagePlay { width:200px; height:200px; margin:40px auto; cursor:pointer; object-fit:cover; display:block; border-radius:10px; }
   #playerUI { display:none; margin-top:20px; }
@@ -50,12 +50,6 @@ figcaption.hidden {
   overflow: hidden;
 }
 
-/* Ajout du div demandée */
-.responsive-container {
-  margin: 0 auto;
-  padding: 0 5%;
-  max-width: 800px;
-}
 
 </style>
 </head>
@@ -88,12 +82,16 @@ figcaption.hidden {
 
 <audio id="audioPlayer"></audio>
 
-<div class="responsive-container">
-<p>La création de textes nativement faciles à lire (FAL) est au cœur de l’engagement de l’association Li(b)re. Un de nos projets est la création d’une collection de livres en français faciles à lire (FAL).</p>
+
+<p>La création de textes nativement faciles à lire (FAL) est au cœur de l’engagement de l’association Li(b)re. Un de nos projets est la création d’une collection de livres en français facile ou simplifié avec la complicité de l’éditeur Jean-Marie Goater. Il s’agit de rendre accessible la création littéraire dans tous les domaines et genres à un public éloigné du livre, avec la collaboration d’auteurs et d’autrices convaincu.es.</p>
+
+
+
 <p>La collection FASIL, qui va naître bientôt, proposera de beaux textes, courts et faciles à lire, au format broché et à un prix modéré.</p>
+
 <p><span style="color: #e3a281;"> Bonne nouvelle : le premier ouvrage de la collection FASIL paraîtra au courant de l’automne 2025 aux éditions Goater ! </span></p>
+
 <p><a Le style="color:#cc4c25 ;" href="http://www.editions-goater.org/"> site des éditions Goater</a></p>
-</div>
 
 <script>
 // --- Paramètres (fichiers triés par numéro) ---
@@ -185,14 +183,7 @@ function loadTrack(index, start=0){
   player.src = files[index];
   player.currentTime = start;
   player.play();
-  if (index == 0){
-    chapterEl.textContent = "Intro"}
-  else if (index == 1){
-    chapterEl.textContent = "Préface"}
-  else {
-    let chap = index - 1
-    chapterEl.textContent = "Chapitre " + chap;}
-  
+  chapterEl.textContent = "Chapitre " + index;
   hasStarted = true;
   playerUI.style.display = "block";
   progressBar.classList.add('progress-pulse');
@@ -263,7 +254,7 @@ forwardBtn.addEventListener('click',()=>{ player.currentTime = Math.min(player.d
 
 // --- Événements ---
 player.addEventListener('timeupdate',()=>{ updateProgress(); saveProgress(); });
-player.addEventListener('ended',()=>{ currentIndex++; if(currentIndex<files.length){ loadTrack(currentIndex,0); } else { progressBar.style.width="100%"; chapterEl.textContent="Fin du livre"; elap[...]}
+player.addEventListener('ended',()=>{ currentIndex++; if(currentIndex<files.length){ loadTrack(currentIndex,0); } else { progressBar.style.width="100%"; chapterEl.textContent="Fin du livre"; elapsedEl.textContent=formatTime(totalDuration); remainingEl.textContent="-0:00"; } });
 
 // --- Volume ---
 volumeControl.addEventListener('input', e=>{ player.volume = e.target.value; });
