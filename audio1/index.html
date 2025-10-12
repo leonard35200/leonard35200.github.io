@@ -1,276 +1,236 @@
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mon Livre Audio</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      margin: 0;
-      background: #f6f6f6;
-      color: #333;
-      text-align: center;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>57 rue du soleil</title>
+<style>
+  body { font-family: sans-serif; margin:0; background:#f6f6f6; color:#333; text-align:center; }
+  h1 { background:black; color:white; margin:0; padding:1em; }
 
-    h1 {
-      background: black;
-      color: white;
-      margin: 0;
-      padding: 1em;
-    }
+  #imagePlay { width:200px; height:200px; margin:40px auto; cursor:pointer; object-fit:cover; display:block; }
 
-    #imagePlay {
-      width: 200px;
-      height: 200px;
-      margin: 40px auto 20px auto;
-      cursor: pointer;
-      display: block;
-      object-fit: cover;
-    }
+  #playerUI { display:none; margin-top:20px; }
+  #progressContainer { position:relative; width:80%; max-width:600px; height:15px; background:#ddd; border-radius:10px; margin:20px auto; cursor:pointer; overflow:hidden; }
+  #progressBar { height:100%; width:0%; background:linear-gradient(90deg,#4a90e2,#7b4397); border-radius:10px; transition:width 0.2s linear; }
+  #volumeContainer { display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:10px; }
+  #chapter { font-size:1.1em; margin-bottom:20px; font-weight:bold; }
+  input[type="range"] { width:100px; }
+  .time { display:flex; justify-content:space-between; width:80%; max-width:600px; font-size:0.9em; margin:5px auto; opacity:0.8; }
+  button { margin:5px; padding:8px 16px; font-size:1em; border:none; border-radius:20px; cursor:pointer; background:black; color:white; }
+  button:hover { background:#222; }
 
-    #playerUI {
-      display: none; /* caché au départ */
-    }
-
-    #progressContainer {
-      position: relative;
-      width: 80%;
-      max-width: 600px;
-      height: 15px;
-      background: #ddd;
-      border-radius: 10px;
-      margin: 20px auto;
-      cursor: pointer;
-      overflow: hidden;
-    }
-
-    #progressBar {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #4a90e2, #7b4397);
-      border-radius: 10px;
-      transition: width 0.2s linear;
-    }
-
-    #volumeContainer {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-
-    #chapter {
-      font-size: 1.1em;
-      margin-bottom: 20px;
-      font-weight: bold;
-    }
-
-    input[type="range"] {
-      width: 100px;
-    }
-
-    .time {
-      display: flex;
-      justify-content: space-between;
-      width: 80%;
-      max-width: 600px;
-      font-size: 0.9em;
-      margin: 5px auto;
-      opacity: 0.8;
-    }
-
-    #pauseBtn {
-      display: inline-block;
-      margin-bottom: 20px;
-      padding: 8px 20px;
-      font-size: 1em;
-      border: none;
-      border-radius: 20px;
-      background: black;
-      color: white;
-      cursor: pointer;
-    }
-
-    #pauseBtn:hover {
-      background: #222;
-    }
-  </style>
+  /* Animation barre de progression */
+  .progress-pulse { animation:pulse 2s infinite; }
+  @keyframes pulse { 0% { box-shadow:0 0 5px #4a90e2; } 50% { box-shadow:0 0 15px #7b4397; } 100% { box-shadow:0 0 5px #4a90e2; } }
+</style>
 </head>
 <body>
-  <h1>Mon Livre Audio</h1>
+<h1>Audio 57 rue du soleil</h1>
+<img src="audio.png" id="imagePlay" alt="Lire / mettre en pause le livre audio" role="button" tabindex="0">
 
-  <!-- Image cliquable -->
-  <img src="audio.png" id="imagePlay" alt="Lire le livre audio">
-
-  <!-- UI du lecteur, caché au départ -->
-  <div id="playerUI">
-    <!-- Barre de progression globale -->
-    <div id="progressContainer">
-      <div id="progressBar"></div>
-    </div>
-
-    <!-- Temps écoulé / temps restant -->
-    <div class="time">
-      <span id="currentTime">0:00</span>
-      <span id="remainingTime">-0:00</span>
-    </div>
-
-    <!-- Volume -->
-    <div id="volumeContainer">
-      🔊 <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="1">
-    </div>
-
-    <!-- Chapitre -->
-    <div id="chapter">Chapitre 0</div>
-
-    <!-- Bouton pause -->
-    <button id="pauseBtn">Pause ⏸️</button>
+<div id="playerUI">
+  <div id="progressContainer" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+  <div class="time">
+    <span id="currentTime">0:00</span>
+    <span id="remainingTime">-0:00</span>
   </div>
+  <div id="volumeContainer">🔊 <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="1"></div>
+  <div id="chapter">Chapitre 0</div>
+  <button id="prevChapterBtn">Chapitre précédent ⏮️</button>
+  <button id="pauseBtn">Pause ⏸️</button>
+  <button id="nextChapterBtn">Chapitre suivant ⏭️</button>
+  <button id="rewindBtn">⏪ 15s</button>
+  <button id="forwardBtn">15s ⏩</button>
+</div>
 
-  <!-- Lecteur audio invisible -->
-  <audio id="audioPlayer"></audio>
+<audio id="audioPlayer"></audio>
 
-  <script>
-    const files = [
-      'livre_audio.mp3',
-      'livre_audio1.mp3',
-      'livre_audio2.mp3',
-      'livre_audio3.mp3'
-    ];
+<script>
+const files = ['livre_audio.mp3','livre_audio1.mp3','livre_audio2.mp3','livre_audio3.mp3'];
+const player = document.getElementById('audioPlayer');
+const imagePlay = document.getElementById('imagePlay');
+const playerUI = document.getElementById('playerUI');
+const progressContainer = document.getElementById('progressContainer');
+const progressBar = document.getElementById('progressBar');
+const volumeControl = document.getElementById('volumeControl');
+const chapterEl = document.getElementById('chapter');
+const currentTimeEl = document.getElementById('currentTime');
+const remainingTimeEl = document.getElementById('remainingTime');
+const pauseBtn = document.getElementById('pauseBtn');
+const prevChapterBtn = document.getElementById('prevChapterBtn');
+const nextChapterBtn = document.getElementById('nextChapterBtn');
+const rewindBtn = document.getElementById('rewindBtn');
+const forwardBtn = document.getElementById('forwardBtn');
 
-    const player = document.getElementById('audioPlayer');
-    const imagePlay = document.getElementById('imagePlay');
-    const playerUI = document.getElementById('playerUI');
-    const progressContainer = document.getElementById('progressContainer');
-    const progressBar = document.getElementById('progressBar');
-    const volumeControl = document.getElementById('volumeControl');
-    const chapterEl = document.getElementById('chapter');
-    const currentTimeEl = document.getElementById('currentTime');
-    const remainingTimeEl = document.getElementById('remainingTime');
-    const pauseBtn = document.getElementById('pauseBtn');
+let currentIndex = parseInt(localStorage.getItem('audioIndex'))||0;
+let lastPosition = parseFloat(localStorage.getItem('audioTime'))||0;
+let durations=[];
+let totalDuration=0;
+let hasStarted=false;
 
-    let currentIndex = parseInt(localStorage.getItem('audioIndex')) || 0;
-    let lastPosition = parseFloat(localStorage.getItem('audioTime')) || 0;
-    let durations = []; // Durée de chaque fichier
-    let totalDuration = 0;
-    let hasStarted = false;
+// Précharger durées
+function preloadDurations(index=0){
+  if(index>=files.length) return;
+  const a=new Audio();
+  a.src=files[index];
+  a.addEventListener('loadedmetadata',()=>{
+    durations[index]=a.duration;
+    totalDuration=durations.reduce((acc,val)=>acc+val,0);
+    preloadDurations(index+1);
+  });
+}
+preloadDurations();
 
-    // Précharger les durées
-    function preloadDurations(index = 0) {
-      if(index >= files.length) return;
-      const a = new Audio();
-      a.src = files[index];
-      a.addEventListener('loadedmetadata', () => {
-        durations[index] = a.duration;
-        totalDuration = durations.reduce((acc, val) => acc + val, 0);
-        preloadDurations(index + 1);
-      });
+function loadTrack(index,startTime=0){
+  if(index>=files.length){
+    chapterEl.textContent="Fin du livre";
+    progressBar.style.width="100%";
+    currentTimeEl.textContent=formatTime(totalDuration);
+    remainingTimeEl.textContent="-0:00";
+    return;
+  }
+  player.src=files[index];
+  player.currentTime=startTime;
+  chapterEl.textContent="Chapitre "+index;
+  player.play();
+  hasStarted=true;
+  playerUI.style.display="block";
+  progressBar.classList.add('progress-pulse');
+}
+
+function updateProgress(){
+  let elapsed=0;
+  for(let i=0;i<currentIndex;i++) elapsed+=durations[i]||0;
+  elapsed+=player.currentTime;
+  const percent=totalDuration?(elapsed/totalDuration)*100:0;
+  progressBar.style.width=percent+"%";
+  progressBar.setAttribute("aria-valuenow",percent);
+  currentTimeEl.textContent=formatTime(elapsed);
+  remainingTimeEl.textContent="-"+formatTime(totalDuration-elapsed);
+}
+
+function formatTime(sec){
+  if(isNaN(sec)) return "0:00";
+  const m=Math.floor(sec/60);
+  const s=Math.floor(sec%60);
+  return m+":"+s.toString().padStart(2,'0');
+}
+
+// Image cliquable : play/pause toggle
+imagePlay.addEventListener('click',()=>{
+  if(!hasStarted) loadTrack(currentIndex,lastPosition);
+  else player.paused?player.play():player.pause();
+});
+
+pauseBtn.addEventListener('click',()=>{ player.pause(); });
+
+prevChapterBtn.addEventListener('click',()=>{
+  if(currentIndex>0){
+    currentIndex--;
+    lastPosition=0;
+    loadTrack(currentIndex);
+  }
+});
+
+nextChapterBtn.addEventListener('click',()=>{
+  if(currentIndex<files.length-1){
+    currentIndex++;
+    lastPosition=0;
+    loadTrack(currentIndex);
+  }
+});
+
+rewindBtn.addEventListener('click',()=>{ player.currentTime=Math.max(0,player.currentTime-15); });
+forwardBtn.addEventListener('click',()=>{ player.currentTime=Math.min(player.duration,player.currentTime+15); });
+
+player.addEventListener('timeupdate',()=>{
+  updateProgress();
+  localStorage.setItem('audioTime',player.currentTime);
+  localStorage.setItem('audioIndex',currentIndex);
+});
+
+player.addEventListener('ended',()=>{
+  currentIndex++;
+  lastPosition=0;
+  localStorage.setItem('audioIndex',currentIndex);
+  localStorage.setItem('audioTime',0);
+  loadTrack(currentIndex);
+});
+
+progressContainer.addEventListener('click',e=>{
+  if(!totalDuration) return;
+  const rect=progressContainer.getBoundingClientRect();
+  const clickX=e.clientX-rect.left;
+  const ratio=clickX/rect.width;
+  const targetTime=ratio*totalDuration;
+  let sum=0;
+  for(let i=0;i<files.length;i++){
+    const dur=durations[i]||0;
+    if(sum+dur>=targetTime){
+      currentIndex=i;
+      lastPosition=targetTime-sum;
+      loadTrack(currentIndex,lastPosition);
+      break;
     }
+    sum+=dur;
+  }
+});
 
-    preloadDurations();
+volumeControl.addEventListener('input',e=>{ player.volume=e.target.value; });
 
-    function loadTrack(index, startTime = 0) {
-      if(index >= files.length){
-        chapterEl.textContent = "Fin du livre";
-        progressBar.style.width = "100%";
-        currentTimeEl.textContent = formatTime(totalDuration);
-        remainingTimeEl.textContent = "-0:00";
-        return;
+// Pause si page inactive
+document.addEventListener('visibilitychange',()=>{ if(document.hidden) player.pause(); });
+
+// Sauvegarde avant de quitter
+window.addEventListener('beforeunload',()=>{
+  localStorage.setItem('audioTime',player.currentTime);
+  localStorage.setItem('audioIndex',currentIndex);
+});
+// Contrôles clavier pour accessibilité
+document.addEventListener('keydown', (e) => {
+  if (!hasStarted) return; // ne rien faire si la lecture n'a pas commencé
+
+  switch(e.code){
+    case 'Space': // toggle play/pause
+      e.preventDefault();
+      player.paused ? player.play() : player.pause();
+      break;
+    case 'ArrowLeft': // reculer 15s
+      e.preventDefault();
+      player.currentTime = Math.max(0, player.currentTime - 15);
+      break;
+    case 'ArrowRight': // avancer 15s
+      e.preventDefault();
+      player.currentTime = Math.min(player.duration, player.currentTime + 15);
+      break;
+    case 'ArrowUp': // augmenter volume
+      e.preventDefault();
+      player.volume = Math.min(1, player.volume + 0.05);
+      volumeControl.value = player.volume;
+      break;
+    case 'ArrowDown': // baisser volume
+      e.preventDefault();
+      player.volume = Math.max(0, player.volume - 0.05);
+      volumeControl.value = player.volume;
+      break;
+    case 'PageUp': // chapitre précédent
+      e.preventDefault();
+      if(currentIndex > 0){
+        currentIndex--;
+        lastPosition = 0;
+        loadTrack(currentIndex);
       }
-      player.src = files[index];
-      player.currentTime = startTime;
-      chapterEl.textContent = "Chapitre " + index;
-      player.play();
-      hasStarted = true;
-      playerUI.style.display = "block"; // révèle le reste du lecteur
-    }
-
-    function updateProgress() {
-      let elapsed = 0;
-      for(let i = 0; i < currentIndex; i++){
-        elapsed += durations[i] || 0;
+      break;
+    case 'PageDown': // chapitre suivant
+      e.preventDefault();
+      if(currentIndex < files.length - 1){
+        currentIndex++;
+        lastPosition = 0;
+        loadTrack(currentIndex);
       }
-      elapsed += player.currentTime;
-      const percent = totalDuration ? (elapsed / totalDuration) * 100 : 0;
-      progressBar.style.width = percent + "%";
-
-      currentTimeEl.textContent = formatTime(elapsed);
-      remainingTimeEl.textContent = "-" + formatTime(totalDuration - elapsed);
-    }
-
-    function formatTime(sec){
-      if(isNaN(sec)) return "0:00";
-      const m = Math.floor(sec/60);
-      const s = Math.floor(sec%60);
-      return m + ":" + s.toString().padStart(2,'0');
-    }
-
-    // Image cliquable : play / pause toggle
-    imagePlay.addEventListener('click', () => {
-      if(!hasStarted){
-        loadTrack(currentIndex, lastPosition);
-      } else {
-        if(player.paused){
-          player.play();
-        } else {
-          player.pause();
-        }
-      }
-    });
-
-    pauseBtn.addEventListener('click', () => {
-      player.pause();
-    });
-
-    player.addEventListener('timeupdate', () => {
-      updateProgress();
-      localStorage.setItem('audioTime', player.currentTime);
-      localStorage.setItem('audioIndex', currentIndex);
-    });
-
-    player.addEventListener('ended', () => {
-      currentIndex++;
-      lastPosition = 0;
-      localStorage.setItem('audioIndex', currentIndex);
-      localStorage.setItem('audioTime', 0);
-      loadTrack(currentIndex);
-    });
-
-    progressContainer.addEventListener('click', e => {
-      if(!totalDuration) return;
-      const rect = progressContainer.getBoundingClientRect();
-      const clickX = e.clientX - rect.left;
-      const ratio = clickX / rect.width;
-      const targetTime = ratio * totalDuration;
-
-      let sum = 0;
-      for(let i = 0; i < files.length; i++){
-        const dur = durations[i] || 0;
-        if(sum + dur >= targetTime){
-          currentIndex = i;
-          lastPosition = targetTime - sum;
-          loadTrack(currentIndex, lastPosition);
-          break;
-        }
-        sum += dur;
-      }
-    });
-
-    volumeControl.addEventListener('input', e => {
-      player.volume = e.target.value;
-    });
-
-    // Pause si la page est inactive
-    document.addEventListener('visibilitychange', () => {
-      if(document.hidden) player.pause();
-    });
-
-    // Sauvegarde position avant de quitter
-    window.addEventListener('beforeunload', () => {
-      localStorage.setItem('audioTime', player.currentTime);
-      localStorage.setItem('audioIndex', currentIndex);
-    });
-  </script>
+      break;
+  }
+});
+</script>
 </body>
 </html>
