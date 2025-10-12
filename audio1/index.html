@@ -178,23 +178,21 @@ progressContainer.addEventListener('click', (e) => {
 
 // --- Boutons ---
 imagePlay.addEventListener('click', () => {
-  // Si la lecture n'a pas encore commencé, on charge et joue le chapitre
   if (!hasStarted) {
+    // Premier clic : lance la lecture et affiche les commandes
     loadTrack(currentIndex, lastPosition);
-  } else {
-    // Toggle pause / lecture
-    if (player.paused) {
-      player.play();
-    } else {
-      player.pause();
-    }
-  }
-
-  // Toggle affichage des commandes audio
-  if (playerUI.style.display === 'block') {
-    playerUI.style.display = 'none';
-  } else {
     playerUI.style.display = 'block';
+  } else {
+    // Toggle affichage et lecture
+    if (playerUI.style.display === 'block') {
+      // Si visible → cacher + pause
+      playerUI.style.display = 'none';
+      player.pause();
+    } else {
+      // Si caché → afficher + jouer
+      playerUI.style.display = 'block';
+      player.play();
+    }
   }
 });
 
