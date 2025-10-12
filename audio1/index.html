@@ -243,8 +243,25 @@ volumeControl.addEventListener('input', e=>{ player.volume = e.target.value; });
 // --- Mise en pause si l’onglet est masqué --- //
 document.addEventListener('visibilitychange',()=>{ if(document.hidden) player.pause(); });
 
+// clic sur barre progression
+progressContainer.addEventListener('click', (e) => {
+  const rect = progressContainer.getBoundingClientRect();
+  const clickX = e.clientX - rect.left;
+  const width = rect.width;
+  const percent = clickX / width;
+
+  // calculer le temps total correspondant
+  const playedBefore = durations.slice(0, currentIndex).reduce((a,b)=>a+b,0);
+  const targetTime = percent * totalDuration - playedBefore;
+
+  // s'assurer que le temps reste dans la piste actuelle
+  player.currentTime = Math.max(0, Math.min(player.duration, targetTime));
+  updateProgress();
+});
+
 // --- Sauvegarde avant fermeture --- //
 window.addEventListener('beforeunload', saveProgress);
+updateProgress(); // <-- temps initial affiché
 </script>
 
 
