@@ -238,10 +238,12 @@ imagePlay.addEventListener('click', () => {
   if (!hasStarted) {
     loadTrack(currentIndex, lastPosition);
     playerUI.style.display = 'block';
+    imagePlay.style.width= 'clamp(120px, 50vw, 280px)';
     figcaptionEl.classList.add('hidden');
   } else {
     if (playerUI.style.display === 'block') {
       playerUI.style.display = 'none';
+      imagePlay.style.width= 'clamp(120px, 30vw, 280px)';
       player.pause();
       figcaptionEl.classList.remove('hidden'); // cacher la légende
     } else {
