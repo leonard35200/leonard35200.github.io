@@ -18,15 +18,14 @@
   box-shadow: 0 6px 18px rgba(0,0,0,0.08);
 }
 
-  /* image responsive, accessible et centrée */
-#imagePlay {
-  width: clamp(120px, 50vw, 280px); /* min 120px, ideal 30% viewport, max 280px */
-  height: auto;                     /* conserve le ratio */
-  display: block;
-  margin: 40px auto;
-  cursor: pointer;
-  object-fit: cover;
-  border-radius: 10px;
+  #imagePlay {
+  width: clamp(120px, 50vw, 280px);
+  height: auto;
+  transition: width 0.4s ease;
+}
+
+#imagePlay.small {
+  width: clamp(120px, 30vw, 220px);
 }
   #playerUI { display:none; margin-top:20px; }
   #progressContainer { position:relative; width:80%; max-width:600px; height:15px; background:#ddd; border-radius:10px; margin:20px auto; cursor:pointer; overflow:hidden; }
@@ -234,26 +233,27 @@ progressContainer.addEventListener('click', (e) => {
 
 // --- Boutons ---
 imagePlay.addEventListener('click', () => {
-  const figcaptionEl = imagePlay.nextElementSibling; // récupère la légende
+  const figcaptionEl = imagePlay.nextElementSibling;
+
   if (!hasStarted) {
     loadTrack(currentIndex, lastPosition);
     playerUI.style.display = 'block';
-    imagePlay.style.width= 'clamp(120px, 50vw, 280px)';
+    imagePlay.classList.add('small'); // image devient plus petite quand lecteur visible
     figcaptionEl.classList.add('hidden');
   } else {
     if (playerUI.style.display === 'block') {
       playerUI.style.display = 'none';
-      imagePlay.style.width= 'clamp(120px, 30vw, 280px)';
       player.pause();
-      figcaptionEl.classList.remove('hidden'); // cacher la légende
+      imagePlay.classList.remove('small'); // image redevient grande
+      figcaptionEl.classList.remove('hidden');
     } else {
       playerUI.style.display = 'block';
       player.play();
-      figcaptionEl.classList.add('hidden'); // afficher la légende
+      imagePlay.classList.add('small'); // redevient petite
+      figcaptionEl.classList.add('hidden');
     }
   }
 });
-
 
 pauseBtn.addEventListener('click',()=>{ player.paused ? player.play() : player.pause(); });
 prevBtn.addEventListener('click',()=>{ if(currentIndex>0){ currentIndex--; loadTrack(currentIndex,0); } });
