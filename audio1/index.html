@@ -6,7 +6,9 @@
 <title>57 rue du soleil</title>
 <style>
 .responsive-container { margin: 0 auto; padding: 0 5%; max-width: 800px; }
-  body { font-family: sans-serif; margin:0; background:#f6f6f6; color:#333; text-align:center; }
+.responsive-containerHaut { margin: 0 auto; padding: 0 5%; max-width: 800px; }
+#Intro {font-size: clamp(18px, 2.5vw, 22px); font-weight: bold; color: #cc4c25; margin-bottom: 20px; text-align: center; }
+body { font-family: sans-serif; margin:0; background:#f6f6f6; color:#333; text-align:center; }
  h1 {
   background: #e6a585;
   color: #1a1a1a;
@@ -64,12 +66,17 @@ figcaption.hidden {
 </head>
 <body>
 <h1>57 rue du soleil - version audio</h1>
+<div class="responsive-containerHaut">
+<p id="Intro">Découvrez ici la version audio de <span style="white-space: nowrap;">57 rue du soleil.</span></p>
+</div>
+
 <figure>
   <img src="audio.png" id="imagePlay" alt="afficher / cacher le lecteur audio" title="Cliquer pour afficher / cacher le lecteur audio">
   <figcaption>
     Cliquer sur l’image pour afficher ou cacher le lecteur audio.
   </figcaption>
 </figure>
+
 
 <div id="playerUI">
   <div id="timeContainer" style="display:flex; justify-content:space-between; width:80%; max-width:600px; margin:0 auto; font-size:0.9em;">
@@ -90,10 +97,11 @@ figcaption.hidden {
 <audio id="audioPlayer"></audio>
 
 <div class="responsive-container">
-<p>La création de textes nativement faciles à lire (FAL) est au cœur de l’engagement de l’association Li(b)re. Un de nos projets est la création d’une collection de livres en français facile ou simplifié avec la complicité de l’éditeur Jean-Marie Goater. Il s’agit de rendre accessible la création littéraire dans tous les domaines et genres à un public éloigné du livre, avec la collaboration d’auteurs et d’autrices convaincu.es.</p>
-<p>La collection FASIL, qui va naître bientôt, proposera de beaux textes, courts et faciles à lire, au format broché et à un prix modéré.</p>
-<p><span style="color: #e3a281;"> Bonne nouvelle : le premier ouvrage de la collection FASIL paraîtra au courant de l’automne 2025 aux éditions Goater ! </span></p>
-<p><a Le style="color:#cc4c25 ;" href="http://www.editions-goater.org/"> site des éditions Goater</a></p>
+
+<p>Une version audio avec ambiance sonore réalisée gracieusement par Florence Arnould, comédienne - <a href="https://www.ecoutez-voir.com/" style="color:#333;">Compagnie Ecoutez Voir</a></p>
+<p> Enregistrement réalisé avec le concours de la <a href="https://www.ecoutez-voir.com/" style="color:#333;">médiathèque L'Encrier de Romillé.</a></p>
+<p><strong><span style="color:#ff9e01; font-size:2em;"> Bonne écoute !</span></strong></p>
+<p><a style="color:#cc4c25 ;" href="http://www.https://assolibre.fr/"> Retour au site de li(b)re</a></p>
 </div>
 <script>
 // --- Paramètres (fichiers triés par numéro) ---
