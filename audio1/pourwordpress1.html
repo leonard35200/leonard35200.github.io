@@ -1,5 +1,8 @@
 <style>
-  body { font-family: sans-serif; margin:0; background:#f6f6f6; color:#333; text-align:center; }
+.responsive-container { margin: 0 auto; padding: 0 5%; max-width: 800px; }
+.responsive-containerHaut { margin: 0 auto; padding: 0 5%; max-width: 800px; }
+#Intro {font-size: clamp(18px, 2.5vw, 22px); font-weight: bold; color: #cc4c25; margin-bottom: 20px; text-align: center; }
+body { font-family: sans-serif; margin:0; background:#f6f6f6; color:#333; text-align:center; }
  h1 {
   background: #e6a585;
   color: #1a1a1a;
@@ -11,7 +14,15 @@
   box-shadow: 0 6px 18px rgba(0,0,0,0.08);
 }
 
-  #imagePlay { width:200px; height:200px; margin:40px auto; cursor:pointer; object-fit:cover; display:block; border-radius:10px; }
+  #imagePlay {
+  width: clamp(120px, 50vw, 280px);
+  height: auto;
+  transition: width 0.4s ease;
+}
+
+#imagePlay.small {
+  width: clamp(120px, 30vw, 220px);
+}
   #playerUI { display:none; margin-top:20px; }
   #progressContainer { position:relative; width:80%; max-width:600px; height:15px; background:#ddd; border-radius:10px; margin:20px auto; cursor:pointer; overflow:hidden; }
   #progressBar { height:100%; width:0%; background:linear-gradient(90deg,#4a90e2,#7b4397); border-radius:10px; transition:width 0.2s linear; }
@@ -46,13 +57,18 @@ figcaption.hidden {
 
 
 </style>
-<h1>57 rue du soleil version audio</h1>
+<h1>57 rue du soleil - version audio</h1>
+<div class="responsive-containerHaut">
+<p id="Intro">Découvrez ici la version audio de <span style="white-space: nowrap;">57 rue du soleil.</span></p>
+</div>
+
 <figure>
   <img src="https://assolibre.fr/wp-content/uploads/2025/10/audio.png" id="imagePlay" alt="afficher / cacher le lecteur audio" title="Cliquer pour afficher / cacher le lecteur audio">
   <figcaption>
     Cliquer sur l’image pour afficher ou cacher le lecteur audio.
   </figcaption>
 </figure>
+
 
 <div id="playerUI">
   <div id="timeContainer" style="display:flex; justify-content:space-between; width:80%; max-width:600px; margin:0 auto; font-size:0.9em;">
@@ -66,27 +82,21 @@ figcaption.hidden {
   <div id="volumeContainer">🔊 <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="1"></div>
   <div id="chapter">Chapitre 0</div>
   <button id="prevChapterBtn">Chapitre précédent ⏮️</button>
+  <button id="nextChapterBtn">Chapitre suivant ⏭️</button> <br>
   <button id="pauseBtn">Lecture / Pause ⏯️</button>
-  <button id="nextChapterBtn">Chapitre suivant ⏭️</button>
-  <button id="rewindBtn">⏪ 15s</button>
-  <button id="forwardBtn">15s ⏩</button>
 </div>
 
 <audio id="audioPlayer"></audio>
 
+<div class="responsive-container">
 
-<p>La création de textes nativement faciles à lire (FAL) est au cœur de l’engagement de l’association Li(b)re. Un de nos projets est la création d’une collection de livres en français facile ou simplifié avec la complicité de l’éditeur Jean-Marie Goater. Il s’agit de rendre accessible la création littéraire dans tous les domaines et genres à un public éloigné du livre, avec la collaboration d’auteurs et d’autrices convaincu.es.</p>
-
-
-
-<p>La collection FASIL, qui va naître bientôt, proposera de beaux textes, courts et faciles à lire, au format broché et à un prix modéré.</p>
-
-<p><span style="color: #e3a281;"> Bonne nouvelle : le premier ouvrage de la collection FASIL paraîtra au courant de l’automne 2025 aux éditions Goater ! </span></p>
-
-<p>Le <a style="color:#cc4c25 ;" href="http://www.editions-goater.org/"> site des éditions Goater</a></p>
-
+<p>Une version audio avec ambiance sonore réalisée gracieusement par Florence Arnould, comédienne - <a href="https://www.ecoutez-voir.com/" style="color:#333;">Compagnie Ecoutez Voir</a></p>
+<p> Enregistrement réalisé avec le concours de la <a href="https://romille.fr/mediatheque/" style="color:#333;">médiathèque L'Encrier de Romillé.</a></p>
+<p><strong><span style="color:#ff9e01; font-size:2em;"> Bonne écoute !</span></strong></p>
+<p><a style="color:#cc4c25 ;" href="https://www.assolibre.fr/"> Retour au site de li(b)re</a></p>
+</div>
 <script>
-// --- Paramètres (fichiers triés par numéro) ---
+// --- Paramètres (noms de fichiers locaux) ---
 const files = [
   'https://assolibre.fr/wp-content/uploads/2025/10/0.Intro-et-remerciment-Jean.mp3',
   'https://assolibre.fr/wp-content/uploads/2025/10/1.-preface.mp3',
@@ -116,6 +126,8 @@ const files = [
   'https://assolibre.fr/wp-content/uploads/2025/10/26.-Chap-25.mp3'
 ];
 
+// Exemple : remoteFiles[0] -> "https://assolibre.fr/.../0.Intro%20et%20remerciment%20Jean.mp3"
+
 const durations = [
   14, 19.5, 308, 46, 470, 239, 58, 305, 196, 101, 374, 289.5, 85.3, 363.2, 
   249.5, 90.5, 314, 160, 92, 213, 330.5, 330.5, 438.5, 312, 473, 352.5
@@ -134,8 +146,6 @@ const chapterEl = document.getElementById('chapter');
 const pauseBtn = document.getElementById('pauseBtn');
 const prevBtn = document.getElementById('prevChapterBtn');
 const nextBtn = document.getElementById('nextChapterBtn');
-const rewindBtn = document.getElementById('rewindBtn');
-const forwardBtn = document.getElementById('forwardBtn');
 const elapsedEl = document.getElementById('elapsed');
 const remainingEl = document.getElementById('remaining');
 
@@ -194,7 +204,13 @@ function loadTrack(index, start=0){
   player.src = files[index];
   player.currentTime = start;
   player.play();
-  chapterEl.textContent = "Chapitre " + index;
+  if (index == 0){
+    chapterEl.textContent = "Intro";}
+  else if (index == 1){
+    chapterEl.textContent = "Préface";}
+  else {
+    let chap = index - 1
+    chapterEl.textContent = "Chapitre " + chap;}
   hasStarted = true;
   playerUI.style.display = "block";
   progressBar.classList.add('progress-pulse');
@@ -238,30 +254,31 @@ progressContainer.addEventListener('click', (e) => {
 
 // --- Boutons ---
 imagePlay.addEventListener('click', () => {
-  const figcaptionEl = imagePlay.nextElementSibling; // récupère la légende
+  const figcaptionEl = imagePlay.nextElementSibling;
+
   if (!hasStarted) {
     loadTrack(currentIndex, lastPosition);
     playerUI.style.display = 'block';
+    imagePlay.classList.add('small'); // image devient plus petite quand lecteur visible
     figcaptionEl.classList.add('hidden');
   } else {
     if (playerUI.style.display === 'block') {
       playerUI.style.display = 'none';
       player.pause();
-      figcaptionEl.classList.remove('hidden'); // cacher la légende
+      imagePlay.classList.remove('small'); // image redevient grande
+      figcaptionEl.classList.remove('hidden');
     } else {
       playerUI.style.display = 'block';
       player.play();
-      figcaptionEl.classList.add('hidden'); // afficher la légende
+      imagePlay.classList.add('small'); // redevient petite
+      figcaptionEl.classList.add('hidden');
     }
   }
 });
 
-
 pauseBtn.addEventListener('click',()=>{ player.paused ? player.play() : player.pause(); });
 prevBtn.addEventListener('click',()=>{ if(currentIndex>0){ currentIndex--; loadTrack(currentIndex,0); } });
 nextBtn.addEventListener('click',()=>{ if(currentIndex<files.length-1){ currentIndex++; loadTrack(currentIndex,0); } });
-rewindBtn.addEventListener('click',()=>{ player.currentTime = Math.max(0, player.currentTime - 15); });
-forwardBtn.addEventListener('click',()=>{ player.currentTime = Math.min(player.duration, player.currentTime + 15); });
 
 // --- Événements ---
 player.addEventListener('timeupdate',()=>{ updateProgress(); saveProgress(); });
@@ -280,3 +297,4 @@ window.addEventListener('beforeunload', saveProgress);
 updateProgress();
 
 </script>
+
