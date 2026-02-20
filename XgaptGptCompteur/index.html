@@ -1,1 +1,259 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Compteur de points - Base</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #0f172a;
+      --panel: #1e293b;
+      --panel-soft: #334155;
+      --text: #e2e8f0;
+      --accent: #38bdf8;
+      --success: #22c55e;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --radius: 16px;
+    }
 
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: radial-gradient(circle at top, #1d4ed8, var(--bg) 45%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .app {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: grid;
+      gap: 20px;
+    }
+
+    .card {
+      background: color-mix(in srgb, var(--panel) 90%, black);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    }
+
+    .topbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.4rem, 2.4vw, 2rem);
+    }
+
+    .controls,
+    .round {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    .player {
+      background: var(--panel-soft);
+      border-radius: 14px;
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .player.winner {
+      outline: 2px solid var(--success);
+      box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
+    }
+
+    input,
+    button {
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font: inherit;
+    }
+
+    input {
+      background: #0b1226;
+      color: var(--text);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      width: 100%;
+    }
+
+    button {
+      cursor: pointer;
+      color: #0b1226;
+      background: var(--accent);
+      font-weight: 700;
+    }
+
+    button.secondary {
+      background: #94a3b8;
+    }
+
+    button.danger {
+      background: var(--danger);
+      color: white;
+    }
+
+    button.ghost {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .score {
+      font-size: 2rem;
+      font-weight: 800;
+      text-align: center;
+      margin: 8px 0;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .muted {
+      opacity: 0.8;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="card topbar">
+      <div>
+        <h1 contenteditable="true" spellcheck="false">Compteur de points (prototype)</h1>
+        <div class="muted">Clique sur le titre pour le renommer.</div>
+      </div>
+      <div class="round">
+        <label for="roundNumber">Manche :</label>
+        <input id="roundNumber" type="number" min="1" value="1" style="width: 90px" />
+      </div>
+      <div class="controls">
+        <button id="addPlayerBtn">+ Ajouter un joueur</button>
+        <button id="resetBtn" class="secondary">Réinitialiser les scores</button>
+      </div>
+    </section>
+
+    <section class="grid" id="playersGrid"></section>
+  </main>
+
+  <template id="playerTemplate">
+    <article class="player">
+      <input class="player-name" type="text" value="Nouveau joueur" aria-label="Nom du joueur" />
+      <div class="score" data-score>0</div>
+      <div class="actions">
+        <button data-change="1">+1</button>
+        <button data-change="5">+5</button>
+        <button data-change="10">+10</button>
+        <button data-change="-1" class="ghost">-1</button>
+        <button data-change="-5" class="ghost">-5</button>
+        <button data-change="-10" class="ghost">-10</button>
+      </div>
+      <button class="danger" data-remove>Supprimer le joueur</button>
+    </article>
+  </template>
+
+  <script>
+    const playersGrid = document.getElementById('playersGrid');
+    const playerTemplate = document.getElementById('playerTemplate');
+    const addPlayerBtn = document.getElementById('addPlayerBtn');
+    const resetBtn = document.getElementById('resetBtn');
+
+    const state = {
+      players: [
+        { id: crypto.randomUUID(), name: 'Joueur 1', score: 0 },
+        { id: crypto.randomUUID(), name: 'Joueur 2', score: 0 }
+      ]
+    };
+
+    function getWinners(players) {
+      const maxScore = Math.max(...players.map((player) => player.score));
+      return players.filter((player) => player.score === maxScore && players.length > 1).map((player) => player.id);
+    }
+
+    function render() {
+      playersGrid.innerHTML = '';
+      const winnerIds = getWinners(state.players);
+
+      state.players.forEach((player) => {
+        const node = playerTemplate.content.cloneNode(true);
+        const article = node.querySelector('.player');
+        const nameInput = node.querySelector('.player-name');
+        const scoreNode = node.querySelector('[data-score]');
+        const removeBtn = node.querySelector('[data-remove]');
+
+        nameInput.value = player.name;
+        scoreNode.textContent = player.score;
+
+        if (winnerIds.includes(player.id) && player.score !== 0) {
+          article.classList.add('winner');
+        }
+
+        nameInput.addEventListener('input', (event) => {
+          player.name = event.target.value;
+        });
+
+        node.querySelectorAll('[data-change]').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            player.score += Number(btn.dataset.change);
+            render();
+          });
+        });
+
+        removeBtn.addEventListener('click', () => {
+          if (state.players.length <= 1) {
+            alert('Il faut garder au moins un joueur.');
+            return;
+          }
+          state.players = state.players.filter((item) => item.id !== player.id);
+          render();
+        });
+
+        playersGrid.appendChild(node);
+      });
+    }
+
+    addPlayerBtn.addEventListener('click', () => {
+      const number = state.players.length + 1;
+      state.players.push({
+        id: crypto.randomUUID(),
+        name: `Joueur ${number}`,
+        score: 0
+      });
+      render();
+    });
+
+    resetBtn.addEventListener('click', () => {
+      state.players.forEach((player) => {
+        player.score = 0;
+      });
+      render();
+    });
+
+    render();
+  </script>
+</body>
+</html>
