@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Compteur en direct</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<main class="container">
+  <header class="header">
+    <div>
+      <a class="btn btn-link" href="index.html">← Retour</a>
+      <h1 id="gameTitle" class="title"></h1>
+      <p id="gameHint" class="subtitle"></p>
+    </div>
+  </header>
+  <section class="surface">
+    <div class="row">
+      <label>Nombre de joueurs
+        <input id="playerCount" type="number" min="1" max="8" value="4">
+      </label>
+      <button id="build">Créer</button>
+    </div>
+    <div id="board" class="players" style="margin-top:.8rem;"></div>
+  </section>
+</main>
+<script src="live.js"></script>
+</body>
+</html>
