@@ -1,10 +1,14 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>57 rue du soleil</title>
 <style>
+#mentions-legales {
+  text-align: right;
+  padding: 12px 0;
+  margin-top: 20px;
+  /* si ton thème force autre chose, conserve la largeur max et le centrage */
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .responsive-container { margin: 0 auto; padding: 0 5%; max-width: 800px; }
 .responsive-containerHaut { margin: 0 auto; padding: 0 5%; max-width: 800px; }
 #Intro {font-size: clamp(18px, 2.5vw, 22px); font-weight: bold; color: #cc4c25; margin-bottom: 20px; text-align: center; }
@@ -63,11 +67,9 @@ figcaption.hidden {
 
 
 </style>
-</head>
-<body>
-<h1>57 rue du soleil - version audio</h1>
+<h1>57 rue du soleil <br> version audio</h1>
 <div class="responsive-containerHaut">
-<p id="Intro">Découvrez ici la version audio de <span style="white-space: nowrap;">57 rue du soleil.</span></p>
+<p id="Intro" >Découvrez ici la version audio de <span style="white-space: nowrap;">57 rue du soleil.</span></p>
 </div>
 
 <figure>
@@ -98,34 +100,54 @@ figcaption.hidden {
 
 <div class="responsive-container">
 
-<p>Une version audio avec ambiance sonore réalisée gracieusement par Florence Arnould, comédienne - <a href="https://www.ecoutez-voir.com/" style="color:#333;">Compagnie Ecoutez Voir</a></p>
-<p> Enregistrement réalisé avec le concours de la <a href="https://www.ecoutez-voir.com/" style="color:#333;">médiathèque L'Encrier de Romillé.</a></p>
-<p><strong><span style="color:#ff9e01; font-size:2em;"> Bonne écoute !</span></strong></p>
-<p><a style="color:#cc4c25 ;" href="http://www.https://assolibre.fr/"> Retour au site de li(b)re</a></p>
+<p>Une version audio avec ambiance sonore réalisée gracieusement par Florence Arnould, comédienne - <a href="https://www.ecoutez-voir.com/" style="color:#333; text-decoration: underline;">Compagnie Ecoutez Voir</a></p>
+<p> Enregistrement réalisé avec le concours de la <a href="https://romille.fr/mediatheque/" style="color:#333; text-decoration: underline;">médiathèque L'Encrier de Romillé.</a></p>
+<p style="text-align:center;"><strong><span style="color:#cc4c25; font-size:2em;">Bonne écoute !</span></strong></p>
+<p><a style="color:#cc4c25 ; text-decoration: underline;" href="https://www.assolibre.fr/"> Retour au site de li(b)re</a></p>
 </div>
+<footer id="mentions-legales" class="responsive-container">
+  <a href="https://assolibre.fr/mentions-legales-audio" ><span style="color:#333; text-decoration: underline;">Mentions légales</span>     </a>
+</footer>
+
+
 <script>
 // --- Paramètres (noms de fichiers locaux) ---
 const files = [
-  '0.Intro et remerciment Jean.mp3', '1. préface.mp3', '3. Chap 2.mp3', '4. Chap 3.mp3',
-  '5. Chap 4.mp3', '6. Chap 5.mp3', '7. Chap 6.mp3', '8. Chap 7.mp3',
-  '9. Chap 8.mp3', '10. Chap 9.mp3', '11. Chap 10.mp3', '12. Chap 11.mp3',
-  '13. Chap 12.mp3', '14. Chap 13.mp3', '15. Chap 14.mp3', '16. Chap 15.mp3',
-  '17. Chap 16.mp3', '18. Chap 17.mp3', '19. Chap 18.mp3', '20. Chap 19.mp3',
-  '21. Chap 20.mp3', '22. Chap 21.mp3', '23. Chap 22.mp3', '24. Chap 23.mp3',
-  '25. Chap 24.mp3', '26. Chap 25.mp3'
+  'https://assolibre.fr/wp-content/uploads/2025/10/0.Intro-et-remerciment-Jean.mp3',
+  'https://assolibre.fr/wp-content/uploads/2025/10/1.-preface.mp3',
+  'https://assolibre.fr/wp-content/uploads/2026/04/2.-Chap-1.mp3',
+  'https://assolibre.fr/wp-content/uploads/2025/10/3.-Chap-2.mp3',
+  'https://assolibre.fr/wp-content/uploads/2025/10/4.-Chap-3.mp3',
+  'https://assolibre.fr/wp-content/uploads/2025/10/5.-Chap-4.mp3',
+  'https://assolibre.fr/wp-content/uploads/2025/10/6.-Chap-5.mp3',
+  'https://assolibre.fr/wp-content/uploads/2025/10/7.-Chap-6.mp3',
+  'https://assolibre.fr/wp-content/uploads/2025/10/8.-Chap-7.mp3',
+  'https://assolibre.fr/wp-content/uploads/2025/10/9.-Chap-8.mp3',
+  'https://assolibre.fr/wp-content/uploads/2025/10/10.-Chap-9.mp3',
+  'https://assolibre.fr/wp-content/uploads/2025/10/11.-Chap-10.mp3',
+  'https://assolibre.fr/wp-content/uploads/2025/10/12.-Chap-11.mp3',
+  'https://assolibre.fr/wp-content/uploads/2025/10/13.-Chap-12.mp3',
+  'https://assolibre.fr/wp-content/uploads/2025/10/14.-Chap-13.mp3',
+  'https://assolibre.fr/wp-content/uploads/2025/10/15.-Chap-14.mp3',
+  'https://assolibre.fr/wp-content/uploads/2025/10/16.-Chap-15.mp3',
+  'https://assolibre.fr/wp-content/uploads/2025/10/17.-Chap-16.mp3',
+  'https://assolibre.fr/wp-content/uploads/2025/10/18.-Chap-17.mp3',
+  'https://assolibre.fr/wp-content/uploads/2025/10/19.-Chap-18.mp3',
+  'https://assolibre.fr/wp-content/uploads/2025/10/20.-Chap-19.mp3',
+  'https://assolibre.fr/wp-content/uploads/2025/10/21.-Chap-20.mp3',
+  'https://assolibre.fr/wp-content/uploads/2025/10/22.-Chap-21.mp3',
+  'https://assolibre.fr/wp-content/uploads/2025/10/23.-Chap-22.mp3',
+  'https://assolibre.fr/wp-content/uploads/2025/10/24.-Chap-23.mp3',
+  'https://assolibre.fr/wp-content/uploads/2025/10/25.-Chap-24.mp3',
+  'https://assolibre.fr/wp-content/uploads/2025/10/26.-Chap-25.mp3',
+  'https://assolibre.fr/wp-content/uploads/2026/04/27.-Chap-26.mp3'
 ];
-
-// --- Base URL distant (modifier si nécessaire) ---
-const baseURL = 'https://assolibre.fr/wp-content/uploads/2025/10/';
-
-// Génère des URLs sûres (encodeURIComponent) à partir des noms de fichiers
-const remoteFiles = files.map(f => baseURL + encodeURIComponent(f));
 
 // Exemple : remoteFiles[0] -> "https://assolibre.fr/.../0.Intro%20et%20remerciment%20Jean.mp3"
 
 const durations = [
-  14, 19.5, 308, 46, 470, 239, 58, 305, 196, 101, 374, 289.5, 85.3, 363.2, 
-  249.5, 90.5, 314, 160, 92, 213, 330.5, 330.5, 438.5, 312, 473, 352.5
+  14, 19.5, 512, 308, 46, 470, 239, 58, 305, 196, 101, 374, 289.5, 85.3, 363.2, 
+  249.5, 90.5, 314, 160, 92, 213, 330.5, 330.5, 438.5, 312, 473, 352.5,791
 ];
 
 const totalDuration = durations.reduce((a,b)=>a+b,0);
@@ -196,16 +218,44 @@ function loadTrack(index, start=0){
     remainingEl.textContent = "-0:00";
     return;
   }
-  player.src = remoteFiles[index];
+  player.src = files[index];
   player.currentTime = start;
+  const titre = [
+  "Amira, 31 ans  Amira aime danser",
+  "Michèle,47 ans  Michèle et l'immeuble",
+  "Amira et Michèle",
+  "Mario, 14ans  Mario aime dessiner des bateaux",
+  "Michèle,47 ans  Michèle et son travail",
+  "Michèle et Mario",
+  "Albert, 59 ans  Albert râle",
+  "Michèle, 47 ans  Michèle veut aménager la cour",
+  "Albert et Michèle",
+  "Amira, 31 ans  Amira ose parler",
+  "Michèle, 47 ans  Michèle chante",
+  "Amira et Michèle",
+  "Mario, 14 ans  Mario regarde autour de lui",
+  "Michèle, 47 ans  Michèle veut préparer l'assemblée générale",
+  "Mario et Michèle",
+  "Albert, 59 ans  Albert voudrait refaire de la couture",
+  "Michèle, 47 ans  Michèle Michèle oublie de faire des crêpes",
+  "Michèle et Albert",
+  "L'assemblée générale",
+  "L'immeuble sans Michèle - 1  Amira et Mario parlent de la cour",
+  "Michèle sans l'immeuble -1  Michèle se repose (et téléphone beaucoup)",
+  "L'immeuble sans Michèle - 2  Amira danse (de plus en plus) et Albert râle(de moins en moins)",
+  "Michèle sans l'immeuble - 2  Michèle veut recommencer à écrire",
+  "L'immeuble sans Michèle - 3  Mario et Albert se parlent",
+  "Michèle sans l'immeuble - 3  Michèle appelle Albert",
+  "Le retour de Michèle"
+  ] 
   player.play();
   if (index == 0){
-    chapterEl.textContent = "Intro";}
+    chapterEl.textContent = "Intro" ;}
   else if (index == 1){
     chapterEl.textContent = "Préface";}
   else {
     let chap = index - 1
-    chapterEl.textContent = "Chapitre " + chap;}
+    chapterEl.textContent = "Chapitre " + chap + " : " +titre[index-2];}
   hasStarted = true;
   playerUI.style.display = "block";
   progressBar.classList.add('progress-pulse');
@@ -292,7 +342,3 @@ window.addEventListener('beforeunload', saveProgress);
 updateProgress();
 
 </script>
-
-
-</body>
-</html>
