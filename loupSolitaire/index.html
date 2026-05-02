@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Loup-Garou — Messagerie MJ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0d0d12;
+      --surface:   #13131c;
+      --surface2:  #1a1a28;
+      --border:    #2a2a40;
+      --accent:    #c8a96e;
+      --accent2:   #8b6fd4;
+      --danger:    #c44b4b;
+      --text:      #e8e0d0;
+      --muted:     #6e6a80;
+      --mj-bubble: #1e1830;
+      --player-bubble: #1a2218;
+      --radius:    12px;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Crimson Text', Georgia, serif;
+      font-size: 17px;
+      overflow: hidden;
+    }
+
+    /* ── STARS BACKGROUND ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        radial-gradient(1px 1px at 20% 30%, rgba(200,169,110,0.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 80% 10%, rgba(255,255,255,0.2) 0%, transparent 100%),
+        radial-gradient(1px 1px at 50% 80%, rgba(139,111,212,0.2) 0%, transparent 100%),
+        radial-gradient(1px 1px at 10% 60%, rgba(255,255,255,0.15) 0%, transparent 100%),
+        radial-gradient(1px 1px at 90% 50%, rgba(200,169,110,0.2) 0%, transparent 100%),
+        radial-gradient(1px 1px at 35% 15%, rgba(255,255,255,0.1) 0%, transparent 100%),
+        radial-gradient(1px 1px at 65% 45%, rgba(255,255,255,0.15) 0%, transparent 100%),
+        radial-gradient(1px 1px at 75% 70%, rgba(200,169,110,0.15) 0%, transparent 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    #app {
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── VIEWS ── */
+    .view { display: none; flex-direction: column; height: 100%; }
+    .view.active { display: flex; }
+
+    /* ── SETUP VIEW ── */
+    #view-setup {
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      gap: 20px;
+      overflow-y: auto;
+    }
+
+    .logo {
+      text-align: center;
+    }
+    .logo-icon {
+      font-size: 48px;
+      display: block;
+      margin-bottom: 8px;
+      filter: drop-shadow(0 0 16px rgba(200,169,110,0.5));
+    }
+    .logo h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+    .logo p {
+      color: var(--muted);
+      font-size: 14px;
+      margin-top: 4px;
+      font-style: italic;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .card h2 {
+      font-family: 'Cinzel', serif;
+      font-size: 14px;
+      letter-spacing: 2px;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .field { margin-bottom: 14px; }
+    .field label {
+      display: block;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 6px;
+      letter-spacing: 0.5px;
+    }
+    .field input {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: 'Crimson Text', serif;
+      font-size: 16px;
+      padding: 10px 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .field input:focus { border-color: var(--accent); }
+
+    /* Players list in setup */
+    #players-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 12px;
+      max-height: 240px;
+      overflow-y: auto;
+    }
+    .player-tag {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 15px;
+    }
+    .player-tag button {
+      background: none;
+      border: none;
+      color: var(--danger);
+      cursor: pointer;
+      font-size: 18px;
+      line-height: 1;
+      padding: 0 4px;
+      opacity: 0.6;
+      transition: opacity 0.2s;
+    }
+    .player-tag button:hover { opacity: 1; }
+
+    .add-row {
+      display: flex;
+      gap: 8px;
+    }
+    .add-row input {
+      flex: 1;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: 'Crimson Text', serif;
+      font-size: 16px;
+      padding: 10px 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .add-row input:focus { border-color: var(--accent); }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 13px 20px;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Cinzel', serif;
+      font-size: 13px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #c8a96e, #a07848);
+      color: #1a1000;
+      font-weight: 700;
+    }
+    .btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
+    .btn-secondary {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-sm {
+      width: auto;
+      padding: 10px 16px;
+      font-size: 12px;
+    }
+    .btn-icon {
+      width: 42px;
+      height: 42px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      border-radius: 8px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .btn-icon:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-icon.send {
+      background: linear-gradient(135deg, #c8a96e, #a07848);
+      border: none;
+      color: #1a1000;
+    }
+    .btn-icon.send:hover { filter: brightness(1.1); }
+
+    .divider {
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      position: relative;
+      margin: 4px 0;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: 40%;
+      height: 1px;
+      background: var(--border);
+    }
+    .divider::before { left: 0; }
+    .divider::after { right: 0; }
+
+    .code-display {
+      text-align: center;
+      padding: 16px;
+      background: var(--surface2);
+      border-radius: 8px;
+      border: 1px dashed var(--accent);
+      margin-top: 8px;
+    }
+    .code-display .code {
+      font-family: 'Cinzel', serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 8px;
+    }
+    .code-display p {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    /* ── JOIN VIEW ── */
+    #view-join {
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      gap: 20px;
+    }
+
+    /* ── LOBBY VIEW (choose player) ── */
+    #view-lobby {
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      gap: 16px;
+      overflow-y: auto;
+    }
+
+    .players-grid {
+      width: 100%;
+      max-width: 420px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 60vh;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+    .players-grid::-webkit-scrollbar { width: 4px; }
+    .players-grid::-webkit-scrollbar-track { background: transparent; }
+    .players-grid::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+    .player-btn {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: var(--text);
+      font-family: 'Crimson Text', serif;
+      font-size: 17px;
+      text-align: left;
+      position: relative;
+    }
+    .player-btn:hover {
+      border-color: var(--accent);
+      background: var(--surface2);
+      transform: translateX(4px);
+    }
+    .player-btn.mj-btn {
+      border-color: var(--accent2);
+      background: #1a1830;
+    }
+    .player-btn.mj-btn:hover { border-color: var(--accent); }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+    }
+    .avatar.mj { background: #2a1e50; border-color: var(--accent2); }
+
+    .unread-badge {
+      margin-left: auto;
+      background: var(--danger);
+      color: white;
+      border-radius: 99px;
+      font-size: 12px;
+      font-family: 'Cinzel', serif;
+      padding: 2px 8px;
+      font-weight: 700;
+    }
+
+    /* ── MJ VIEW ── */
+    #view-mj {
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .topbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+    .topbar-title {
+      font-family: 'Cinzel', serif;
+      font-size: 14px;
+      letter-spacing: 1px;
+      color: var(--accent);
+      flex: 1;
+    }
+    .topbar-sub {
+      font-size: 12px;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    /* MJ: split layout */
+    .mj-body {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* Sidebar players */
+    .sidebar {
+      width: 72px;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 12px 8px;
+      gap: 8px;
+      overflow-y: auto;
+      flex-shrink: 0;
+    }
+    .sidebar::-webkit-scrollbar { display: none; }
+
+    .sidebar-player {
+      position: relative;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: var(--surface2);
+      border: 2px solid var(--border);
+      font-size: 10px;
+      color: var(--muted);
+      text-align: center;
+      flex-shrink: 0;
+      font-family: 'Cinzel', serif;
+      letter-spacing: 0;
+      padding: 2px;
+      line-height: 1.2;
+    }
+    .sidebar-player:hover { border-color: var(--accent); color: var(--text); }
+    .sidebar-player.active { border-color: var(--accent); background: #231d10; color: var(--accent); }
+    .sidebar-player.has-unread::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      width: 10px;
+      height: 10px;
+      background: var(--danger);
+      border-radius: 50%;
+      border: 2px solid var(--surface);
+    }
+    .sidebar-player.dead { opacity: 0.35; }
+    .sidebar-player.dead::before {
+      content: '💀';
+      position: absolute;
+      font-size: 14px;
+      top: -4px;
+      right: -4px;
+    }
+
+    /* Chat area */
+    .chat-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .chat-header {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    .chat-header-name {
+      font-family: 'Cinzel', serif;
+      font-size: 15px;
+      color: var(--text);
+      flex: 1;
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #4caf50;
+      flex-shrink: 0;
+    }
+    .btn-kill {
+      font-size: 11px;
+      padding: 6px 10px;
+      letter-spacing: 1px;
+      background: transparent;
+      border: 1px solid var(--danger);
+      color: var(--danger);
+      border-radius: 6px;
+      font-family: 'Cinzel', serif;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-kill:hover { background: var(--danger); color: white; }
+    .btn-kill.dead-btn {
+      border-color: var(--muted);
+      color: var(--muted);
+      cursor: default;
+    }
+    .btn-kill.dead-btn:hover { background: transparent; color: var(--muted); }
+
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .messages::-webkit-scrollbar { width: 4px; }
+    .messages::-webkit-scrollbar-track { background: transparent; }
+    .messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+    .msg {
+      max-width: 80%;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .msg.from-mj { align-self: flex-end; align-items: flex-end; }
+    .msg.from-player { align-self: flex-start; align-items: flex-start; }
+
+    .bubble {
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+    .from-mj .bubble {
+      background: var(--mj-bubble);
+      border: 1px solid #2d2550;
+      border-bottom-right-radius: 4px;
+    }
+    .from-player .bubble {
+      background: var(--player-bubble);
+      border: 1px solid #252e22;
+      border-bottom-left-radius: 4px;
+    }
+    .msg-time {
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .msg-sender {
+      font-size: 11px;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .empty-chat {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-style: italic;
+      font-size: 15px;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .no-player-selected {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-style: italic;
+      font-size: 15px;
+      text-align: center;
+    }
+
+    .input-bar {
+      padding: 12px 16px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 8px;
+      align-items: flex-end;
+      flex-shrink: 0;
+      background: var(--surface);
+    }
+    .input-bar textarea {
+      flex: 1;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-family: 'Crimson Text', serif;
+      font-size: 16px;
+      padding: 10px 14px;
+      outline: none;
+      resize: none;
+      max-height: 120px;
+      min-height: 42px;
+      line-height: 1.4;
+      transition: border-color 0.2s;
+    }
+    .input-bar textarea:focus { border-color: var(--accent); }
+    .input-bar textarea::placeholder { color: var(--muted); }
+
+    /* ── PLAYER VIEW ── */
+    #view-player {
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ── BROADCAST PANEL (MJ) ── */
+    .broadcast-btn {
+      font-size: 11px;
+      padding: 6px 10px;
+      letter-spacing: 1px;
+      background: transparent;
+      border: 1px solid var(--accent2);
+      color: var(--accent2);
+      border-radius: 6px;
+      font-family: 'Cinzel', serif;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .broadcast-btn:hover { background: var(--accent2); color: white; }
+
+    .broadcast-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .broadcast-overlay.open { display: flex; }
+    .broadcast-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      width: 100%;
+      max-width: 380px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .broadcast-panel h3 {
+      font-family: 'Cinzel', serif;
+      font-size: 14px;
+      letter-spacing: 2px;
+      color: var(--accent2);
+      text-transform: uppercase;
+    }
+    .broadcast-panel textarea {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: 'Crimson Text', serif;
+      font-size: 16px;
+      padding: 12px;
+      outline: none;
+      resize: none;
+      height: 100px;
+      transition: border-color 0.2s;
+    }
+    .broadcast-panel textarea:focus { border-color: var(--accent2); }
+    .broadcast-row { display: flex; gap: 10px; }
+
+    /* ── NIGHT ANNOUNCEMENT ── */
+    .night-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      background: #1a1030;
+      border: 1px solid var(--accent2);
+      color: var(--accent2);
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-family: 'Cinzel', serif;
+      letter-spacing: 1px;
+    }
+
+    /* ── MISC ── */
+    .mt-8 { margin-top: 8px; }
+    .mt-12 { margin-top: 12px; }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(60px);
+      background: var(--surface);
+      border: 1px solid var(--accent);
+      color: var(--text);
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      z-index: 200;
+      transition: transform 0.3s;
+      white-space: nowrap;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* scrollbar global */
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ══════════ SETUP VIEW ══════════ -->
+  <div id="view-setup" class="view active">
+    <div class="logo">
+      <span class="logo-icon">🌕</span>
+      <h1>Loup-Garou MJ</h1>
+      <p>Messagerie secrète pour maîtres du jeu</p>
+    </div>
+
+    <div class="card">
+      <h2>Créer une partie</h2>
+      <div id="players-list"></div>
+      <div class="add-row">
+        <input type="text" id="new-player-input" placeholder="Prénom du joueur..." maxlength="20" />
+        <button class="btn-icon" id="add-player-btn">＋</button>
+      </div>
+      <button class="btn btn-primary mt-12" id="create-party-btn">Créer la partie →</button>
+    </div>
+
+    <div class="divider">ou</div>
+
+    <div class="card">
+      <h2>Rejoindre une partie</h2>
+      <div class="field">
+        <label>Code de la partie (4 lettres)</label>
+        <input type="text" id="join-code-input" placeholder="ex: WOLF" maxlength="4" style="text-transform:uppercase;letter-spacing:4px;font-family:'Cinzel',serif;font-size:20px;" />
+      </div>
+      <button class="btn btn-secondary" id="join-party-btn">Rejoindre →</button>
+    </div>
+  </div>
+
+  <!-- ══════════ LOBBY VIEW ══════════ -->
+  <div id="view-lobby" class="view">
+    <div class="logo">
+      <span class="logo-icon">🌕</span>
+      <h1>Loup-Garou MJ</h1>
+    </div>
+    <div class="card" style="max-width:420px;width:100%;">
+      <h2>Qui es-tu ?</h2>
+      <p style="color:var(--muted);font-size:14px;margin-bottom:16px;">Sélectionne ton prénom pour accéder à ta messagerie.</p>
+      <div class="players-grid" id="lobby-players"></div>
+    </div>
+    <div class="code-display" style="max-width:420px;width:100%;">
+      <div class="code" id="lobby-code-display">----</div>
+      <p>Partage ce code avec les joueurs</p>
+    </div>
+  </div>
+
+  <!-- ══════════ MJ VIEW ══════════ -->
+  <div id="view-mj" class="view">
+    <div class="topbar">
+      <button class="btn-icon" id="mj-back-btn" style="width:36px;height:36px;font-size:16px;">←</button>
+      <div>
+        <div class="topbar-title">🌕 Maître du Jeu</div>
+        <div class="topbar-sub" id="mj-party-code-display"></div>
+      </div>
+      <button class="broadcast-btn" id="broadcast-open-btn">📢 Annonce</button>
+    </div>
+
+    <div class="mj-body">
+      <!-- Sidebar -->
+      <div class="sidebar" id="mj-sidebar"></div>
+
+      <!-- Chat -->
+      <div class="chat-area" id="mj-chat-area">
+        <div class="no-player-selected">← Sélectionne un joueur</div>
+      </div>
+    </div>
+
+    <!-- Broadcast overlay -->
+    <div class="broadcast-overlay" id="broadcast-overlay">
+      <div class="broadcast-panel">
+        <h3>📢 Annonce à tous</h3>
+        <p style="color:var(--muted);font-size:14px;">Ce message sera envoyé à <strong style="color:var(--text);">tous les joueurs</strong> en même temps.</p>
+        <textarea id="broadcast-text" placeholder="Ex: La nuit tombe sur le village... Un villageois a été retrouvé mort."></textarea>
+        <div class="broadcast-row">
+          <button class="btn btn-secondary" style="flex:1" id="broadcast-cancel-btn">Annuler</button>
+          <button class="btn btn-primary" style="flex:1" id="broadcast-send-btn">Envoyer à tous</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ PLAYER VIEW ══════════ -->
+  <div id="view-player" class="view">
+    <div class="topbar">
+      <button class="btn-icon" id="player-back-btn" style="width:36px;height:36px;font-size:16px;">←</button>
+      <div>
+        <div class="topbar-title" id="player-topbar-name"></div>
+        <div class="topbar-sub">Messagerie avec le Maître du Jeu</div>
+      </div>
+    </div>
+    <div class="messages" id="player-messages">
+      <div class="empty-chat">Aucun message pour l'instant.<br>Le MJ te contactera bientôt.</div>
+    </div>
+    <div class="input-bar">
+      <textarea id="player-input" placeholder="Ton message au MJ..." rows="1"></textarea>
+      <button class="btn-icon send" id="player-send-btn">➤</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getDatabase, ref, set, push, onValue, get, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+  // ══════════════════════════════════════════
+  //  🔧 REMPLACE ICI TA CONFIG FIREBASE
+  // ══════════════════════════════════════════
+  const firebaseConfig = {
+    apiKey: "AIzaSyCtaKv9Cx-_lQg4jaDlbN07-eja1xa_8NQ",
+    authDomain: "loup-garou-99e4f.firebaseapp.com",
+    databaseURL: "https://loup-garou-99e4f-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "loup-garou-99e4f",
+    storageBucket: "loup-garou-99e4f.firebasestorage.app",
+    messagingSenderId: "127011919790",
+    appId: "1:127011919790:web:945ccb9f4d499e4fa05a3f"
+  };
+  // ══════════════════════════════════════════
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  // ── STATE ──
+  let state = {
+    partyCode: null,
+    role: null,        // 'mj' | playerName
+    players: [],       // [{name, dead}]
+    selectedPlayer: null,
+    unread: {},        // {playerName: count}
+    deadPlayers: new Set(),
+    listeners: []
+  };
+
+  // ── UTILS ──
+  function genCode() {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+    return Array.from({length:4}, () => chars[Math.floor(Math.random()*chars.length)]).join('');
+  }
+
+  function showView(id) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.getElementById('view-' + id).classList.add('active');
+  }
+
+  function showToast(msg, duration = 2500) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), duration);
+  }
+
+  function formatTime(ts) {
+    const d = new Date(ts);
+    return d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0');
+  }
+
+  function autoResize(el) {
+    el.style.height = 'auto';
+    el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+  }
+
+  // ── SETUP VIEW ──
+  let tempPlayers = [];
+
+  function renderTempPlayers() {
+    const list = document.getElementById('players-list');
+    list.innerHTML = '';
+    tempPlayers.forEach((name, i) => {
+      const div = document.createElement('div');
+      div.className = 'player-tag';
+      div.innerHTML = `<span>${name}</span><button data-i="${i}">✕</button>`;
+      div.querySelector('button').addEventListener('click', () => {
+        tempPlayers.splice(i, 1);
+        renderTempPlayers();
+      });
+      list.appendChild(div);
+    });
+  }
+
+  document.getElementById('add-player-btn').addEventListener('click', () => {
+    const input = document.getElementById('new-player-input');
+    const name = input.value.trim();
+    if (!name) return;
+    if (tempPlayers.includes(name)) { showToast('Ce prénom existe déjà'); return; }
+    if (tempPlayers.length >= 25) { showToast('Max 25 joueurs'); return; }
+    tempPlayers.push(name);
+    renderTempPlayers();
+    input.value = '';
+    input.focus();
+  });
+
+  document.getElementById('new-player-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') document.getElementById('add-player-btn').click();
+  });
+
+  document.getElementById('create-party-btn').addEventListener('click', async () => {
+    if (tempPlayers.length < 2) { showToast('Ajoute au moins 2 joueurs'); return; }
+    const code = genCode();
+    const players = tempPlayers.map(name => ({ name, dead: false }));
+    await set(ref(db, `parties/${code}`), {
+      players: Object.fromEntries(players.map(p => [p.name, { dead: false }])),
+      createdAt: Date.now()
+    });
+    state.partyCode = code;
+    state.players = players;
+    showLobby(code, players);
+  });
+
+  document.getElementById('join-party-btn').addEventListener('click', async () => {
+    const code = document.getElementById('join-code-input').value.trim().toUpperCase();
+    if (code.length !== 4) { showToast('Code à 4 lettres'); return; }
+    const snap = await get(ref(db, `parties/${code}`));
+    if (!snap.exists()) { showToast('Partie introuvable'); return; }
+    const data = snap.val();
+    state.partyCode = code;
+    state.players = Object.entries(data.players || {}).map(([name, v]) => ({ name, dead: v.dead || false }));
+    showLobby(code, state.players);
+  });
+
+  // ── LOBBY VIEW ──
+  function showLobby(code, players) {
+    state.partyCode = code;
+    document.getElementById('lobby-code-display').textContent = code;
+    const grid = document.getElementById('lobby-players');
+    grid.innerHTML = '';
+
+    // MJ button
+    const mjBtn = document.createElement('button');
+    mjBtn.className = 'player-btn mj-btn';
+    mjBtn.innerHTML = `<div class="avatar mj">🌕</div><span>Maître du Jeu</span>`;
+    mjBtn.addEventListener('click', () => enterAsMJ());
+    grid.appendChild(mjBtn);
+
+    players.forEach(p => {
+      const btn = document.createElement('button');
+      btn.className = 'player-btn';
+      btn.innerHTML = `<div class="avatar">${p.name.charAt(0).toUpperCase()}</div><span>${p.name}</span>`;
+      if (p.dead) btn.innerHTML += `<span class="unread-badge" style="background:var(--muted)">💀</span>`;
+      btn.addEventListener('click', () => enterAsPlayer(p.name));
+      grid.appendChild(btn);
+    });
+
+    showView('lobby');
+  }
+
+  // ── ENTER AS MJ ──
+  function enterAsMJ() {
+    state.role = 'mj';
+    state.selectedPlayer = null;
+    state.unread = {};
+    document.getElementById('mj-party-code-display').textContent = `Code : ${state.partyCode}`;
+    renderMJSidebar();
+    setupMJListeners();
+    showView('mj');
+  }
+
+  function renderMJSidebar() {
+    const sidebar = document.getElementById('mj-sidebar');
+    sidebar.innerHTML = '';
+    state.players.forEach(p => {
+      const btn = document.createElement('div');
+      btn.className = 'sidebar-player' +
+        (state.selectedPlayer === p.name ? ' active' : '') +
+        (state.unread[p.name] ? ' has-unread' : '') +
+        (state.deadPlayers.has(p.name) ? ' dead' : '');
+      const initials = p.name.length > 6 ? p.name.substring(0,5)+'.' : p.name;
+      btn.textContent = initials;
+      btn.title = p.name;
+      btn.addEventListener('click', () => selectPlayer(p.name));
+      sidebar.appendChild(btn);
+    });
+  }
+
+  function setupMJListeners() {
+    // Listen all player conversations
+    state.players.forEach(p => {
+      const msgRef = ref(db, `parties/${state.partyCode}/messages/${p.name}`);
+      const unsub = onValue(msgRef, snap => {
+        const msgs = snap.val() || {};
+        // count unread from player
+        const count = Object.values(msgs).filter(m => m.from === 'player' && !m.readByMJ).length;
+        state.unread[p.name] = count;
+        if (state.selectedPlayer === p.name) {
+          renderMJChat(p.name, msgs);
+          markAsRead(p.name);
+        }
+        renderMJSidebar();
+      });
+      state.listeners.push(unsub);
+    });
+
+    // Listen dead status
+    const partyRef = ref(db, `parties/${state.partyCode}/players`);
+    onValue(partyRef, snap => {
+      const data = snap.val() || {};
+      state.deadPlayers = new Set(Object.entries(data).filter(([,v]) => v.dead).map(([k]) => k));
+      renderMJSidebar();
+      if (state.selectedPlayer) updateChatHeader(state.selectedPlayer);
+    });
+  }
+
+  function selectPlayer(name) {
+    state.selectedPlayer = name;
+    state.unread[name] = 0;
+    renderMJSidebar();
+
+    // Build chat area
+    const area = document.getElementById('mj-chat-area');
+    area.innerHTML = `
+      <div class="chat-header">
+        <div class="avatar" style="font-size:14px">${name.charAt(0).toUpperCase()}</div>
+        <div class="chat-header-name" id="chat-header-name">${name}</div>
+        <button class="btn-kill" id="kill-btn" onclick="window._toggleDead('${name}')">☠ Éliminer</button>
+      </div>
+      <div class="messages" id="mj-messages"><div class="empty-chat">Début de la conversation avec ${name}.</div></div>
+      <div class="input-bar">
+        <textarea id="mj-input" placeholder="Message pour ${name}..." rows="1"></textarea>
+        <button class="btn-icon send" id="mj-send-btn">➤</button>
+      </div>
+    `;
+
+    updateChatHeader(name);
+
+    document.getElementById('mj-input').addEventListener('input', e => autoResize(e.target));
+    document.getElementById('mj-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMJMessage(name); }
+    });
+    document.getElementById('mj-send-btn').addEventListener('click', () => sendMJMessage(name));
+
+    markAsRead(name);
+  }
+
+  function updateChatHeader(name) {
+    const killBtn = document.getElementById('kill-btn');
+    if (!killBtn) return;
+    if (state.deadPlayers.has(name)) {
+      killBtn.textContent = '💀 Éliminé';
+      killBtn.classList.add('dead-btn');
+    } else {
+      killBtn.textContent = '☠ Éliminer';
+      killBtn.classList.remove('dead-btn');
+    }
+  }
+
+  window._toggleDead = async function(name) {
+    const isDead = state.deadPlayers.has(name);
+    if (!isDead) {
+      if (!confirm(`Confirmer l'élimination de ${name} ?`)) return;
+    }
+    await update(ref(db, `parties/${state.partyCode}/players/${name}`), { dead: !isDead });
+    // Send auto-message
+    if (!isDead) {
+      await pushMessage(name, '💀 Tu as été éliminé(e) cette nuit. Tu peux rester observateur, mais garde le silence.', 'mj');
+    }
+  };
+
+  async function markAsRead(playerName) {
+    const snap = await get(ref(db, `parties/${state.partyCode}/messages/${playerName}`));
+    if (!snap.exists()) return;
+    const msgs = snap.val();
+    const updates = {};
+    Object.entries(msgs).forEach(([key, msg]) => {
+      if (msg.from === 'player' && !msg.readByMJ) updates[key + '/readByMJ'] = true;
+    });
+    if (Object.keys(updates).length > 0) {
+      await update(ref(db, `parties/${state.partyCode}/messages/${playerName}`), updates);
+    }
+  }
+
+  function renderMJChat(playerName, msgs) {
+    const container = document.getElementById('mj-messages');
+    if (!container) return;
+    const list = Object.values(msgs).sort((a,b) => a.ts - b.ts);
+    if (list.length === 0) {
+      container.innerHTML = `<div class="empty-chat">Début de la conversation avec ${playerName}.</div>`;
+      return;
+    }
+    container.innerHTML = '';
+    list.forEach(m => {
+      const div = document.createElement('div');
+      div.className = 'msg ' + (m.from === 'mj' ? 'from-mj' : 'from-player');
+      div.innerHTML = `<div class="bubble">${escHtml(m.text)}</div><div class="msg-time">${formatTime(m.ts)}</div>`;
+      container.appendChild(div);
+    });
+    container.scrollTop = container.scrollHeight;
+  }
+
+  async function sendMJMessage(playerName) {
+    const input = document.getElementById('mj-input');
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+    autoResize(input);
+    await pushMessage(playerName, text, 'mj');
+  }
+
+  async function pushMessage(playerName, text, from) {
+    await push(ref(db, `parties/${state.partyCode}/messages/${playerName}`), {
+      text, from, ts: Date.now(), readByMJ: from === 'mj'
+    });
+  }
+
+  // ── BROADCAST ──
+  document.getElementById('broadcast-open-btn').addEventListener('click', () => {
+    document.getElementById('broadcast-overlay').classList.add('open');
+    document.getElementById('broadcast-text').focus();
+  });
+  document.getElementById('broadcast-cancel-btn').addEventListener('click', () => {
+    document.getElementById('broadcast-overlay').classList.remove('open');
+  });
+  document.getElementById('broadcast-send-btn').addEventListener('click', async () => {
+    const text = document.getElementById('broadcast-text').value.trim();
+    if (!text) return;
+    const promises = state.players.map(p => pushMessage(p.name, '📢 ' + text, 'mj'));
+    await Promise.all(promises);
+    document.getElementById('broadcast-text').value = '';
+    document.getElementById('broadcast-overlay').classList.remove('open');
+    showToast(`Annonce envoyée à ${state.players.length} joueurs ✓`);
+  });
+
+  // ── MJ BACK ──
+  document.getElementById('mj-back-btn').addEventListener('click', () => {
+    state.listeners.forEach(u => u());
+    state.listeners = [];
+    showLobby(state.partyCode, state.players);
+  });
+
+  // ── ENTER AS PLAYER ──
+  function enterAsPlayer(name) {
+    state.role = name;
+    state.selectedPlayer = name;
+    document.getElementById('player-topbar-name').textContent = name;
+
+    // Listen messages
+    const msgRef = ref(db, `parties/${state.partyCode}/messages/${name}`);
+    const unsub = onValue(msgRef, snap => {
+      const msgs = snap.val() || {};
+      renderPlayerMessages(msgs);
+    });
+    state.listeners.push(unsub);
+
+    // Input
+    const input = document.getElementById('player-input');
+    input.addEventListener('input', e => autoResize(e.target));
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendPlayerMessage(name); }
+    });
+    document.getElementById('player-send-btn').addEventListener('click', () => sendPlayerMessage(name));
+
+    showView('player');
+  }
+
+  function renderPlayerMessages(msgs) {
+    const container = document.getElementById('player-messages');
+    const list = Object.values(msgs).sort((a,b) => a.ts - b.ts);
+    if (list.length === 0) {
+      container.innerHTML = `<div class="empty-chat">Aucun message pour l'instant.<br>Le MJ te contactera bientôt.</div>`;
+      return;
+    }
+    container.innerHTML = '';
+    list.forEach(m => {
+      const div = document.createElement('div');
+      div.className = 'msg ' + (m.from === 'mj' ? 'from-mj' : 'from-player');
+      const label = m.from === 'mj' ? 'Maître du Jeu' : 'Toi';
+      div.innerHTML = `
+        <div class="msg-sender">${label}</div>
+        <div class="bubble">${escHtml(m.text)}</div>
+        <div class="msg-time">${formatTime(m.ts)}</div>
+      `;
+      container.appendChild(div);
+    });
+    container.scrollTop = container.scrollHeight;
+  }
+
+  async function sendPlayerMessage(name) {
+    const input = document.getElementById('player-input');
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+    autoResize(input);
+    await pushMessage(name, text, 'player');
+  }
+
+  document.getElementById('player-back-btn').addEventListener('click', () => {
+    state.listeners.forEach(u => u());
+    state.listeners = [];
+    showLobby(state.partyCode, state.players);
+  });
+
+  // ── ESCAPE HTML ──
+  function escHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+  }
+
+</script>
+</body>
+</html>
