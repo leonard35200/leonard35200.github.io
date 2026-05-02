@@ -1213,6 +1213,50 @@
     return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
   }
 
+
+/* ═══════════════════════════════════════
+   BOUTON TIRAGE AU SORT (joueurs vivants)
+   À coller dans ton JS, vers la fin du script
+═══════════════════════════════════════ */
+
+/* 1) Création du bouton quand on entre en MJ */
+const oldEnterAsMJ = enterAsMJ;
+enterAsMJ = function () {
+  oldEnterAsMJ();
+
+  setTimeout(() => {
+    if (document.getElementById("random-player-btn")) return;
+
+    const btn = document.createElement("button");
+    btn.id = "random-player-btn";
+    btn.className = "broadcast-btn";
+    btn.textContent = "🎲 Tirage";
+
+    btn.style.marginLeft = "8px";
+
+    btn.addEventListener("click", randomAlivePlayer);
+
+    document.querySelector("#view-mj .topbar").appendChild(btn);
+  }, 50);
+};
+
+
+/* 2) Fonction tirage au sort */
+function randomAlivePlayer() {
+  const vivants = state.players.filter(p => !state.deadPlayers.has(p.name));
+
+  if (vivants.length === 0) {
+    showToast("Aucun joueur vivant");
+    return;
+  }
+
+  const choisi = vivants[Math.floor(Math.random() * vivants.length)];
+
+  // Ouvre directement sa conversation
+  selectPlayer(choisi.name);
+
+  showToast("🎲 Tiré au sort : " + choisi.name);
+}
 </script>
 </body>
 </html>
