@@ -732,16 +732,6 @@
       <button class="btn btn-primary mt-12" id="create-party-btn">Créer la partie →</button>
     </div>
 
-    <div class="divider">ou</div>
-
-    <div class="card">
-      <h2>Rejoindre une partie</h2>
-      <div class="field">
-        <label>Code de la partie (4 lettres)</label>
-        <input type="text" id="join-code-input" placeholder="ex: WOLF" maxlength="4" style="text-transform:uppercase;letter-spacing:4px;font-family:'Cinzel',serif;font-size:20px;" />
-      </div>
-      <button class="btn btn-secondary" id="join-party-btn">Rejoindre →</button>
-    </div>
   </div>
 
   <!-- ══════════ LOBBY VIEW ══════════ -->
@@ -755,10 +745,6 @@
       <p style="color:var(--muted);font-size:14px;margin-bottom:16px;">Sélectionne ton prénom pour accéder à ta messagerie.</p>
       <div class="players-grid" id="lobby-players"></div>
     </div>
-    <div class="code-display" style="max-width:420px;width:100%;">
-      <div class="code" id="lobby-code-display">----</div>
-      <p>Partage ce code avec les joueurs</p>
-    </div>
   </div>
 
   <!-- ══════════ MJ VIEW ══════════ -->
@@ -770,6 +756,7 @@
         <div class="topbar-sub" id="mj-party-code-display"></div>
       </div>
       <button class="broadcast-btn" id="broadcast-open-btn">📢 Annonce</button>
+      <button class="broadcast-btn" id="reset-party-btn" style="border-color:var(--danger);color:var(--danger);">🔄 Reset</button>
     </div>
 
     <div class="mj-body">
@@ -898,6 +885,8 @@
     });
   }
 
+  const PARTY_CODE = 'MAIN';
+
   document.getElementById('add-player-btn').addEventListener('click', () => {
     const input = document.getElementById('new-player-input');
     const name = input.value.trim();
@@ -914,28 +903,30 @@
     if (e.key === 'Enter') document.getElementById('add-player-btn').click();
   });
 
+  // Au chargement, on essaie de récupérer la partie existante
+  async function init() {
+    const snap = await get(ref(db, `parties/${PARTY_CODE}`));
+    if (snap.exists()) {
+      const data = snap.val();
+      state.partyCode = PARTY_CODE;
+      state.players = Object.entries(data.players || {}).map(([name, v]) => ({ name, dead: v.dead || false }));
+      showLobby(PARTY_CODE, state.players);
+    } else {
+      showView('setup');
+    }
+  }
+  init();
+
   document.getElementById('create-party-btn').addEventListener('click', async () => {
     if (tempPlayers.length < 2) { showToast('Ajoute au moins 2 joueurs'); return; }
-    const code = genCode();
     const players = tempPlayers.map(name => ({ name, dead: false }));
-    await set(ref(db, `parties/${code}`), {
+    await set(ref(db, `parties/${PARTY_CODE}`), {
       players: Object.fromEntries(players.map(p => [p.name, { dead: false }])),
       createdAt: Date.now()
     });
-    state.partyCode = code;
+    state.partyCode = PARTY_CODE;
     state.players = players;
-    showLobby(code, players);
-  });
-
-  document.getElementById('join-party-btn').addEventListener('click', async () => {
-    const code = document.getElementById('join-code-input').value.trim().toUpperCase();
-    if (code.length !== 4) { showToast('Code à 4 lettres'); return; }
-    const snap = await get(ref(db, `parties/${code}`));
-    if (!snap.exists()) { showToast('Partie introuvable'); return; }
-    const data = snap.val();
-    state.partyCode = code;
-    state.players = Object.entries(data.players || {}).map(([name, v]) => ({ name, dead: v.dead || false }));
-    showLobby(code, state.players);
+    showLobby(PARTY_CODE, players);
   });
 
   // ── LOBBY VIEW ──
@@ -969,7 +960,7 @@
     state.role = 'mj';
     state.selectedPlayer = null;
     state.unread = {};
-    document.getElementById('mj-party-code-display').textContent = `Code : ${state.partyCode}`;
+    document.getElementById('mj-party-code-display').textContent = '';
     renderMJSidebar();
     setupMJListeners();
     showView('mj');
@@ -1121,7 +1112,19 @@
     });
   }
 
-  // ── BROADCAST ──
+  // ── RESET PARTY ──
+  document.getElementById('reset-party-btn').addEventListener('click', async () => {
+    if (!confirm('Réinitialiser la partie ? Tous les joueurs et messages seront effacés.')) return;
+    await set(ref(db, `parties/${PARTY_CODE}`), null);
+    state.players = [];
+    state.unread = {};
+    state.deadPlayers = new Set();
+    state.listeners.forEach(u => u());
+    state.listeners = [];
+    tempPlayers = [];
+    renderTempPlayers();
+    showView('setup');
+  });
   document.getElementById('broadcast-open-btn').addEventListener('click', () => {
     document.getElementById('broadcast-overlay').classList.add('open');
     document.getElementById('broadcast-text').focus();
